@@ -1,0 +1,51 @@
+@forward 'vuetify/settings' with (
+    $font-size-root: 0.8rem !important,
+    $input-font-size: .875rem,
+    $field-font-size: 12px !important,
+    $field-input-opacity: 0.8 !important
+);
+
+@use 'vuetify/styles';
+@use 'vuetify/tools';
+@use 'overrides/scrollbar-overrides';
+
+.v-field--focused:not(.v-field--disabled) .v-label.v-field-label {
+    color: rgb(var(--v-theme-primary));
+}
+.v-field--variant-filled .v-field__outline::after, .v-field--variant-underlined .v-field__outline::after {
+    border-color: rgb(var(--v-theme-primary));
+}
+.v-expansion-panel-title--active > .v-expansion-panel-title__overlay {
+    opacity: 0;
+}
+.v-expansion-panel-title--active:hover > .v-expansion-panel-title__overlay {
+    opacity: 0;
+}
+.v-expansion-panel--disabled .v-expansion-panel-title .v-expansion-panel-title__overlay {
+    opacity: 0;
+}
+.text-overline {
+    font-size: 0.625rem !important;
+    font-weight: 400;
+    line-height: 1rem;
+}
+.v-container {
+    padding: 5px;
+}
+// add asterix in require fields
+div.v-input.required .v-label::after {
+    content: "*";
+    color: rgb(var(--v-theme-error)) !important;
+    margin-left: 4px;
+}
+.required_text::before {
+    content: "*";
+    color: rgb(var(--v-theme-error)) !important;
+    margin-right: 4px;
+}
+button,
+input,
+select,
+textarea {
+    background-image: none;
+}
