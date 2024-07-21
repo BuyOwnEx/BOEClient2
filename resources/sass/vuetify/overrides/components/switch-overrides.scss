@@ -1,0 +1,70 @@
+// Switch small size <26.02.21>
+.v-application {
+	.trading,
+	.balance {
+		.v-input--switch {
+			.v-input--selection-controls__input {
+				top: 5px !important;
+				width: 25px !important;
+			}
+			.v-input--selection-controls__ripple {
+				height: 12px !important;
+				width: 12px !important;
+				left: -9px !important;
+				top: -6px !important;
+			}
+			.v-input--switch__track {
+				height: 14px !important;
+				width: 26px !important;
+			}
+			.v-input--switch__thumb {
+				height: 8px !important;
+				width: 8px !important;
+				top: calc(50% - 9px) !important;
+			}
+			label {
+				font-size: 13px !important;
+			}
+		}
+	}
+}
+// Small switch transform
+.v-application {
+	.trading,
+	.balance {
+		.v-input--switch--inset.v-input--is-dirty .v-input--switch__thumb,
+		.v-input--switch--inset.v-input--is-dirty
+			.v-input--selection-controls__ripple {
+			transform: translate(12px, 0) !important;
+		}
+	}
+}
+
+// Label size for some switch in tables
+.v-application {
+	.small-label-table-switch.v-input {
+		.v-input__slot label {
+			font-size: 10px !important;
+			text-transform: uppercase !important;
+			font-weight: 600 !important;
+		}
+	}
+}
+
+// for rtl
+.v-application--is-rtl {
+	.trading,
+	.balance {
+		.v-input--switch {
+			.v-input--selection-controls__ripple {
+				right: -9px !important;
+				left: 0 !important;
+			}
+		}
+		.v-input--switch--inset.v-input--is-dirty .v-input--switch__thumb,
+		.v-input--switch--inset.v-input--is-dirty
+			.v-input--selection-controls__ripple {
+			transform: translate(-16px, 0) !important;
+		}
+	}
+}

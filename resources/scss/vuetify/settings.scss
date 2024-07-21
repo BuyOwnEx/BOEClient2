@@ -1,13 +1,17 @@
-@forward 'vuetify/settings' with (
+
+/*@forward 'vuetify/settings' with (
     $font-size-root: 0.8rem !important,
     $input-font-size: .875rem,
     $field-font-size: 12px !important,
     $field-input-opacity: 0.8 !important
-);
+);*/
 
-@use 'vuetify/styles';
-@use 'vuetify/tools';
-@use 'overrides/scrollbar-overrides';
+
+html {
+    overflow-y: auto;
+    font-family: Roboto, sans-serif;
+    font-size: 0.8rem !important;
+}
 
 .v-field--focused:not(.v-field--disabled) .v-label.v-field-label {
     color: rgb(var(--v-theme-primary));

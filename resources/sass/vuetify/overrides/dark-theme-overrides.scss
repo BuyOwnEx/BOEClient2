@@ -1,0 +1,31 @@
+.v-theme--dark {
+	// Navigation drawer
+	.v-navigation-drawer__content {
+		background: none;
+	}
+
+	// Buttons
+	.v-btn:not(.v-btn--flat):not(.v-btn--text):not(.v-btn--outlined) {
+		//background-color: rgba(130, 130, 130, 0.08);
+	}
+
+	// Remove button background dark theme
+	.v-theme--dark.v-btn:not(.v-btn--flat):not(.v-btn--text):not(.v-btn--outlined):not(.v-btn--has-bg) {
+		//background: none !important;
+	}
+
+	// более размытая тень
+	.v-sheet.v-card {
+		box-shadow: none !important;
+	}
+	.v-menu__content {
+		box-shadow: none !important;
+		border: 1px solid #4b4b4b3b;
+	}
+	.v-btn {
+		box-shadow: none !important;
+	}
+	.v-stepper {
+		box-shadow: none !important;
+	}
+}

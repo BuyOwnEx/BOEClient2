@@ -1,0 +1,106 @@
+// Override only for trading page <15.01.21>
+.trading {
+	--table-header-height: 32px;
+	--negative-table-header-height: -32px;
+	--table-row-height: 25px;
+	--table-row-height-big: 28px;
+
+	.ask-list .v-data-table__wrapper,
+	.bid-list .v-data-table__wrapper {
+		overflow: hidden;
+	}
+
+	// Less table font size <20.02.21>
+	td {
+		font-size: 0.75rem !important;
+	}
+
+	// Less padding in trading tables <19.02.21>
+	table {
+		padding: 0 !important;
+	}
+	td {
+		padding: 4px !important;
+	}
+	th {
+		padding: 4px !important;
+	}
+
+	// Less table cells height <20.02.21>
+	.v-data-table--dense td {
+		height: var(--table-row-height) !important;
+	}
+	.own-active-order-list,
+	.own-active-position-list,
+	.own-history-deal-list {
+		.v-data-table--dense td {
+			height: var(--table-row-height-big) !important;
+		}
+	}
+
+	// Text Field small size <18.02.21>
+	.trading-forms .v-input,
+	.trading-tickers-list .v-input {
+		.v-input__control {
+			border-radius: 0 !important;
+		}
+		fieldset {
+			height: 36px !important;
+			color: rgba(0, 0, 0, 0.05) !important;
+		}
+		.v-text-field__slot {
+			top: -4px !important;
+		}
+		.v-input__append-inner {
+			margin-top: 9px !important;
+		}
+		.v-label--active {
+			transform: translateY(-14px) scale(0.75) !important;
+		}
+	}
+
+	// Switch Margin
+	.trading-forms .v-input--switch {
+		margin-left: 4px !important;
+		margin-top: 0 !important;
+	}
+
+	// Own... components style
+	.own-active-order-list,
+	.own-history-deal-list,
+	.own-active-position-list {
+		.v-input--switch {
+			margin-top: 0;
+			padding-top: 0;
+		}
+		.v-data-footer__select .v-select {
+			margin-left: 8px !important;
+		}
+	}
+}
+
+// Dark style
+.v-theme--dark .trading {
+	.trading-forms,
+	.trading-tickers-list {
+		.v-input fieldset {
+			color: rgba(255, 255, 255, 0.12) !important;
+		}
+	}
+}
+
+.v-application--is-rtl .trading {
+	.trading-forms {
+		.v-radio:first-child {
+			margin-right: 0 !important;
+		}
+	}
+	.own-active-order-list,
+	.own-history-deal-list,
+	.own-active-position-list {
+		.v-data-footer__select .v-select {
+			margin-left: 0;
+			margin-right: 8px;
+		}
+	}
+}

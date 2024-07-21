@@ -4,7 +4,15 @@ use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
 
 return [
-
+    'server'              => env('SERVER'),
+    'api-public-key'      => env('API_PUBLIC_KEY'),
+    'api-secret-key'      => env('API_SECRET_KEY'),
+    'client_id'           => env('CLIENT_ID'),
+    'api-mobile-public-key'      => env('API_MOBILE_PUBLIC_KEY', null),
+    'api-mobile-secret-key'      => env('API_MOBILE_SECRET_KEY', null),
+    'mobile-api-enabled'         => (bool) env('MOBILE_API_ENABLED', false),
+    'support_enabled'     => (bool) env('VITE_CONFIG_ENABLED_SUPPORT', false),
+    'kyc_driver'          => env('VITE_KYC_DRIVER', 'local'),
     /*
     |--------------------------------------------------------------------------
     | Application Name

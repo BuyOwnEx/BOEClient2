@@ -22,7 +22,12 @@ Route::get('/', function () {
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
-});
+})->name('main');
+
+Route::get('trading/{market}/{currency}', 'ViewController@getTradingView')->name('trading');
+Route::get('api', 'ViewController@getApiView')->name('api');
+Route::get('fees', 'ViewController@getFeesView')->name('fees');
+Route::get('status', 'ViewController@getStatusView')->name('status');
 
 Route::middleware([
     'auth:sanctum',

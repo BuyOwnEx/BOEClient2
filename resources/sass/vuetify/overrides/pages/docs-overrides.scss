@@ -1,0 +1,38 @@
+.docs-page {
+	.docs-navigation {
+		.v-treeview {
+			margin-left: -10px;
+		}
+		.v-treeview-node {
+			&__root {
+				padding: 0 !important;
+			}
+			&__label button {
+				padding: 0 !important;
+			}
+			.v-icon:focus::after {
+				opacity: 0;
+			}
+			.v-treeview-node__label {
+				color: var(--v-primary-base);
+				font-size: 0.875rem;
+				font-weight: 700;
+			}
+		}
+	}
+
+	.v-expansion-panel-content {
+		display: block;
+		padding: 0 24px 16px;
+	}
+
+	.v-theme--dark.v-expansion-panels .v-expansion-panel {
+		&::before {
+			box-shadow: 0 0 3px 0 rgb(110 110 110 / 15%), 0 0 3px 0 rgb(85 85 85 / 6%),
+				0 0 3px 0 rgb(85 85 85 / 3%) !important;
+		}
+		&--active {
+			border: 1px solid #4d4d4d82;
+		}
+	}
+}
