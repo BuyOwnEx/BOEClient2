@@ -92,6 +92,7 @@ return [
     */
 
     'locale' => 'en',
+    'locales' => ['ar','de','en','es','fr','ja','ko','pl','pt','ru','zh'],
 
     /*
     |--------------------------------------------------------------------------
@@ -192,6 +193,7 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
+        'Zendesk' => Huddle\Zendesk\Facades\Zendesk::class,
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
 

@@ -12,6 +12,8 @@
     const theme = useTheme()
     const name = import.meta.env.VITE_PRODUCT_NAME;
     const version = import.meta.env.VITE_PRODUCT_VERSION;
+    const default_currency = import.meta.env.VITE_DEFAULT_CURRENCY;
+    const default_market = import.meta.env.VITE_DEFAULT_MARKET;
     //import logo_dark from "@/Assets/logo_auth_dark.png";
     //import logo_light from "@/Assets/logo_auth_light.png";
     const wavesRef = ref(null);
@@ -25,6 +27,7 @@
     onBeforeUnmount(() => {
         if (waves.isStarted) waves.stop();
     })
+
 
 </script>
 <template>
@@ -47,7 +50,8 @@
 
                 <div class="auth-layout__links text-overline pa-1 mb-1">
                     <span>
-                        <Link :href="route('main')">{{ $t('menu.trading') }}</Link>
+                        <Link :href="route('trading', { market: default_market, currency: default_currency })">{{
+                        $t('menu.trading') }}</Link>
                         <Link class="white--text" :href="route('fees')">{{ $t('fees.title') }}</Link>
                         <Link class="white--text" :href="route('status')">{{ $t('status.title') }}</Link>
                         <Link class="white--text" :href="route('api')">{{ $t('menu.api') }}</Link>
