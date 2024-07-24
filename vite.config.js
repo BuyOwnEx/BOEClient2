@@ -23,7 +23,7 @@ export default defineConfig({
                     // Make the variables defined in these files available to all components, without requiring an explicit
                     // @import of the files themselves
                     '@import "./resources/sass/theme.scss"',
-                    '@import "./resources/sass/highcharts"',
+                    // '@import "./resources/sass/highcharts"',
                     '', // end with newline
                 ].join('\n'),
             },

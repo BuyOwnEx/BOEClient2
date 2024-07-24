@@ -14,7 +14,7 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 import { createVuetify } from 'vuetify';
 import { aliases, mdi } from 'vuetify/lib/iconsets/mdi-svg';
-import i18n, {  adapter } from "@/Translations/i18n";
+import i18n, { adapter } from "@/Translations/i18n";
 import link from "@/Plugins/link";
 
 

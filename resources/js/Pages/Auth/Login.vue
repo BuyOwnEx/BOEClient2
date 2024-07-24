@@ -1,57 +1,58 @@
 <script setup>
-import { Head, Link, useForm } from '@inertiajs/vue3';
-import AuthenticationCard from '@/Components/AuthenticationCard.vue';
-import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
-import Checkbox from '@/Components/Checkbox.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import { mdiEmailOutline, mdiEyeOutline, mdiEyeOffOutline } from '@mdi/js';
-import { required, email, min8char } from '@/Rules/rules'
-import {ref} from "vue";
+    import { Head, useForm } from '@inertiajs/vue3';
+    import AuthenticationCard from '@/Components/AuthenticationCard.vue';
+    import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
+    import { mdiEmailOutline, mdiEyeOutline, mdiEyeOffOutline } from '@mdi/js';
+    import { required, email, min8char } from '@/Rules/rules'
+    import { ref } from "vue";
 
-const valid = ref(true);
-let show = ref(false);
 
-defineProps({
-    canResetPassword: Boolean,
-    status: String,
-});
+    const valid = ref(true);
+    let show = ref(false);
 
-const toggleShow = () => {
-    show.value = !show.value;
-};
 
-const form = useForm({
-    email: '',
-    password: '',
-    remember: false,
-});
 
-const submit = () => {
-    form.transform(data => ({
-        ...data,
-        remember: form.remember ? 'on' : '',
-    })).post(route('login'), {
-        onFinish: () => form.reset('password'),
+    defineProps({
+        canResetPassword: Boolean,
+        status: String,
     });
-};
+
+    const toggleShow = () => {
+        show.value = !show.value;
+    };
+
+    const form = useForm({
+        email: '',
+        password: '',
+        remember: false,
+    });
+
+    const submit = () => {
+        form.transform(data => ({
+            ...data,
+            remember: form.remember ? 'on' : '',
+        })).post(route('login'), {
+            onFinish: () => form.reset('password'),
+        });
+    };
+
+
 </script>
 
 <template>
-    <Head title="Log in" />
 
+    <Head title="Log in" />
     <AuthenticationCard>
         <template #logo>
             <AuthenticationCardLogo />
         </template>
         <div class="layout-content auth ma-auto">
+
             <v-card>
                 <v-card-title class="text-center">
-				<span class="text-overline mb-4" style="font-size: 1.25rem !important">
-					{{ $t('auth.login.title') }}
-				</span>
+                    <span class="text-overline mb-4" style="font-size: 1.25rem !important">
+                        {{ $t('auth.login.title') }}
+                    </span>
                 </v-card-title>
 
                 <v-card-subtitle class="text-center">
@@ -63,18 +64,10 @@ const submit = () => {
                         <v-container class="pt-0 pb-0">
                             <v-row>
                                 <v-col cols="12" md="12" class="pt-0 pb-0">
-                                    <v-text-field
-                                        v-model="form.email"
-                                        variant="underlined"
-                                        :append-inner-icon="mdiEmailOutline"
-                                        :hint="$t('auth.login.enter_your_email')"
-                                        :error-messages="form.errors.email"
-                                        :rules="[required,email]"
-                                        persistent-hint
-                                        clearable
-                                        required
-                                        @input="form.errors.email = []"
-                                    >
+                                    <v-text-field v-model="form.email" variant="underlined"
+                                        :append-inner-icon="mdiEmailOutline" :hint="$t('auth.login.enter_your_email')"
+                                        :error-messages="form.errors.email" :rules="[required, email]" persistent-hint
+                                        clearable required @input="form.errors.email = []">
                                         <template #label>
                                             {{ $t('auth.email') }} <span class="text-red ml-1"><b>*</b></span>
                                         </template>
@@ -82,19 +75,12 @@ const submit = () => {
                                 </v-col>
 
                                 <v-col cols="12" md="12" class="pt-0 pb-0">
-                                    <v-text-field
-                                        v-model="form.password"
-                                        variant="underlined"
+                                    <v-text-field v-model="form.password" variant="underlined"
                                         :append-inner-icon="show ? mdiEyeOutline : mdiEyeOffOutline"
-                                        :hint="$t('auth.password')"
-                                        :error-messages="form.errors.password"
-                                        :rules="[required, min8char]"
-                                        persistent-hint
-                                        required
-                                        :type="show ? 'text' : 'password'"
-                                        @input="form.errors.password = []"
-                                        @click:appendInner="toggleShow"
-                                    >
+                                        :hint="$t('auth.password')" :error-messages="form.errors.password"
+                                        :rules="[required, min8char]" persistent-hint required
+                                        :type="show ? 'text' : 'password'" @input="form.errors.password = []"
+                                        @click:appendInner="toggleShow">
                                         <template #label>
                                             {{ $t('auth.password') }} <span class="text-red ml-1"><b>*</b></span>
                                         </template>
@@ -117,7 +103,7 @@ const submit = () => {
                     </v-card-text>
 
                     <v-card-actions class="pt-2 pl-6 pr-6 pb-2">
-                        <v-btn base-color="primary" block tile variant="flat" type="submit">
+                        <v-btn base-color="primary" block tile variant="flat" type="submit" :disabled="!valid">
                             {{ $t('auth.signin') }}
                         </v-btn>
                     </v-card-actions>
@@ -145,14 +131,6 @@ const submit = () => {
                 {{ status }}
             </v-alert>
 
-<!--            <v-alert v-if="status.verify_block" density="compact" variant="text" type="success" class="mt-4">
-                {{ $t('auth.login.verified_text') }}
-            </v-alert>
-
-            <v-alert v-if="status.verify_error" density="compact" variant="text" type="error" class="mt-4">
-                {{ status.verify_error }}
-            </v-alert>-->
-
             <div class="text-center mt-6">
                 <div class="text-caption text-grey">
                     {{ $t('auth.login.noaccount') }}
@@ -165,5 +143,12 @@ const submit = () => {
     </AuthenticationCard>
 </template>
 <style scoped lang="scss">
-
+    .waves-canvas {
+        width: 100%;
+        max-height: 100%;
+        position: absolute;
+        top: 0;
+        left: -2px;
+        height: 100vh;
+    }
 </style>
