@@ -1,12 +1,12 @@
-.auth {
+/*.auth {
 	.v-icon {
 		color: #868a8c !important;
 	}
-}
+}*/
 .v-theme--dark .auth {
 	.v-card {
 		background-color: #2d2d2d !important;
-		color: #edf0f2 !important;
+		//color: #edf0f2 !important;
 	}
 	input:-webkit-autofill {
 		-webkit-box-shadow: inset 0 0 0 50px #2d2d2d !important;

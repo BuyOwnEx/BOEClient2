@@ -1,84 +1,88 @@
 <script setup>
-    import { Head, useForm } from '@inertiajs/vue3';
-    import AuthenticationCard from '@/Components/AuthenticationCard.vue';
-    import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
-    import { mdiEmailOutline } from '@mdi/js';
+import { Head, useForm } from '@inertiajs/vue3';
+import AuthenticationCard from '@/Components/AuthenticationCard.vue';
+import AuthFormWrapper from '@/Components/Forms/Auth.vue';
+import TextInputRequired from '@/Components/Fields/TextInputRequired.vue';
+import { mdiEmailOutline } from '@mdi/js';
+import { required, email, max255char } from '@/Rules/rules';
+import { ref } from "vue";
 
-    defineProps({
-        status: String,
-    });
+defineProps({
+    status: String,
+});
 
-    const form = useForm({
-        email: '',
-    });
+const valid = ref(true);
 
-    const submit = () => {
-        form.post(route('password.email'));
-    };
+const form = useForm({
+    email: '',
+});
 
+const submit = () => {
+    form.post(route('password.email'));
+};
 </script>
 
 <template>
-
     <Head title="Forgot Password" />
 
     <AuthenticationCard>
-        <template #logo>
-            <AuthenticationCardLogo />
-        </template>
-        <div class="layout-content auth ma-auto">
-            <v-card>
-                <v-card-title class="text-center">
-                    <span class="text-overline mb-4" style="font-size: 1.25rem !important">
-                        {{ $t('auth.forgot.title') }}
-                    </span>
-                </v-card-title>
-                <v-card-subtitle class="text-center ">
-                    <span>{{ $t('auth.forgot.subtitle') }}</span>
-                </v-card-subtitle>
+        <AuthFormWrapper>
+            <template #title>
+                {{ $t('auth.forgot.title') }}
+            </template>
+            <template #sub_title>
+                {{ $t('auth.forgot.subtitle')}}
+            </template>
+            <v-form @submit.prevent="submit" v-model="valid">
+                <v-card-text>
+                    <v-container class="pt-0 pb-0">
+                        <v-row>
+                            <v-col cols="12" md="12" class="pt-2 pb-0">
+                                <TextInputRequired
+                                    v-model="form.email"
+                                    :append-inner-icon="mdiEmailOutline"
+                                    :hint="$t('auth.login.enter_your_email')"
+                                    :label="$t('auth.email')"
+                                    :rules="[required, email, max255char]"
+                                    :error-messages="form.errors.email"
+                                    @input="form.errors.email = null"
+                                    counter="255"
+                                ></TextInputRequired>
+                            </v-col>
+                        </v-row>
+                    </v-container>
+                </v-card-text>
 
+                <v-card-actions class="pt-2 pl-6 pr-6 pb-2">
+                    <v-btn base-color="primary" block tile variant="flat" type="submit" :disabled="!valid || form.processing">
+                        {{ $t('common.send') }}
+                    </v-btn>
+                </v-card-actions>
 
-                <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
-                    {{ status }}
-                </div>
-
-                <form @submit.prevent="submit">
-                    <v-card-text>
-                        <v-container class="pt-0 pb-5">
-                            <v-row>
-
-                                <v-col cols="12" md="12" class="pt-0 pb-0">
-                                    <v-text-field v-model="form.email" variant="underlined"
-                                        :append-inner-icon="mdiEmailOutline" :hint="$t('auth.login.enter_your_email')"
-                                        :error-messages="form.errors.email" :rules="[required, email]" persistent-hint
-                                        clearable required @input="form.errors.email = []">
-                                        <template #label>
-                                            {{ $t('auth.email') }} <span class="text-red ml-1"><b>*</b></span>
-                                        </template>
-                                    </v-text-field>
-                                </v-col>
-
-
-                            </v-row>
-                        </v-container>
-                    </v-card-text>
-                    <v-card-actions class="pt-2 pl-6 pr-6 pb-2">
-                        <v-btn base-color="primary" block tile variant="flat" type="submit">
-                            {{ $t('auth.signin') }}
-                        </v-btn>
-                    </v-card-actions>
-                    <div class="text-left pl-6 pr-6 pb-3">
-                        <small style="font-size: 80%">
+                <div class="text-left pl-6 pr-6 pb-3">
+                    <small style="font-size: 80%">
                             <span class="text-red">
                                 <b>*</b>
                             </span>
-                            <span class="text-grey-lighten-1 ml-1">
+                        <span class="text-grey-lighten-1 ml-1">
                                 {{ $t('auth.indicates_required_fields') }}
                             </span>
-                        </small>
+                    </small>
+                </div>
+            </v-form>
+            <template #additional_actions>
+                <div class="text-center mt-6">
+                    <div class="text-caption text-grey mb-1">
+                        {{ $t('auth.login.noaccount') }}
                     </div>
-                </form>
-            </v-card>
-        </div>
+                    <v-btn :to="route('register')" color="primary" variant="text" block>
+                        {{ $t('auth.login.create') }}
+                    </v-btn>
+                </div>
+            </template>
+            <v-alert v-if="status" density="compact" variant="tonal" type="info" class="text-center ma-6 mt-2">
+                {{ status }}
+            </v-alert>
+        </AuthFormWrapper>
     </AuthenticationCard>
 </template>

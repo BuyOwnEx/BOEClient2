@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
@@ -12,9 +13,25 @@ class ViewController extends Controller
 {
     public function getMainView(Request $request)
     {
-        return to_route('trading');
+        $find_pair = Arr::where(app('all-pairs'), function ($value, $key) {
+            return $value['currency'] === mb_strtoupper(config('app.default-currency')) && $value['market'] === mb_strtoupper(config('app.default-market'));
+        });
+        if(!$find_pair)
+        {
+            return Inertia::render('404', [
+                'user' => $request->user()
+            ]);
+        }
+        return Inertia::render('Trading', [
+            'user' => $request->user(),
+            'canLogin' => Route::has('login'),
+            'canRegister' => Route::has('register'),
+            'currency'=> config('app.default-currency'),
+            'market'=> config('app.default-market')
+        ]);
+        //return to_route('trading',['currency' => config('app.default-currency'), 'market' => config('app.default-market')]);
     }
-    public function getTradingView(Request $request, $market = null, $currency = null)
+    public function getTradingView(Request $request, $currency = null, $market = null)
     {
         if (!isset($market)) {
             return Inertia::render('404', [
@@ -35,7 +52,7 @@ class ViewController extends Controller
                 'user' => $request->user()
             ]);
         }
-        $find_pair = Arr::where(app('all-pairs'), function ($value, $key) use ($currency, $market){
+        $find_pair = Arr::where(app('all-pairs'), function ($value) use ($currency, $market){
             return $value['currency'] === mb_strtoupper($currency) && $value['market'] === mb_strtoupper($market);
         });
         if(!$find_pair)

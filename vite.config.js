@@ -13,7 +13,10 @@ export default defineConfig({
             template: { transformAssetUrls },
         }),
         vuetify({
-            autoImport: true
+            autoImport: true,
+            styles: {
+                configFile: 'resources/sass/vuetify/settings.scss', // не трогать! отсюда изначально загружаются все css variables для vuetify
+            },
         }),
     ],
     css: {
@@ -22,7 +25,7 @@ export default defineConfig({
                 additionalData: [
                     // Make the variables defined in these files available to all components, without requiring an explicit
                     // @import of the files themselves
-                    '@import "./resources/sass/theme.scss"',
+                    //'@import "./resources/sass/theme.scss"',
                     // '@import "./resources/sass/highcharts"',
                     '', // end with newline
                 ].join('\n'),

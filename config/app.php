@@ -7,6 +7,8 @@ return [
     'server'              => env('SERVER'),
     'api-public-key'      => env('API_PUBLIC_KEY'),
     'api-secret-key'      => env('API_SECRET_KEY'),
+    'default-currency'    => env('VITE_DEFAULT_CURRENCY'),
+    'default-market'      => env('VITE_DEFAULT_MARKET'),
     'client_id'           => env('CLIENT_ID'),
     'api-mobile-public-key'      => env('API_MOBILE_PUBLIC_KEY', null),
     'api-mobile-secret-key'      => env('API_MOBILE_SECRET_KEY', null),

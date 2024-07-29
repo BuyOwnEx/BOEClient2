@@ -10,6 +10,8 @@ export const min6char = v => !v || v.length >= 6 || i18n.global.t('forms_validat
 export const min8char = v => !v || v.length >= 8 || i18n.global.t('forms_validation.min_8char');
 export const max6char = v => !v || v.length <= 6 || i18n.global.t('forms_validation.max_6char');
 export const max64char = v => !v || v.length <= 64 || i18n.global.t('forms_validation.max_64char');
+export const max128char = v => !v || v.length <= 128 || i18n.global.t('forms_validation.max_128char');
+export const max255char = v => !v || v.length <= 255 || i18n.global.t('forms_validation.max_255char');
 export const latinAndNumbers = v => !v || (v && /^[a-zA-Z0-9-_]+$/g.test(v)) || i18n.global.t('forms_validation.unsupported_char_latinAndNumbers');
 export const numbers = v => !v || /^[0-9]+$/.test(v) || i18n.global.t('forms_validation.unsupported_char_numbers');
 export const positive = v => !v || BigNumber(v).gt(0) || i18n.global.t('forms_validation.positive');

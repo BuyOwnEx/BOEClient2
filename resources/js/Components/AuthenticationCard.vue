@@ -1,21 +1,20 @@
 <script setup>
     import { Link } from '@inertiajs/vue3';
+    import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
     import ChangeLocale from "@/Components/ChangeLocale.vue";
     import ChangeTheme from "@/Components/ChangeTheme.vue";
     import { useDisplay, useTheme } from "vuetify";
-    import ActionMessage from '@/Components/ActionMessage.vue';
-    import Banner from '@/Components/Banner.vue';
     import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue';
-
     import { ClassicalNoise } from "@/Plugins/hero-canvas";
+
     const { smAndDown } = useDisplay();
     const theme = useTheme()
     const name = import.meta.env.VITE_PRODUCT_NAME;
     const version = import.meta.env.VITE_PRODUCT_VERSION;
+    const slogan = import.meta.env.VITE_CONFIG_SLOGAN;
     const default_currency = import.meta.env.VITE_DEFAULT_CURRENCY;
     const default_market = import.meta.env.VITE_DEFAULT_MARKET;
-    //import logo_dark from "@/Assets/logo_auth_dark.png";
-    //import logo_light from "@/Assets/logo_auth_light.png";
+
     const wavesRef = ref(null);
     const waves = new ClassicalNoise()
 
@@ -27,83 +26,54 @@
     onBeforeUnmount(() => {
         if (waves.isStarted) waves.stop();
     })
-
-
 </script>
 <template>
     <v-app>
         <div class="auth-layout flex-md-row ">
-            <canvas class="waves-canvas" ref="wavesRef"></canvas>
             <div class="auth-layout__header">
                 <ChangeLocale class="auth-layout__lang"></ChangeLocale>
-                <ChangeTheme class="auth-layout__theme mr-md-0 ml-md-0" :class="[$vuetify.rtl ? 'mr-1' : 'ml-1']">
-                </ChangeTheme>
+                <ChangeTheme class="auth-layout__theme mr-md-0 ml-md-0" :class="[$vuetify.rtl ? 'mr-1' : 'ml-1']"></ChangeTheme>
             </div>
 
             <v-sheet class="auth-layout__side mx-auto d-none d-md-flex flex-md-column justify-space-between">
+                <canvas class="waves-canvas" ref="wavesRef"></canvas>
                 <div class="auth-layout__side-top mt-3 mt-md-1 pa-2">
-                    <slot name="logo" />
+                    <AuthenticationCardLogo />
                     <div class="auth-layout__slogan title my-2 text-white">
-                        {{ $t('apps.exchange.subtitle') }}
+                        {{ slogan }}
                     </div>
                 </div>
-
                 <div class="auth-layout__links text-overline pa-1 mb-1">
                     <span>
-                        <Link :href="route('trading', { market: default_market, currency: default_currency })">{{
-                        $t('menu.trading') }}</Link>
-                        <Link class="white--text" :href="route('fees')">{{ $t('fees.title') }}</Link>
-                        <Link class="white--text" :href="route('status')">{{ $t('status.title') }}</Link>
-                        <Link class="white--text" :href="route('api')">{{ $t('menu.api') }}</Link>
+                        <Link class="text-white" :href="route('trading', {market: default_market, currency: default_currency})">{{ $t('menu.trading') }}</Link>
+                        <Link class="text-white" :href="route('fees')">{{ $t('fees.title') }}</Link>
+                        <Link class="text-white" :href="route('status')">{{ $t('status.title') }}</Link>
+                        <Link class="text-white" :href="route('api')">{{ $t('menu.api') }}</Link>
                     </span>
                 </div>
             </v-sheet>
 
             <div class="pa-2 pa-md-4 pt-9 pt-md-12 flex-grow-1 align-center justify-center d-flex flex-column z-1">
-                <div class="layout-content ma-auto w-full z-1z">
-
+                <div class="layout-content ma-auto w-full">
                     <slot />
                 </div>
 
                 <div class="text-overline mt-4">
                     <div v-if="smAndDown" class="auth-layout__links mb-1">
-                        <Link :href="route('main')">{{ $t('menu.trading') }}</Link>
+                        <Link :href="route('trading', {market: default_market, currency: default_currency})">{{ $t('menu.trading') }}</Link>
                         <Link :href="route('fees')">{{ $t('fees.title') }}</Link>
                         <Link :href="route('status')">{{ $t('status.title') }}</Link>
                         <Link :href="route('api')">{{ $t('menu.api') }}</Link>
                     </div>
-                    <div>{{ name }} - {{ version }}</div>
+                    <div class="text-center">{{ name }} - {{ version }}</div>
                 </div>
             </div>
         </div>
     </v-app>
-    <!--    <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
-        <div>
-            <slot name="logo" />
-        </div>
-
-        <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
-            <slot />
-        </div>
-    </div>-->
 </template>
 <style scoped lang="scss">
-    .layout-content {
-        max-width: 480px;
-        z-index: 1;
-    }
-
     .w-full {
         width: 100% !important;
-    }
-
-    .waves {
-        width: 100%;
-        max-height: 100%;
-        position: absolute;
-        top: 0;
-        left: -2px;
-        height: 100vh;
     }
 
     .auth-layout {
@@ -140,7 +110,7 @@
         }
     }
 
-    .v-application--is-rtl .auth-layout {
+    .v-locale--is-rtl .auth-layout {
         &__header {
             text-align: left;
             left: 32px;
@@ -164,7 +134,7 @@
             }
         }
 
-        .v-application--is-rtl .auth-layout {
+        .v-locale--is-rtl .auth-layout {
             &__header {
                 left: 8px;
             }

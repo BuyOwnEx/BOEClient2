@@ -73,6 +73,7 @@ return [
     |
     */
 
+    //'home' => '/trading/'.mb_strtoupper(config('app.default-currency')).'/'.mb_strtoupper(config('app.default-market')),
     'home' => '/dashboard',
 
     /*
@@ -146,7 +147,7 @@ return [
     'features' => [
         Features::registration(),
         Features::resetPasswords(),
-        // Features::emailVerification(),
+        Features::emailVerification(),
         Features::updateProfileInformation(),
         Features::updatePasswords(),
         Features::twoFactorAuthentication([

@@ -1,0 +1,28 @@
+$transition: (
+    'fast-out-slow-in': cubic-bezier(0.4, 0, 0.2, 1),
+    'linear-out-slow-in': cubic-bezier(0, 0, 0.2, 1),
+    'fast-out-linear-in': cubic-bezier(0.4, 0, 1, 1),
+    'ease-in-out': cubic-bezier(0.4, 0, 0.6, 1),
+    'fast-in-fast-out': cubic-bezier(0.25, 0.8, 0.25, 1),
+    'swing': cubic-bezier(0.25, 0.8, 0.5, 1)
+);
+
+@use 'vuetify/settings' with (
+  $input-details-padding-above: 2px,
+  $label-font-size: 14px,
+  $input-font-size: 14px,
+  $field-font-size: 14px,
+  $button-colored-disabled: false,
+  $toolbar-transition: 0.2s map-get($transition, 'fast-out-slow-in') transform,
+  $card-subtitle-white-space: normal
+);
+/*@import './variables/_colors';
+
+@import './variables/_global';
+@import './variables/_font';
+@import './variables/_elevations';
+@import './variables/_mixins';
+@import './variables/_utilities';
+
+@import './variables/_light';
+@import './variables/_dark';*/

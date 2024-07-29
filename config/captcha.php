@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'enabled' => env('CAPTCHA_ENABLED'),
+    'enabled' => env('CAPTCHA_ENABLED', false),
     'type' => env('CAPTCHA_TYPE'),
     'id' => env('CAPTCHA_ID'),
     'secret' => env('CAPTCHA_SECRET'),

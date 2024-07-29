@@ -2850,6 +2850,8 @@ make our system processes as transparent as possible.`,
 
         max_6char: 'Max. 6 characters',
         max_64char: 'Max. 64 characters',
+        max_128char: 'Max. 128 characters',
+        max_255char: 'Max. 255 characters',
 
         unsupported_char_latinAndNumbers: 'Unsupported characters. Only [a-zA-Z0-9-_]',
         unsupported_char_numbers: 'Unsupported characters. Only numbers',

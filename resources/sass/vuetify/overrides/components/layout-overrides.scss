@@ -4,11 +4,15 @@
 }
 
 // Navigation Drawer
-.v-navigation-drawer__content {
+/*.v-navigation-drawer__content {
 	flex: 1 1 auto;
 	overflow-y: auto;
 	min-height: 0;
 	padding: 8px 0;
+}*/
+.v-navigation-drawer__content .v-list-item:first-child .v-avatar.v-avatar--density-default {
+    height: 48px !important;
+    width: 48px !important;
 }
 
 // Rows

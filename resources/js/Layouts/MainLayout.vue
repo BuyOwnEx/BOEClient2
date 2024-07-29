@@ -1,5 +1,6 @@
 <script setup>
 import {ref} from "vue";
+import { Head } from '@inertiajs/vue3';
 import ChangeTheme from "@/Components/ChangeTheme.vue";
 import ToolbarLogo from "@/Components/ToolbarLogo.vue";
 import ChangeLocale from "@/Components/ChangeLocale.vue";
@@ -10,6 +11,7 @@ import ToolbarUser from "@/Components/ToolbarUser.vue";
 const drawer = ref(null);
 const isContentBoxed = ref(false);
 defineProps({
+    title: String,
     canLogin: Boolean,
     canRegister: Boolean,
     laravelVersion: String,
@@ -20,24 +22,25 @@ defineProps({
 
 <template>
     <v-app>
+        <Head :title="title" />
         <Banner />
         <v-navigation-drawer
             v-model="drawer"
             rail
             expand-on-hover
-            v-if="$page.props.auth.user"
+            v-if="$page.props.auth.user && $page.props.auth.user.email_verified_at"
         >
             <ToolbarLogo></ToolbarLogo>
             <v-divider></v-divider>
             <AsideMenu></AsideMenu>
         </v-navigation-drawer>
         <v-app-bar>
-            <ToolbarLogo v-if="!$page.props.auth.user"></ToolbarLogo>
-            <v-app-bar-nav-icon v-if="$page.props.auth.user" @click.stop="drawer = !drawer" />
+            <ToolbarLogo v-if="!$page.props.auth.user || ($page.props.auth.user && !$page.props.auth.user.email_verified_at)"></ToolbarLogo>
+            <v-app-bar-nav-icon v-if="$page.props.auth.user && $page.props.auth.user.email_verified_at" @click.stop="drawer = !drawer" />
             <v-spacer class="d-block" />
             <ChangeTheme></ChangeTheme>
             <ChangeLocale></ChangeLocale>
-            <ToolbarApps></ToolbarApps>
+            <ToolbarApps v-if="$page.props.auth.user && $page.props.auth.user.email_verified_at"></ToolbarApps>
             <v-btn v-if="!$page.props.auth.user" :href="route('login')" tile>{{ $t('menu.login') }}</v-btn>
             <v-btn v-if="!$page.props.auth.user" :href="route('register')" tile dark color="primary">{{ $t('menu.register') }}</v-btn>
             <ToolbarUser v-if="$page.props.auth.user" :user="$page.props.auth.user"></ToolbarUser>
@@ -56,6 +59,8 @@ defineProps({
     </v-app>
 </template>
 <style lang="sass" scoped>
+.v-container
+    padding: 4px
 .v-layout
     height: 100%
 </style>

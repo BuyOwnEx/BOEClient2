@@ -24,7 +24,7 @@ use Inertia\Inertia;
     ]);
 })->name('main');*/
 
-Route::get('/', 'ViewController@getMainView')->name('main');
+//Route::get('/', 'ViewController@getMainView')->name('trading');
 Route::get('trading/{market}/{currency}', 'ViewController@getTradingView')->name('trading');
 Route::get('overview', 'ViewController@getOverviewView')->name('overview');
 Route::get('policy', 'ViewController@getPolicyView')->name('policy');
@@ -37,7 +37,7 @@ Route::get('2fa', 'ViewController@get2FAView')->name('2fa');
 Route::get('forget_2fa','ViewController@forget2FAView')->name('forget_2fa');
 
 Route::get('captcha', 'TraderController@getCaptchaConfig');
-Route::post('set_locale', 'TraderController@setLocale');
+Route::post('set_locale', 'TraderController@setLocale')->name('set_locale');
 Route::post('2fa_validate', ['middleware' => 'throttle:5', 'uses' => 'TraderController@postValidateToken']);
 
 Route::middleware([
@@ -46,8 +46,12 @@ Route::middleware([
     'verified',
 ])->group(function () {
     Route::get('/', function () {
-        return Inertia::render('Trading');
+        return to_route('trading/{market}/{currency}',['market' => config('app.default-market'), 'currency' => config('app.default-currency')]);
+        //return Inertia::render('Trading');
     })->name('trading');
+    Route::get('/dashboard', function () {
+        return Inertia::render('Dashboard');
+    })->name('dashboard');
     Route::get('balance', 'ViewController@getBalanceView')->name('balance');
     Route::get('transactions', 'ViewController@getTransactionsView')->name('transactions');
     Route::get('fiat_transactions', 'ViewController@getFiatTransactionsView')->name('fiat_transactions');

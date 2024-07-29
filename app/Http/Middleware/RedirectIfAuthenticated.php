@@ -21,7 +21,7 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
-                return redirect(RouteServiceProvider::HOME);
+                return redirect('/trading/'.mb_strtoupper(config('app.default-currency')).'/'.mb_strtoupper(config('app.default-market')));
             }
         }
 

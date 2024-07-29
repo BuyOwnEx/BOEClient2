@@ -1,8 +1,8 @@
-<!-- <script setup>
+<script setup>
 import { useLocale } from 'vuetify'
 import { computed } from 'vue'
 import { useDisplay, useRtl } from 'vuetify'
-// import { ComponentCodeName } from "vue3-flag-svg/manifest/index.js";
+import { ComponentCodeName } from "vue3-flag-svg/manifest/index.js";
 import {useForm} from "@inertiajs/vue3";
 import _ from 'lodash';
 
@@ -15,7 +15,8 @@ const changeLocale = (locale) => {
         lang: locale,
     });
     form.post(route('set_locale'), {
-        onSuccess: () => {
+        wantsJson: true,
+        onSuccess: (data) => {
             current.value = locale;
             localStorage.setItem('locale', locale);
         },
@@ -116,5 +117,4 @@ const currentLocaleLabel = computed(() => {
         </v-list>
     </v-menu>
 </template>
- -->
-<template></template>
+

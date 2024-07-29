@@ -50,10 +50,16 @@ class TraderController extends Controller
                 $request->user()->language = $request->lang;
                 $request->user()->save();
             }
-            return ['success'=>true];
+            return back()->with('flash', [
+                'success' => true,
+                'message'=>'Language is changed to '.$request->lang
+            ]);
         }
         else {
-            return ['success'=>false, 'message'=>'Language is not supported'];
+            return back()->with('flash', [
+                'success' => false,
+                'message'=>'Language is not supported'
+            ]);
         }
     }
     public function postValidateToken(ValidateSecretRequest $request)

@@ -1,11 +1,10 @@
 import './bootstrap';
 import '../css/app.css';
 // STYLES Именно так и никак иначе, поскольку только variables должны быть в секции css.preprocessorOptions.sass.additionalData
-import '../sass/vuetify/main.scss'
+import 'vuetify/styles';
 import '../sass/vuetify/overrides.scss'
 import '../sass/app.scss'
 import '../scss/vuetify/settings.scss'
-
 import '../sass/helpers.scss'
 
 import { createApp, h } from 'vue';
@@ -19,6 +18,22 @@ import link from "@/Plugins/link";
 
 
 const vuetify = createVuetify({
+    defaults: {
+        global: {
+            dense: true,
+            ripple: false
+        },
+        VField: {
+            VIcon: {
+                color: '#868a8c',
+                style: 'opacity: 1',
+            }
+        },
+        VCheckbox: {
+            color: 'primary',
+            density: 'compact'
+        }
+    },
     theme: {
         defaultTheme: localStorage.getItem('theme') ?? 'dark',
         themes: {
@@ -27,7 +42,7 @@ const vuetify = createVuetify({
                 colors: {
                     background: '#05090c',
                     surface: '#1e1e1e',
-                    "on-surface": '#ffffff',
+                    "on-surface": '#edf0f2',
                     primary: '#03a4c2',
                     "on-primary": '#edf0f2',
                     secondary: '#829099',
@@ -36,6 +51,7 @@ const vuetify = createVuetify({
                     info: '#2196F3',
                     success: '#4CAF50',
                     warning: '#FFC107',
+                    anchor: '#8c9eff'
                 },
             },
             light: {

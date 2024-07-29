@@ -2889,6 +2889,8 @@ export default {
 
         max_6char: 'Макс. 6 символов',
         max_64char: 'Макс. 64 символа',
+        max_128char: 'Макс. 128 символов',
+        max_255char: 'Макс. 255 символов',
 
         unsupported_char_latinAndNumbers: 'Неподдерживаемые символы. Только [a-zA-Z0-9-_]',
         unsupported_char_numbers: 'Неподдерживаемые символы. Только числа',
