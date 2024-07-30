@@ -12,8 +12,6 @@
     const name = import.meta.env.VITE_PRODUCT_NAME;
     const version = import.meta.env.VITE_PRODUCT_VERSION;
     const slogan = import.meta.env.VITE_CONFIG_SLOGAN;
-    const default_currency = import.meta.env.VITE_DEFAULT_CURRENCY;
-    const default_market = import.meta.env.VITE_DEFAULT_MARKET;
 
     const wavesRef = ref(null);
     const waves = new ClassicalNoise()
@@ -45,7 +43,7 @@
                 </div>
                 <div class="auth-layout__links text-overline pa-1 mb-1">
                     <span>
-                        <Link class="text-white" :href="route('trading', {market: default_market, currency: default_currency})">{{ $t('menu.trading') }}</Link>
+                        <Link class="text-white" :href="route('landing')">{{ $t('menu.trading') }}</Link>
                         <Link class="text-white" :href="route('fees')">{{ $t('fees.title') }}</Link>
                         <Link class="text-white" :href="route('status')">{{ $t('status.title') }}</Link>
                         <Link class="text-white" :href="route('api')">{{ $t('menu.api') }}</Link>
@@ -60,7 +58,7 @@
 
                 <div class="text-overline mt-4">
                     <div v-if="smAndDown" class="auth-layout__links mb-1">
-                        <Link :href="route('trading', {market: default_market, currency: default_currency})">{{ $t('menu.trading') }}</Link>
+                        <Link :href="route('landing')">{{ $t('menu.trading') }}</Link>
                         <Link :href="route('fees')">{{ $t('fees.title') }}</Link>
                         <Link :href="route('status')">{{ $t('status.title') }}</Link>
                         <Link :href="route('api')">{{ $t('menu.api') }}</Link>

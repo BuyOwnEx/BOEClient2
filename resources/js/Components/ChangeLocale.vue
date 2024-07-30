@@ -86,7 +86,9 @@ const isIconUse = computed(() => {
 const currentLocaleLabel = computed(() => {
     return _.find(availableLocales, item => (item.code === current.value))
 })
-
+const isRtlUsed = computed(() => {
+    return isRtl.value
+})
 
 </script>
 
@@ -99,8 +101,9 @@ const currentLocaleLabel = computed(() => {
                 <component
                     :is="ComponentCodeName[currentLocaleLabel.flag].component"
                     style="width: 15px"
+                    :class="[isRtlUsed ? 'ml-2' : 'mr-2']"
                 ></component>
-                <span v-show='!isIconUse' :class="[isRtl.value ? 'mr-2' : 'ml-2']">{{ currentLocaleLabel.label }}</span>
+                <span v-show='!isIconUse'>{{ currentLocaleLabel.label }}</span>
             </v-btn>
         </template>
         <v-list dense nav>
@@ -109,7 +112,7 @@ const currentLocaleLabel = computed(() => {
                     <component
                         :is="ComponentCodeName[locale.flag].component"
                         style="width: 15px"
-                        :class="[isRtl.value ? 'ml-2' : 'mr-2']"
+                        :class="[isRtlUsed ? 'ml-2' : 'mr-2']"
                     ></component>
                 </template>
                 <v-list-item-title>{{ locale.label }}</v-list-item-title>

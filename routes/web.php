@@ -24,8 +24,8 @@ use Inertia\Inertia;
     ]);
 })->name('main');*/
 
-//Route::get('/', 'ViewController@getMainView')->name('trading');
-Route::get('trading/{market}/{currency}', 'ViewController@getTradingView')->name('trading');
+Route::get('/', 'ViewController@getMainView')->name('landing');
+Route::get('trading/{currency}/{market}', 'ViewController@getTradingView')->name('trading');
 Route::get('overview', 'ViewController@getOverviewView')->name('overview');
 Route::get('policy', 'ViewController@getPolicyView')->name('policy');
 Route::get('terms', 'ViewController@getTermsView')->name('terms');
@@ -45,10 +45,9 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/', function () {
+    /*Route::get('/', function () {
         return to_route('trading/{market}/{currency}',['market' => config('app.default-market'), 'currency' => config('app.default-currency')]);
-        //return Inertia::render('Trading');
-    })->name('trading');
+    })->name('trading');*/
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');

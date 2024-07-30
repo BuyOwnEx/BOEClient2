@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Arr;
@@ -13,179 +15,115 @@ class ViewController extends Controller
 {
     public function getMainView(Request $request)
     {
-        $find_pair = Arr::where(app('all-pairs'), function ($value, $key) {
-            return $value['currency'] === mb_strtoupper(config('app.default-currency')) && $value['market'] === mb_strtoupper(config('app.default-market'));
-        });
-        if(!$find_pair)
-        {
-            return Inertia::render('404', [
-                'user' => $request->user()
-            ]);
-        }
-        return Inertia::render('Trading', [
-            'user' => $request->user(),
-            'canLogin' => Route::has('login'),
-            'canRegister' => Route::has('register'),
-            'currency'=> config('app.default-currency'),
-            'market'=> config('app.default-market')
-        ]);
-        //return to_route('trading',['currency' => config('app.default-currency'), 'market' => config('app.default-market')]);
+        return to_route('trading',['currency' => config('app.default-currency'), 'market' => config('app.default-market')]);
     }
     public function getTradingView(Request $request, $currency = null, $market = null)
     {
         if (!isset($market)) {
-            return Inertia::render('404', [
-                'user' => $request->user()
-            ]);
+            return Inertia::render('404');
         }
         if (!isset($currency)) {
-            return Inertia::render('404', [
-                'user' => $request->user()
-            ]);
+            return Inertia::render('404');
         }
         $validator = Validator::make(['market'=>$market,'currency'=>$currency], [
             'market' => 'required|alpha_num|min:2|max:10',
             'currency' => 'required|alpha_num|min:2|max:10',
         ]);
         if ($validator->fails()) {
-            return Inertia::render('404', [
-                'user' => $request->user()
-            ]);
+            return Inertia::render('404');
         }
         $find_pair = Arr::where(app('all-pairs'), function ($value) use ($currency, $market){
             return $value['currency'] === mb_strtoupper($currency) && $value['market'] === mb_strtoupper($market);
         });
         if(!$find_pair)
         {
-            return Inertia::render('404', [
-                'user' => $request->user()
-            ]);
+            return Inertia::render('404');
         }
         return Inertia::render('Trading', [
-            'user' => $request->user(),
-            'canLogin' => Route::has('login'),
-            'canRegister' => Route::has('register'),
             'currency'=>$currency,
-            'market'=>$market
+            'market'=>$market,
+            'pair'=>$find_pair
         ]);
     }
     public function getOverviewView(Request $request)
     {
-        return Inertia::render('Overview', [
-            'user' => $request->user()
-        ]);
+        return Inertia::render('Overview');
     }
     public function getPolicyView(Request $request)
     {
-        return Inertia::render('Policy', [
-            'user' => $request->user()
-        ]);
+        return Inertia::render('Policy');
     }
     public function getTermsView(Request $request)
     {
-        return Inertia::render('Terms', [
-            'user' => $request->user()
-        ]);
+        return Inertia::render('Terms');
     }
     public function getApiView(Request $request)
     {
-        return Inertia::render('Api', [
-            'user' => $request->user()
-        ]);
+        return Inertia::render('Api');
     }
     public function getFeesView(Request $request)
     {
-        return Inertia::render('Fees', [
-            'user' => $request->user()
-        ]);
+        return Inertia::render('Fees');
     }
     public function getStatusView(Request $request)
     {
-        return Inertia::render('Status', [
-            'user' => $request->user()
-        ]);
+        return Inertia::render('Status');
     }
     public function getContactsView(Request $request)
     {
-        return Inertia::render('Contacts', [
-            'user' => $request->user()
-        ]);
+        return Inertia::render('Contacts');
     }
     public function get2FAView(Request $request)
     {
         if (session('2fa:user:id')) {
-            return Inertia::render('2FA', [
-                'user' => $request->user()
-            ]);
+            return Inertia::render('2FA');
         }
-        return to_route('auth.login');
+        return to_route('login');
     }
     public function forget2FAView(Request $request)
     {
-        return Inertia::render('2FAForget', [
-            'user' => $request->user()
-        ]);
+        return Inertia::render('2FAForget');
     }
     //================ AUTH views========================
     public function getBalanceView(Request $request)
     {
-        return Inertia::render('Balance', [
-            'user' => $request->user()
-        ]);
+        return Inertia::render('Balance');
     }
     public function getTransactionsView(Request $request)
     {
-        return Inertia::render('Transactions', [
-            'user' => $request->user()
-        ]);
+        return Inertia::render('Transactions');
     }
     public function getFiatTransactionsView(Request $request)
     {
-        return Inertia::render('FiatTransactions', [
-            'user' => $request->user()
-        ]);
+        return Inertia::render('FiatTransactions');
     }
     public function getTransfersView(Request $request)
     {
-        return Inertia::render('Transfers', [
-            'user' => $request->user()
-        ]);
+        return Inertia::render('Transfers');
     }
     public function getOrdersView(Request $request)
     {
-        return Inertia::render('Orders', [
-            'user' => $request->user()
-        ]);
+        return Inertia::render('Orders');
     }
     public function getDealsView(Request $request)
     {
-        return Inertia::render('Deals', [
-            'user' => $request->user()
-        ]);
+        return Inertia::render('Deals');
     }
     public function getRefPaymentsView(Request $request)
     {
-        return Inertia::render('RefPayments', [
-            'user' => $request->user()
-        ]);
+        return Inertia::render('RefPayments');
     }
     public function getSupportView(Request $request)
     {
-        return Inertia::render('Support', [
-            'user' => $request->user()
-        ]);
+        return Inertia::render('Support');
     }
     public function getProfileView(Request $request)
     {
-        return Inertia::render('Profile', [
-            'user' => $request->user()
-        ]);
+        return Inertia::render('Profile');
     }
     public function getNotificationsView(Request $request)
     {
-        return Inertia::render('Notifications', [
-            'user' => $request->user()
-        ]);
+        return Inertia::render('Notifications');
     }
 
 }

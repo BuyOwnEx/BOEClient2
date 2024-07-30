@@ -1,5 +1,5 @@
 <script setup>
-import { useDisplay, useRtl } from 'vuetify'
+import { useRtl } from 'vuetify'
 import {
     mdiViewGridOutline,
     mdiApps

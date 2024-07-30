@@ -127,7 +127,7 @@ const submit = () => {
                 </v-card-text>
 
                 <v-card-actions class="pt-2 pl-6 pr-6 pb-2">
-                    <v-btn base-color="primary" block tile variant="flat" type="submit" :disabled="!valid || (!force_agree && (!term_agree || !policy_agree)) || form.processing">
+                    <v-btn base-color="primary" block tile variant="flat" type="submit" :loading="form.processing" :disabled="!valid || (!force_agree && (!term_agree || !policy_agree)) || form.processing">
                         {{ $t('auth.register.register_action') }}
                     </v-btn>
                 </v-card-actions>
