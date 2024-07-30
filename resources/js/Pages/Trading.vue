@@ -71,12 +71,12 @@ let selectedTab = ref(0);
             />
         </div>
         <div v-else class="trading__mobile">
-            <v-bottom-navigation horizontal v-model="selectedTab" mode="shift" grow color="primary" base-color="on-surface">
-                <v-btn class="pl-1 pr-1" size="x-small" value="chart">
+            <v-bottom-navigation class="mt-1" style="position: relative" v-model="selectedTab" mode="shift" grow color="primary" base-color="on-surface">
+                <v-btn class="pl-1 pr-1" size="x-small">
                     <v-icon>{{ mdiChartBar }}</v-icon>
                     <span>{{ $t('trading.headers.chart') }}</span>
                 </v-btn>
-                <v-btn class="pl-1 pr-1" size="x-small" value="tickers">
+                <v-btn class="pl-1 pr-1" size="x-small">
                     <v-icon>{{ mdiTable }}</v-icon>
                     <span>{{ $t('trading.headers.tickers') }}</span>
                 </v-btn>
@@ -127,7 +127,10 @@ let selectedTab = ref(0);
                 class="trading__mobile__chat"
             />
 
-            <div v-if="selectedTab === 4">
+            <div
+                v-if="selectedTab === 4"
+                class="trading__mobile__orders"
+            >
                 <TradingBidList
                     class="trading__mobile__orders__bid"
                     :currency="currency"
@@ -227,6 +230,36 @@ let selectedTab = ref(0);
 			'activity bid forms forms ask history'
 			'own own own own own own';
         grid-template-rows: 4fr 2fr 1fr 2fr 1fr;
+    }
+
+    &__mobile {
+        display: flex;
+        flex-grow: 1;
+        flex-flow: column-reverse;
+
+        &__chart {
+            height: 100%;
+        }
+
+        &__tickers {
+            height: 100%;
+        }
+
+        &__orders {
+            height: 100%;
+        }
+
+        &__history {
+            height: 100%;
+        }
+
+        &__chat {
+            height: 100%;
+        }
+
+        &__forms {
+            height: 100%;
+        }
     }
 }
 @media screen and (min-width: 1382px) and (max-width: 1768px) {
