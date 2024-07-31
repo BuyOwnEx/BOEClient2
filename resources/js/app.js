@@ -15,6 +15,7 @@ import { createVuetify } from 'vuetify';
 import { aliases, mdi } from 'vuetify/lib/iconsets/mdi-svg';
 import i18n, { adapter } from "@/Translations/i18n";
 import link from "@/Plugins/link";
+import store from '@/Store';
 
 
 const vuetify = createVuetify({
@@ -93,6 +94,7 @@ createInertiaApp({
             .use(plugin)
             .use(i18n)
             .use(vuetify)
+            .use(store)
             .use(ZiggyVue)
             .use(link)
             .mount(el);

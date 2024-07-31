@@ -41,7 +41,7 @@ html {
 		min-width: var(--scrollbar-minlength);
 	}
 }
-.trading *,
+.v-layout *,
 .v-menu__content {
 	scrollbar-color: var(--scrollbar-color) var(--light-background-color) !important;
 	scrollbar-width: var(--scrollbar-ff-width);
@@ -70,7 +70,7 @@ html {
 	}
 }
 .v-theme--dark {
-	.trading *,
+	.v-layout *,
 	.v-menu__content {
 		scrollbar-color: var(--dark-scrollbar-color) var(--dark-background-color) !important;
 		scrollbar-width: var(--scrollbar-ff-width);

@@ -54,7 +54,6 @@ const all_rights_text = import.meta.env.VITE_CONFIG_ALL_RIGHTS_TEXT;
             <v-btn v-if="!$page.props.auth.user" :to="route('register')" base-color="primary" density="comfortable" tile variant="flat" :class="[isRtl.value ? 'ml-1' : 'mr-1']">{{ $t('menu.register') }}</v-btn>
             <ToolbarUser v-if="$page.props.auth.user" :user="$page.props.auth.user"></ToolbarUser>
         </v-app-bar>
-        <v-divider></v-divider>
         <v-main>
             <v-container class="fill-height" :fluid="!isContentBoxed">
                 <v-layout>

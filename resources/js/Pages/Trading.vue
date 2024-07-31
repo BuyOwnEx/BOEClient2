@@ -12,8 +12,10 @@ import TradingMarketActivity from "@/Components/Cards/TradingMarketActivity.vue"
 import TradingOwnLists from "@/Components/Cards/TradingOwnLists.vue";
 import { useDisplay } from "vuetify";
 import {computed, ref} from "vue";
+import { useStore } from 'vuex';
 import TradingMarketInfo from "@/Components/Cards/TradingMarketInfo.vue";
 import { mdiChartBar, mdiTable, mdiBook, mdiForum, mdiChartBox, mdiFormSelect, mdiViewList } from '@mdi/js'
+import TradingAskBidLastPrice from "@/Components/Cards/TradingAskBidLastPrice.vue";
 
 const props = defineProps({
     currency: {
@@ -22,6 +24,10 @@ const props = defineProps({
     },
     market: {
         type: String,
+        required: true,
+    },
+    tickers: {
+        type: Array,
         required: true,
     }
 });
@@ -38,14 +44,18 @@ const showHistory = computed(() => {
 })
 let selectedTab = ref(0);
 
+const store = useStore();
+
+store.commit('tickers/setTickersList', props.tickers);
+
 </script>
 
 <template>
     <Head :title="currency+'/'+market" />
 
     <MainLayout>
-        <div v-if="!mobile" class="trading__desktop fill-height" :class="[$page.props.auth.user && $page.props.auth.user.email_verified_at ? 'logged' : '']">
-            <TradingTickersList class="trading__desktop__tickers" :currency="currency" :market="market" />
+        <div v-if="!mobile" class="trading__desktop" :class="[$page.props.auth.user && $page.props.auth.user.email_verified_at ? 'logged' : '']">
+            <TradingTickersList class="trading__desktop__tickers" :currency="currency" :market="market" :tickers="tickers" />
 
             <TradingMarketInfo class="trading__desktop__info" :currency="currency" :market="market" />
 
@@ -129,19 +139,19 @@ let selectedTab = ref(0);
 
             <div
                 v-if="selectedTab === 4"
-                class="trading__mobile__orders"
+                class="trading__mobile__orders d-flex flex-column"
             >
                 <TradingBidList
-                    class="trading__mobile__orders__bid"
+                    class="trading__mobile__orders__bid flex-grow-1"
                     :currency="currency"
                     :market="market"
                 />
-<!--                <AskBidLastPrice
+                <TradingAskBidLastPrice
                     class="trading__mobile__orders__last-price"
                     :market="market"
-                />-->
+                />
                 <TradingAskList
-                    class="trading__mobile__orders__ask"
+                    class="trading__mobile__orders__ask flex-grow-1"
                     :currency="currency"
                     :market="market"
                 />
@@ -164,9 +174,11 @@ let selectedTab = ref(0);
     </MainLayout>
 </template>
 <style scoped lang="scss">
+$grid-height: calc(100vh - 64px - 40px - 8px); // 64px - header, 40px - footer, 8px - (pa-1 + grid-gap)
 .trading {
     &__desktop {
         width: 100%;
+        height: $grid-height;
         display: grid;
         grid-template-areas:
             'tickers info info info info history'
@@ -181,6 +193,9 @@ let selectedTab = ref(0);
         &__tickers {
             grid-area: tickers;
             min-width: 325px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
         }
 
         &__info {
@@ -224,12 +239,13 @@ let selectedTab = ref(0);
     }
     &__desktop.logged {
         grid-template-areas:
+            'tickers info info info info history'
 			'tickers chart chart chart chart history'
 			'chat bid forms forms ask history'
 			'chat bid forms forms ask history'
 			'activity bid forms forms ask history'
 			'own own own own own own';
-        grid-template-rows: 4fr 2fr 1fr 2fr 1fr;
+        grid-template-rows: 40px 5fr 2fr 1fr 2fr 1fr;
     }
 
     &__mobile {
@@ -246,6 +262,7 @@ let selectedTab = ref(0);
         }
 
         &__orders {
+
             height: 100%;
         }
 
@@ -287,15 +304,17 @@ let selectedTab = ref(0);
             }
         }
         &__desktop.logged {
-            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
             grid-template-areas:
-				'chart chart chart chart chart chart chart chart chart chart chart chart'
-				'bid bid bid bid ask ask ask ask tickers tickers tickers tickers'
-				'forms forms forms forms forms forms forms forms history history history history'
-				'forms forms forms forms forms forms forms forms history history history history'
-				'forms forms forms forms forms forms forms forms history history history history'
-				'own own own own own own own own own own own own';
-            grid-template-rows: 4fr 2fr 2fr 1fr;
+				'info info info info info info info info info history history history tickers tickers tickers'
+				'chart chart chart chart chart chart chart chart chart history history history tickers tickers tickers'
+				'forms forms forms forms forms forms bid bid bid ask ask ask chat chat chat'
+				'forms forms forms forms forms forms bid bid bid ask ask ask chat chat chat'
+				'forms forms forms forms forms forms bid bid bid ask ask ask chat chat chat'
+				'forms forms forms forms forms forms bid bid bid ask ask ask chat chat chat'
+                'forms forms forms forms forms forms bid bid bid ask ask ask chat chat chat'
+                'own own own own own own own own own own own own own own own';
+            grid-template-rows: 40px 30fr 6fr 6fr 6fr 6fr 6fr 6fr;
 
             &__tickers {
                 min-width: unset;
@@ -333,15 +352,16 @@ let selectedTab = ref(0);
             }
         }
         &__desktop.logged {
-            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
             grid-template-areas:
-				'chart chart chart chart chart chart chart chart chart chart chart chart'
-				'bid bid bid bid ask ask ask ask tickers tickers tickers tickers'
-				'forms forms forms forms forms forms forms forms history history history history'
-				'forms forms forms forms forms forms forms forms history history history history'
-				'forms forms forms forms forms forms forms forms history history history history'
-				'own own own own own own own own own own own own';
-            grid-template-rows: 4fr 2fr 2fr 1fr;
+				'info info info info info info info info info info info info tickers tickers tickers tickers'
+                'chart chart chart chart chart chart chart chart chart chart chart chart tickers tickers tickers tickers'
+				'forms forms forms forms forms forms forms forms bid bid bid bid ask ask ask ask'
+				'forms forms forms forms forms forms forms forms bid bid bid bid ask ask ask ask'
+				'forms forms forms forms forms forms forms forms bid bid bid bid ask ask ask ask'
+				'forms forms forms forms forms forms forms forms bid bid bid bid ask ask ask ask'
+                'own own own own own own own own own own own own own own own own';
+            grid-template-rows: 40px 4fr 2fr 2fr 1fr;
 
             &__tickers {
                 min-width: unset;

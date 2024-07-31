@@ -1,0 +1,70 @@
+const state = () => ({
+    tickersList: null,
+    markets: null
+});
+
+const getters = {
+
+};
+
+const mutations = {
+    setTickersList(state, list) {
+        state.tickersList = list;
+    },
+    updateSingleTicker(state, ticker) {
+        if (state.tickersList === null)
+        {
+            state.tickersList = [ticker];
+            return;
+        }
+        let list = state.tickersList;
+        let findIndex = _.findIndex(list, (item) => {
+            return item.currency === ticker.currency && item.market === ticker.market;
+        });
+        if (findIndex !== -1) {
+            list[i] = ticker;
+            state.tickersList = list;
+        }
+    },
+    setMarketData(state, list) {
+        state.markets = list;
+    },
+}
+
+const actions = {
+    getTickersListFromServer({ commit }) {
+        return new Promise((resolve, reject) => {
+            axios.get('/trader/ext/tickers')
+                .then(response => {
+                    commit('setTickersList', response.data.data);
+                    resolve();
+                }).catch(error => {
+                console.log(error);
+                reject();
+            });
+        });
+    },
+    getMarketDataFromServer({ commit }) {
+        return new Promise((resolve, reject) => {
+            axios.get('/trader/ext/market_data')
+                .then(response => {
+                    commit('setMarketData', response.data.data);
+                    resolve();
+                }).catch(error => {
+                console.log(error);
+                reject();
+            });
+        });
+    }
+}
+
+export default {
+    namespaced: true,
+    state,
+    getters,
+    actions,
+    mutations,
+    modules: {
+
+    }
+}

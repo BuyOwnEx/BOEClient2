@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 
+use App\Library\BuyOwnExClientAPI;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -47,11 +48,20 @@ class ViewController extends Controller
         {
             return Inertia::render('404');
         }
-        return Inertia::render('Trading', [
-            'currency'=>$currency,
-            'market'=>$market,
-            'pair'=>$find_pair
-        ]);
+        try
+        {
+            $api = new BuyOwnExClientAPI(config('app.api-public-key'), config('app.api-secret-key'));
+            $tickers = $api->tickers();
+
+            return Inertia::render('Trading', [
+                'currency'=>$currency,
+                'market'=>$market,
+                'pair'=>$find_pair,
+                'tickers'=>$tickers->getData()->data
+            ]);
+        } catch (\Exception $e) {
+            return Inertia::render('500', ['message' => $e->getMessage()]);
+        }
     }
     public function getOverviewView(Request $request)
     {
