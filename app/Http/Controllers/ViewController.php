@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 
 
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Arr;
 use Inertia\Inertia;
@@ -19,6 +22,11 @@ class ViewController extends Controller
     }
     public function getTradingView(Request $request, $currency = null, $market = null)
     {
+        if ($request->user() && ($request->user() instanceof MustVerifyEmail && !$request->user()->hasVerifiedEmail())) {
+            return $request->expectsJson()
+                ? abort(403, 'Your email address is not verified.')
+                : Redirect::guest(URL::route('verification.notice'));
+        }
         if (!isset($market)) {
             return Inertia::render('404');
         }
