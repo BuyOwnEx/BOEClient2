@@ -14,7 +14,12 @@ $transition: (
   $field-font-size: 14px,
   $button-colored-disabled: false,
   $toolbar-transition: 0.2s map-get($transition, 'fast-out-slow-in') transform,
-  $card-subtitle-white-space: normal
+  $card-subtitle-white-space: normal,
+  $button-font-weight: 700,
+  $field-focused-border-width: 1px,
+  //$input-control-height: 26px,
+  //$field-input-padding-top: 4px,
+  //$field-input-padding-bottom: 4px,
 );
 /*@import './variables/_colors';
 

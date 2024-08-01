@@ -231,7 +231,7 @@ const getPercentColorClass = (percent) => {
 </script>
 <template>
     <v-card class="trading-tickers-list pa-2">
-        <div class="trading-tickers-list__header">
+        <div class="trading-tickers-list__header ml-1 mr-1">
             <div v-if="!isSearch" class="trading-tickers-list__header-markets">
                 <v-btn
                     v-if="allMarkets.length !== null"
@@ -249,7 +249,14 @@ const getPercentColorClass = (percent) => {
             </div>
 
             <div v-if="isSearch" class="trading-tickers-list__header-search">
-                <v-text-field v-model="tickersSearchQuery" :label="$t('trading.search')" hide-details variant="outlined" density="compact">
+                <v-text-field
+                    v-model="tickersSearchQuery"
+                    :label="$t('trading.search')"
+                    hide-details
+                    variant="underlined"
+                    single-line
+                    density="compact"
+                    tile>
                 </v-text-field>
             </div>
 
@@ -264,14 +271,14 @@ const getPercentColorClass = (percent) => {
         <div class="trading-tickers-list__table-header pb-1 mb-1 pt-2">
 
             <div class="trading-tickers-list__header-item--favorite clickable" @click="switchFavoriteSorting">
-                    <span class="trading-tickers-list__header-favorite-wrapper">
+                    <div class="trading-tickers-list__header-favorite-wrapper d-flex align-center">
                         <v-icon v-if="selectedMarket !== 'favorites'" color="#b0b29c">
                             {{ mdiStar }}
                         </v-icon>
                         <v-icon v-if="selectedMarket === 'favorites'" color="#FFE040">
                             {{ mdiStar }}
                         </v-icon>
-                    </span>
+                    </div>
             </div>
 
             <div class="trading-tickers-list__header-item--pair clickable" @click="setSorting('pair')">
@@ -371,6 +378,8 @@ const getPercentColorClass = (percent) => {
     </v-card>
 </template>
 <style scoped lang="sass">
+.v-field__input
+    min-height: 26px
 .trading-tickers-list
     display: flex
     flex-flow: column
@@ -385,7 +394,6 @@ const getPercentColorClass = (percent) => {
     &__header-search
         width: 100%
         padding-right: 8px
-        padding-top: 9px !important
 
     &__header-actions
         display: flex
@@ -465,10 +473,6 @@ const getPercentColorClass = (percent) => {
         display: flex
         flex-direction: row
 
-
-
-
-
     &__body-favorite-wrapper
         display: flex
         align-items: center
@@ -481,10 +485,6 @@ const getPercentColorClass = (percent) => {
     .small-cell-text
         font-size: 10px !important
 
-    ::v-deep .v-data-table__wrapper
-        padding-right: 8px
-        margin-top: 8px
-
 .v-application--is-rtl
     .trading-tickers-list
         &__header-search
@@ -493,9 +493,6 @@ const getPercentColorClass = (percent) => {
         &__pair-link
             padding-left: 0
             padding-right: 4px
-        ::v-deep .v-data-table__wrapper
-            padding-right: 0
-            padding-left: 8px
 
 .theme--dark
     .trading-tickers-list

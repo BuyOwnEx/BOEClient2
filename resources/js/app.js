@@ -30,6 +30,10 @@ const vuetify = createVuetify({
                 style: 'opacity: 1',
             }
         },
+        VTextField: {
+            color: '#868a8c',
+            baseColor: '#868a8c'
+        },
         VCheckbox: {
             color: 'primary',
             density: 'compact'
