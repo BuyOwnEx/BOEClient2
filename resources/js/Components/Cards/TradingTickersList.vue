@@ -223,14 +223,14 @@ const formatWithScaleInAllCurrencies = (value, currency) => {
 };
 
 const getPercentColorClass = (percent) => {
-    if (percent > 0) return 'success--text';
-    else if (percent < 0) return 'error--text';
+    if (percent > 0) return 'text-success';
+    else if (percent < 0) return 'text-error';
     else return '';
 };
 
 </script>
 <template>
-    <v-card class="trading-tickers-list pa-1">
+    <v-card class="trading-tickers-list pa-2">
         <div class="trading-tickers-list__header">
             <div v-if="!isSearch" class="trading-tickers-list__header-markets">
                 <v-btn
@@ -249,125 +249,123 @@ const getPercentColorClass = (percent) => {
             </div>
 
             <div v-if="isSearch" class="trading-tickers-list__header-search">
-                <v-text-field v-model="tickersSearchQuery" :label="$t('trading.search')" hide-details outlined dense>
+                <v-text-field v-model="tickersSearchQuery" :label="$t('trading.search')" hide-details variant="outlined" density="compact">
                 </v-text-field>
             </div>
 
             <div class="trading-tickers-list__header-actions">
 				<span class="trading-tickers-list__search-action">
-					<v-btn @click="switchSearchShowAndClearField">
+					<v-btn @click="switchSearchShowAndClearField" size="small">
 						<v-icon>{{ mdiMagnify }}</v-icon>
 					</v-btn>
 				</span>
             </div>
         </div>
-        <div class="trading-tickers-list__content-wrapper">
-            <div class="trading-tickers-list__table-header">
+        <div class="trading-tickers-list__table-header pb-1 mb-1 pt-2">
 
-                <div class="trading-tickers-list__header-item--favorite clickable" @click="switchFavoriteSorting">
+            <div class="trading-tickers-list__header-item--favorite clickable" @click="switchFavoriteSorting">
                     <span class="trading-tickers-list__header-favorite-wrapper">
-                        <v-icon v-if="selectedMarket !== 'favorites'" color="#b0b29c" small>
+                        <v-icon v-if="selectedMarket !== 'favorites'" color="#b0b29c">
                             {{ mdiStar }}
                         </v-icon>
-                        <v-icon v-if="selectedMarket === 'favorites'" color="#FFE040" small>
+                        <v-icon v-if="selectedMarket === 'favorites'" color="#FFE040">
                             {{ mdiStar }}
                         </v-icon>
                     </span>
-                </div>
+            </div>
 
-                <div class="trading-tickers-list__header-item--pair clickable" @click="setSorting('pair')">
-                    <div class="d-flex align-center">
+            <div class="trading-tickers-list__header-item--pair clickable" @click="setSorting('pair')">
+                <div class="d-flex align-center">
                         <span>
                             {{ $t('table_header.market') }}
                         </span>
-                        <v-icon v-if="tickersSorting === 'pairAsc'" small>
-                            {{ mdiArrowUp }}
-                        </v-icon>
-                        <v-icon v-if="tickersSorting === 'pairDesc'" small>
-                            {{ mdiArrowDown }}
-                        </v-icon>
-                    </div>
+                    <v-icon v-if="tickersSorting === 'pairAsc'" size="x-small" class="ml-1">
+                        {{ mdiArrowUp }}
+                    </v-icon>
+                    <v-icon v-if="tickersSorting === 'pairDesc'" size="x-small" class="ml-1">
+                        {{ mdiArrowDown }}
+                    </v-icon>
                 </div>
+            </div>
 
-                <div class="trading-tickers-list__header-item--rate">
-                    {{ $t('table_header.rate') }}
-                </div>
+            <div class="trading-tickers-list__header-item--rate">
+                {{ $t('table_header.rate') }}
+            </div>
 
-                <div class="trading-tickers-list__header-item--volume clickable" @click="setSorting('volume')">
-                    <div class="d-flex align-center">
+            <div class="trading-tickers-list__header-item--volume clickable" @click="setSorting('volume')">
+                <div class="d-flex align-center">
                         <span>
                             {{ $t('trading.sort.volume') }}
                         </span>
-                        <v-icon v-if="tickersSorting === 'volumeAsc'" small>
-                            {{ mdiArrowUp }}
-                        </v-icon>
-                        <v-icon v-if="tickersSorting === 'volumeDesc'" small>
-                            {{ mdiArrowDown }}
-                        </v-icon>
-                    </div>
+                    <v-icon v-if="tickersSorting === 'volumeAsc'" size="x-small" class="ml-1">
+                        {{ mdiArrowUp }}
+                    </v-icon>
+                    <v-icon v-if="tickersSorting === 'volumeDesc'" size="x-small" class="ml-1">
+                        {{ mdiArrowDown }}
+                    </v-icon>
                 </div>
+            </div>
 
-                <div class="trading-tickers-list__header-item--change clickable text-end" @click="setSorting('change')">
-                    <div class="d-flex align-center justify-end">
+            <div class="trading-tickers-list__header-item--change clickable text-end" @click="setSorting('change')">
+                <div class="d-flex align-center justify-end">
                         <span>
                             {{ $t('trading.sort.change') }}
                         </span>
-                        <v-icon v-if="tickersSorting === 'changeAsc'" small>
-                            {{ mdiArrowUp }}
-                        </v-icon>
-                        <v-icon v-if="tickersSorting === 'changeDesc'" small>
-                            {{ mdiArrowDown }}
-                        </v-icon>
-                    </div>
+                    <v-icon v-if="tickersSorting === 'changeAsc'" size="x-small" class="ml-1">
+                        {{ mdiArrowUp }}
+                    </v-icon>
+                    <v-icon v-if="tickersSorting === 'changeDesc'" size="x-small" class="ml-1">
+                        {{ mdiArrowDown }}
+                    </v-icon>
                 </div>
             </div>
-            <div class="trading-tickers-list__table-body">
-                <div class="trading-tickers-list__table-body-item" v-if="tickersListFilteredAndSorted.length > 0" v-for="item in tickersListFilteredAndSorted" :key="item.pairName">
-                    <div class="trading-tickers-list__body-item--favorite text-start">
-                        <div class="trading-tickers-list__body-favorite-wrapper">
-                            <v-icon
-                                v-if="isPairFavorite(item.pairName)"
-                                color="#FFE040"
-                                small
-                                @click="removeFromFavorites(item.pairName)"
-                            >
-                                {{ mdiStar }}
-                            </v-icon>
-                            <v-icon
-                                v-if="!isPairFavorite(item.pairName)"
-                                color="#b0b29c"
-                                small
-                                @click="addToFavorites(item.pairName)"
-                            >
-                                {{ mdiStar }}
-                            </v-icon>
-                        </div>
-                    </div>
-
-                    <div class="trading-tickers-list__body-item--pair text-start">
-                        <Link class="trading-tickers-list__pair-link" :href="route('trading',{'currency': item.currency, 'market': item.market})">
-                            <strong class="trading-tickers-list__pair-currency" :class="{ 'small-cell-text': selectedMarket === 'favorites' }">
-                                {{ getCurrencyOrPair(item) }}
-                            </strong>
-                        </Link>
-                    </div>
-
-                    <div class="trading-tickers-list__body-item--cost text-start">
-                        {{ BigNumber(item.latest).toString() }}
-                    </div>
-
-                    <div class="trading-tickers-list__body-item--volume text-start" :class="{ 'small-cell-text': selectedMarket === 'favorites' }">
-                        {{ formatWithScaleInAllCurrencies(item.volume, market) }}
-                    </div>
-
-                    <div class="trading-tickers-list__body-item--change text-end" :class="[getPercentColorClass(item.changePercent)]">
-                        <span>{{ item.changePercent }}</span> <span>%</span>
+        </div>
+        <div class="trading-tickers-list__table-body mt-1">
+            <div class="trading-tickers-list__table-body-item" v-if="tickersListFilteredAndSorted.length > 0" v-for="item in tickersListFilteredAndSorted" :key="item.pairName">
+                <div class="trading-tickers-list__body-item--favorite text-start">
+                    <div class="trading-tickers-list__body-favorite-wrapper">
+                        <v-icon
+                            v-if="isPairFavorite(item.pairName)"
+                            color="#FFE040"
+                            small
+                            @click="removeFromFavorites(item.pairName)"
+                        >
+                            {{ mdiStar }}
+                        </v-icon>
+                        <v-icon
+                            v-if="!isPairFavorite(item.pairName)"
+                            color="#b0b29c"
+                            small
+                            @click="addToFavorites(item.pairName)"
+                        >
+                            {{ mdiStar }}
+                        </v-icon>
                     </div>
                 </div>
 
-                <div v-else-if="tickersListFilteredAndSorted.length === 0" class="text-center mt-4 overline">
-                    {{ $t('trading.not_found') }}
+                <div class="trading-tickers-list__body-item--pair text-start">
+                    <Link class="trading-tickers-list__pair-link" :href="route('trading',{'currency': item.currency, 'market': item.market})">
+                        <strong class="trading-tickers-list__pair-currency" :class="{ 'small-cell-text': selectedMarket === 'favorites' }">
+                            {{ getCurrencyOrPair(item) }}
+                        </strong>
+                    </Link>
                 </div>
+
+                <div class="trading-tickers-list__body-item--cost text-start">
+                    {{ BigNumber(item.latest).toString() }}
+                </div>
+
+                <div class="trading-tickers-list__body-item--volume text-start" :class="{ 'small-cell-text': selectedMarket === 'favorites' }">
+                    {{ formatWithScaleInAllCurrencies(item.volume, market) }}
+                </div>
+
+                <div class="trading-tickers-list__body-item--change text-end" :class="[getPercentColorClass(item.changePercent)]">
+                    <span>{{ item.changePercent }}</span> <span>%</span>
+                </div>
+            </div>
+
+            <div v-else-if="tickersListFilteredAndSorted.length === 0" class="text-center mt-4 overline">
+                {{ $t('trading.not_found') }}
             </div>
         </div>
     </v-card>
@@ -393,12 +391,8 @@ const getPercentColorClass = (percent) => {
         display: flex
         align-items: center
 
-    &__content-wrapper
-        display: flex
-        flex-flow: column
-        flex-grow: 1
-
     &__table-header
+        font-weight: bold
         display: flex
         border-bottom: 1px solid gray
 
@@ -429,6 +423,7 @@ const getPercentColorClass = (percent) => {
     &__table-body
         display: flex
         flex-flow: column
+        overflow-y: auto
 
     &__table-body-item
         display: flex
@@ -480,7 +475,6 @@ const getPercentColorClass = (percent) => {
         justify-content: center
 
     &__pair-link
-        padding-left: 4px
         text-decoration: none
         color: unset
 
