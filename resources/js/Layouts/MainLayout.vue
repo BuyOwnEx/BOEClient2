@@ -34,6 +34,7 @@ const all_rights_text = import.meta.env.VITE_CONFIG_ALL_RIGHTS_TEXT;
         <Head :title="title" />
         <Banner />
         <v-navigation-drawer
+            elevation="1"
             v-model="drawer"
             rail
             expand-on-hover
@@ -43,7 +44,7 @@ const all_rights_text = import.meta.env.VITE_CONFIG_ALL_RIGHTS_TEXT;
             <v-divider></v-divider>
             <AsideMenu></AsideMenu>
         </v-navigation-drawer>
-        <v-app-bar>
+        <v-app-bar elevation="1">
             <ToolbarLogo v-if="!$page.props.auth.user || ($page.props.auth.user && !$page.props.auth.user.email_verified_at)"></ToolbarLogo>
             <v-app-bar-nav-icon v-if="$page.props.auth.user && $page.props.auth.user.email_verified_at" @click.stop="drawer = !drawer" />
             <v-spacer class="d-block" />

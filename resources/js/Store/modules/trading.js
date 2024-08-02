@@ -35,7 +35,7 @@ const state = () => ({
     valuesToDisplay: 97,
     candlesData: [],
     volumeData: [],
-    all_currencies: []
+    all_currencies: null
 });
 
 const getters = {

@@ -5,6 +5,7 @@ import 'vuetify/styles';
 import '../sass/vuetify/overrides.scss'
 import '../sass/app.scss'
 import '../scss/vuetify/settings.scss'
+import '../sass/highcharts.scss'
 import '../sass/helpers.scss'
 
 import { createApp, h } from 'vue';
@@ -33,6 +34,9 @@ const vuetify = createVuetify({
         VTextField: {
             color: '#868a8c',
             baseColor: '#868a8c'
+        },
+        VCard: {
+            elevation: 1
         },
         VCheckbox: {
             color: 'primary',

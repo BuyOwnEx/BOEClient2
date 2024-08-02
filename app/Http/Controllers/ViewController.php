@@ -52,12 +52,14 @@ class ViewController extends Controller
         {
             $api = new BuyOwnExClientAPI(config('app.api-public-key'), config('app.api-secret-key'));
             $tickers = $api->tickers();
-
+            $graph = $api->candlesticks($currency, $market);
             return Inertia::render('Trading', [
                 'currency'=>$currency,
                 'market'=>$market,
                 'pair'=>$find_pair,
-                'tickers'=>$tickers->getData()->data
+                'tickers'=>$tickers->getData()->data,
+                'graph'=>$graph->getData()->data,
+                'all_currencies'=>app('all-currencies')['data']
             ]);
         } catch (\Exception $e) {
             return Inertia::render('500', ['message' => $e->getMessage()]);

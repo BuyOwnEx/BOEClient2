@@ -16,6 +16,8 @@ import { useStore } from 'vuex';
 import TradingMarketInfo from "@/Components/Cards/TradingMarketInfo.vue";
 import { mdiChartBar, mdiTable, mdiBook, mdiForum, mdiChartBox, mdiFormSelect, mdiViewList } from '@mdi/js'
 import TradingAskBidLastPrice from "@/Components/Cards/TradingAskBidLastPrice.vue";
+import BigNumber from 'bignumber.js';
+BigNumber.config({ EXPONENTIAL_AT: [-15, 20] });
 
 const props = defineProps({
     currency: {
@@ -29,7 +31,15 @@ const props = defineProps({
     tickers: {
         type: Array,
         required: true,
-    }
+    },
+    graph: {
+        type: Array,
+        required: true,
+    },
+    all_currencies: {
+        type: Array,
+        required: true,
+    },
 });
 let { width, mobile } = useDisplay();
 
@@ -46,7 +56,32 @@ let selectedTab = ref(0);
 
 const store = useStore();
 
+let ohlc = [];
+let volumes = [];
+
+for (let i = 0; i < props.graph.length; i++) {
+    ohlc.push({
+        x: parseInt(props.graph[i].x),
+        open: BigNumber(props.graph[i].open).toNumber(),
+        high: BigNumber(props.graph[i].high).toNumber(),
+        low: BigNumber(props.graph[i].low).toNumber(),
+        close: BigNumber(props.graph[i].close).toNumber(),
+    });
+    volumes.push({
+        x: parseInt(props.graph[i].x),
+        y: BigNumber(props.graph[i].volume).toNumber(),
+    });
+}
+ohlc = ohlc.sort((a, b) => {
+    return a.x - b.x;
+});
+volumes = volumes.sort((a, b) => {
+    return a.x - b.x;
+});
+
 store.commit('tickers/setTickersList', props.tickers);
+store.commit('trading/setAllCurrenciesList', props.all_currencies);
+store.commit('trading/setGraphData', {candlesData: ohlc, volumeData: volumes});
 
 </script>
 
@@ -55,7 +90,7 @@ store.commit('tickers/setTickersList', props.tickers);
 
     <MainLayout>
         <div v-if="!mobile" class="trading__desktop" :class="[$page.props.auth.user && $page.props.auth.user.email_verified_at ? 'logged' : '']">
-            <TradingTickersList class="trading__desktop__tickers" :currency="currency" :market="market" :tickers="tickers" />
+            <TradingTickersList class="trading__desktop__tickers" :currency="currency" :market="market" />
 
             <TradingMarketInfo class="trading__desktop__info" :currency="currency" :market="market" />
 
@@ -188,7 +223,7 @@ $grid-height: calc(100vh - 64px - 40px - 8px); // 64px - header, 40px - footer, 
 			'activity bid forms forms ask history';
         grid-gap: 4px;
         grid-template-columns: 325px 1fr 1fr 1fr 1fr 325px;
-        grid-template-rows: 40px 5fr 2fr 1fr 2fr;
+        grid-template-rows: 40px 408px 2fr 1fr 195px;
 
         &__tickers {
             grid-area: tickers;

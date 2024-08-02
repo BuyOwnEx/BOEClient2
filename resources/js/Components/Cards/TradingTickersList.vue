@@ -1,8 +1,8 @@
 <script setup>
-import {computed, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 import { Link } from '@inertiajs/vue3';
 import { useStore } from 'vuex';
-import { mdiMagnify, mdiStar, mdiArrowUp, mdiArrowDown } from '@mdi/js';
+import { mdiMagnify, mdiClose, mdiStar, mdiArrowUp, mdiArrowDown } from '@mdi/js';
 import _ from "lodash";
 import BigNumber from 'bignumber.js';
 BigNumber.config({ EXPONENTIAL_AT: [-15, 20] });
@@ -16,19 +16,24 @@ const props = defineProps({
         type: String,
         required: true,
     },
-    tickers: {
-        type: Array,
-        required: true
-    },
 });
 
 const isSearch = ref(false);
 let tickersSearchQuery = ref('');
 let tickersSorting = ref('volumeDesc');
 let selectedMarket = ref(props.market);
-let prevSelectedMarket = ref('');
+let prevSelectedMarket = ref(props.market);
 let favoritePairs = ref([]);
 const store = useStore();
+
+onMounted(() => {
+    if (typeof Storage !== 'undefined') {
+        const savedFavoriteTickers = localStorage.getItem('tickersFavorites');
+        if (savedFavoriteTickers) favoritePairs.value = JSON.parse(savedFavoriteTickers);
+        const sortType = localStorage.getItem('tickersSorting');
+        if (sortType) tickersSorting.value = sortType;
+    }
+});
 
 const allMarkets = computed(() => {
     return _.uniqBy(store.state.tickers.tickersList, 'market').map(obj => obj['market']);
@@ -46,7 +51,7 @@ const allFavorites = computed(() => {
 });
 
 const tickersList = computed(() => {
-    return _.map(props.tickers, item => {
+    return _.map(store.state.tickers.tickersList, item => {
         let change = BigNumber(item.latest).minus(BigNumber(item.previous_day));
         let changePercent = 0;
         if (!change.isZero()) {
@@ -56,26 +61,13 @@ const tickersList = computed(() => {
                 changePercent = change.multipliedBy(100).div(BigNumber(item.previous_day));
             }
         }
-
-        let amountScale = 6;
-        let rateScale = 2;
-        let currentMarket = allMarkets.value[item.market.toUpperCase()];
-        if (currentMarket !== undefined) {
-            let currentPair = _.find(currentMarket, marketArray => {
-                return marketArray.currency.toLowerCase() === item.currency.toLowerCase();
-            });
-            if (currentPair !== undefined) {
-                amountScale = currentPair.amountScale;
-                rateScale = currentPair.rateScale;
-            }
-        }
         return {
             pairName: item.currency.toUpperCase() + '/' + item.market.toUpperCase(),
             market: item.market,
             currency: item.currency,
             margin: item.margin,
             volume: item.volume,
-            latest: item.latest.toFixed(rateScale),
+            latest: item.latest.toFixed(item.scale),
             change: change.toFixed(item.scale),
             changePercent: changePercent.toFixed(2),
         };
@@ -129,7 +121,7 @@ const switchSearchShowAndClearField = () => {
 
 const switchFavoriteSorting = () => {
     const isSelectedFavorite = selectedMarket.value === 'favorites';
-    if (isSelectedFavorite) this.selectedMarket = prevSelectedMarket.value;
+    if (isSelectedFavorite) selectedMarket.value = prevSelectedMarket.value;
     else selectedMarket.value = 'favorites';
 };
 
@@ -139,7 +131,6 @@ const setSortingToLocalStorage = (sorting) => {
 
 const setSorting = (type) => {
     const sort = tickersSorting.value;
-
     switch (type) {
         case 'pair':
             if (sort === 'pairAsc') {
@@ -151,7 +142,6 @@ const setSorting = (type) => {
             }
             setSortingToLocalStorage(tickersSorting.value);
             break;
-
         case 'change':
             if (sort === 'changeAsc') {
                 tickersSorting.value = 'changeDesc';
@@ -162,7 +152,6 @@ const setSorting = (type) => {
             }
             setSortingToLocalStorage(tickersSorting.value);
             break;
-
         case 'volume':
         default:
             if (sort === 'volumeAsc') {
@@ -187,6 +176,9 @@ const addToFavorites = (pairName) => {
     });
     if (!exist) {
         favoritePairs.value.push(pairName);
+        if (typeof Storage !== 'undefined') {
+            localStorage.setItem('tickersFavorites', JSON.stringify(favoritePairs.value));
+        }
     }
 };
 
@@ -196,21 +188,27 @@ const removeFromFavorites = (pairName) => {
     });
     if (index !== -1) {
         favoritePairs.value.splice(index, 1);
+        if (typeof Storage !== 'undefined') {
+            localStorage.setItem('tickersFavorites', JSON.stringify(favoritePairs.value));
+        }
     }
 };
 
 const getCurrencyOrPair = (item) => {
-    const isFavorites = selectedMarket.value === 'favorites';
-    return isFavorites ? item.pairName : item.currency;
+    return selectedMarket.value === 'favorites' || (isSearch.value && tickersSearchQuery.value !== '') ? item.pairName : item.currency;
 };
 
 const findCurrencyScale = (currency) => {
-    const allCurrencies = store.state.trading.all_currencies;
-    const isCurrenciesInit = store.state.trading.allCurrencyListInit;
-    if (isCurrenciesInit) {
-        const storeCurrencyItem = allCurrencies.find(currencyItem => currencyItem.currency.toUpperCase() === currency.toUpperCase());
-        if (storeCurrencyItem) return storeCurrencyItem.scale;
-    }
+    const currencies = store.state.trading.all_currencies;
+    const index = _.findIndex(currencies.data, item => {
+        return item.currency.toUpperCase() === currency.toUpperCase();
+    });
+    if (index > -1) return currencies.data[index].scale;
+};
+
+const setSelectedMarket = (market) => {
+    selectedMarket.value = market;
+    prevSelectedMarket.value = market;
 };
 
 const formatWithScaleInAllCurrencies = (value, currency) => {
@@ -242,7 +240,7 @@ const getPercentColorClass = (percent) => {
                     :input-value="selectedMarket === market"
                     variant="text"
                     size="small"
-                    @click="selectedMarket = market"
+                    @click="setSelectedMarket(market)"
                 >
                     <span>{{ market }}</span>
                 </v-btn>
@@ -256,14 +254,17 @@ const getPercentColorClass = (percent) => {
                     variant="underlined"
                     single-line
                     density="compact"
-                    tile>
+                    tile
+                    autofocus
+                >
                 </v-text-field>
             </div>
 
             <div class="trading-tickers-list__header-actions">
 				<span class="trading-tickers-list__search-action">
-					<v-btn @click="switchSearchShowAndClearField" size="small">
-						<v-icon>{{ mdiMagnify }}</v-icon>
+					<v-btn @click="switchSearchShowAndClearField" size="small" variant="text">
+						<v-icon v-if="!isSearch">{{ mdiMagnify }}</v-icon>
+                        <v-icon v-else>{{ mdiClose }}</v-icon>
 					</v-btn>
 				</span>
             </div>
@@ -352,7 +353,7 @@ const getPercentColorClass = (percent) => {
 
                 <div class="trading-tickers-list__body-item--pair text-start">
                     <Link class="trading-tickers-list__pair-link" :href="route('trading',{'currency': item.currency, 'market': item.market})">
-                        <strong class="trading-tickers-list__pair-currency" :class="{ 'small-cell-text': selectedMarket === 'favorites' }">
+                        <strong class="trading-tickers-list__pair-currency" :class="{ 'small-cell-text': selectedMarket === 'favorites' || (isSearch && tickersSearchQuery !== '') }">
                             {{ getCurrencyOrPair(item) }}
                         </strong>
                     </Link>
@@ -362,8 +363,8 @@ const getPercentColorClass = (percent) => {
                     {{ BigNumber(item.latest).toString() }}
                 </div>
 
-                <div class="trading-tickers-list__body-item--volume text-start" :class="{ 'small-cell-text': selectedMarket === 'favorites' }">
-                    {{ formatWithScaleInAllCurrencies(item.volume, market) }}
+                <div class="trading-tickers-list__body-item--volume text-start" :class="{ 'small-cell-text': selectedMarket === 'favorites' || (isSearch && tickersSearchQuery !== '')}">
+                    {{ formatWithScaleInAllCurrencies(item.volume, item.market) }}
                 </div>
 
                 <div class="trading-tickers-list__body-item--change text-end" :class="[getPercentColorClass(item.changePercent)]">
@@ -378,8 +379,6 @@ const getPercentColorClass = (percent) => {
     </v-card>
 </template>
 <style scoped lang="sass">
-.v-field__input
-    min-height: 26px
 .trading-tickers-list
     display: flex
     flex-flow: column
@@ -483,7 +482,7 @@ const getPercentColorClass = (percent) => {
         color: unset
 
     .small-cell-text
-        font-size: 10px !important
+        font-size: 9px !important
 
 .v-application--is-rtl
     .trading-tickers-list
@@ -494,12 +493,4 @@ const getPercentColorClass = (percent) => {
             padding-left: 0
             padding-right: 4px
 
-.theme--dark
-    .trading-tickers-list
-        &__header-item--pair:hover
-            color: #edf0f2 !important
-        &__header-item--volume:hover
-            color: #edf0f2 !important
-        &__header-item--change:hover
-            color: #edf0f2 !important
 </style>
