@@ -91,6 +91,14 @@ let options = {
     rangeSelector: {
         allButtonsEnabled: true,
         enabled: true,
+        buttonTheme: {
+            fill: '#f0f0f0',
+            states: {
+                select: {
+                    fill: '#dedede',
+                }
+            }
+        },
         buttons: [
             {
                 type: 'minute',

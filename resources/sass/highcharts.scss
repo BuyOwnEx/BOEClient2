@@ -83,7 +83,7 @@
                 width: 10px;
                 height: 10px;
                 background-color: #f7f7f7;
-                background-image: url('@/Assets/images/highcharts/arrow-right.svg');
+                background-image: url('../js/Assets/images/highcharts/arrow-right.svg');
                 background-size: cover;
             }
             .highcharts-toggle-toolbar:hover {
@@ -120,7 +120,7 @@
             transform: rotate(0deg);
         }
         .highcharts-bindings-wrapper .highcharts-arrow-left {
-            background-image: url('@/Assets/images/highcharts/arrow-right.svg');
+            background-image: url('../js/Assets/images/highcharts/arrow-right.svg');
             -webkit-transform: rotate(180deg);
             -moz-transform: rotate(180deg);
             -ms-transform: rotate(180deg);
@@ -129,7 +129,7 @@
             transform: rotate(180deg);
         }
         .highcharts-bindings-wrapper .highcharts-arrow-down {
-            background-image: url('@/Assets/images/highcharts/arrow-right.svg');
+            background-image: url('../js/Assets/images/highcharts/arrow-right.svg');
             background-size: cover;
             -webkit-transform: rotate(90deg);
             -moz-transform: rotate(90deg);
@@ -139,7 +139,7 @@
             transform: rotate(90deg);
         }
         .highcharts-bindings-wrapper .highcharts-arrow-up {
-            background-image: url('@/Assets/images/highcharts/arrow-right.svg');
+            background-image: url('../js/Assets/images/highcharts/arrow-right.svg');
             background-size: cover;
             outline: none;
             display: inline-block;
@@ -158,7 +158,7 @@
             transform: rotate(-90deg);
         }
         .highcharts-bindings-wrapper .highcharts-arrow-right {
-            background: url('@/Assets/images/highcharts/arrow-bottom.svg') no-repeat right bottom;
+            background: url('../js/Assets/images/highcharts/arrow-bottom.svg') no-repeat right bottom;
             background-size: contain;
         }
 
@@ -196,7 +196,7 @@
         .highcharts-bindings-wrapper .highcharts-stocktools-toolbar li.highcharts-disabled-btn .highcharts-menu-item-btn:hover {
             background-color: transparent;
         }
-        .highcharts-bindings-wrapper li > span.highcharts-menu-item-btn {
+        .highcharts-bindings-wrapper li > button.highcharts-menu-item-btn {
             display: block;
             float: left;
             width: 100%;
@@ -204,7 +204,7 @@
             background-repeat: no-repeat;
             background-position: 50% 50%;
         }
-        .highcharts-bindings-wrapper li > span.highcharts-submenu-item-arrow {
+        .highcharts-bindings-wrapper li > button.highcharts-submenu-item-arrow {
             float: left;
             width: 10px;
             height: 100%;
@@ -219,11 +219,11 @@
             width: 36px;
             pointer-events: none;
         }
-        .highcharts-bindings-wrapper li.highcharts-separator > span.highcharts-menu-item-btn {
+        .highcharts-bindings-wrapper li.highcharts-separator > button.highcharts-menu-item-btn {
             width: 100%;
         }
-        .highcharts-bindings-wrapper li.highcharts-active > span.highcharts-menu-item-btn,
-        .highcharts-bindings-wrapper li > span.highcharts-menu-item-btn:hover,
+        .highcharts-bindings-wrapper li.highcharts-active > button.highcharts-menu-item-btn,
+        .highcharts-bindings-wrapper li > button.highcharts-menu-item-btn:hover,
         .highcharts-bindings-wrapper .highcharts-arrow-wrapper > div:hover,
         .highcharts-bindings-wrapper li.highcharts-active,
 
@@ -253,18 +253,13 @@
             z-index: 3 !important;
         }
 
-
-
-
-
-
         .highcharts-draw-mode {
             cursor: crosshair;
         }
         .highcharts-stocktools-popup {
             width: 100%;
         }
-        .highcharts-submenu-wrapper li > span.highcharts-menu-item-btn {
+        .highcharts-submenu-wrapper li > button.highcharts-menu-item-btn {
             width: 40px;
         }
         .highcharts-hide {
@@ -283,10 +278,17 @@
             margin-top: 0;
         }
 
-        .highcharts-popup.highcharts-annotation-toolbar > span {
+        .highcharts-popup.highcharts-annotation-toolbar > button {
             display: block;
             float: left;
             padding: 12px;
+        }
+
+        .highcharts-popup.highcharts-annotation-toolbar > p {
+            display: block;
+            float: left;
+            padding: 12px;
+            margin-bottom: 0;
         }
 
         .highcharts-popup {
@@ -332,8 +334,6 @@
         .highcharts-popup-lhs-col,
         .highcharts-popup-rhs-col {
             padding: 20px;
-            height: calc(100% - 84px);
-            /* 44px - padding, 40px - tabs*/
             float: left;
         }
 
@@ -347,29 +347,28 @@
         }
 
         .highcharts-popup-lhs-col.highcharts-popup-lhs-full + .highcharts-popup-bottom-row {
-            width: calc(100% - 32px);
+            width: calc(100% - 40px);
         }
 
         .highcharts-popup-lhs-col {
             clear: both;
-            width: calc(30% - 44px);
+            width: 30%;
             border-right: 1px solid #e6e6e6;
         }
 
         .highcharts-popup-bottom-row {
             float: left;
             padding: 0 20px;
-            width: calc(100% - 40px);
+            width: 100%;
         }
 
         .highcharts-popup-rhs-col {
-            width: calc(70% - 40px);
+            width: 70%;
         }
 
         .highcharts-popup-rhs-col-wrapper {
             float: left;
             width: 100%;
-            height: calc(100% - 40px);
             overflow-y: auto;
             overflow-x: hidden;
         }
@@ -392,6 +391,10 @@
         }
 
         .highcharts-indicator-list li:hover {
+            background-color: transparent;
+        }
+
+        .highcharts-indicator-list li button:hover {
             background-color: #e6ebf5;
         }
 
@@ -401,7 +404,7 @@
             display: block;
             float: left;
             padding: 10px;
-            height: 20px;
+            height: 40px;
         }
 
         .highcharts-tab-item.highcharts-tab-item-active {
@@ -418,16 +421,17 @@
         }
 
         .highcharts-tab-item-show {
-            display: block;
+            display: flex;
+            padding-bottom: 12px;
         }
 
         .highcharts-popup-close {
-            background: url('@/Assets/images/highcharts/close.svg') no-repeat 50% 50%;
-            width: 20px;
-            height: 20px;
+            background: url('../js/Assets/images/highcharts/close.svg') no-repeat 50% 50%;
+            width: 40px;
+            height: 40px;
             cursor: pointer;
             position: absolute;
-            padding: 10px;
+            padding: 10px !important;
             top: 0;
             right: 0;
             color: #333333;
@@ -441,12 +445,9 @@
         }
 
         .highcharts-popup button {
-            float: right;
             border: none;
             background: #f7f7f7;
             color: #666;
-            margin-left: 5px;
-            margin-top: 12px;
         }
 
         .highcharts-popup button:first-child {
@@ -460,18 +461,18 @@
         /* annotation edit small popup */
         .highcharts-popup button.highcharts-annotation-edit-button,
         .highcharts-popup button.highcharts-annotation-remove-button {
-            width: 20px;
+            width: 40px;
             height: 40px;
-            padding: 20px;
+            padding: 0;
         }
 
         .highcharts-popup button.highcharts-annotation-edit-button {
-            background: url('@/Assets/images/highcharts/edit.svg') no-repeat 50% 50% transparent;
+            background: url('../js/Assets/images/highcharts/edit.svg') no-repeat 50% 50% transparent;
             text-indent: -9999px;
         }
 
         .highcharts-popup button.highcharts-annotation-remove-button {
-            background: url('@/Assets/images/highcharts/destroy.svg') no-repeat 50% 50% transparent;
+            background: url('../js/Assets/images/highcharts/destroy.svg') no-repeat 50% 50% transparent;
             text-indent: -9999px;
         }
 
@@ -519,9 +520,16 @@
                 padding: 0 !important;
             }
             li.highcharts-indicator-list {
-                font-size: 11px !important;
-                padding: 4px 16px !important;
-                width: 115px !important;
+                button {
+                    font-size: 10px !important;
+                    padding: 0 !important;
+                    width: 100%;
+                    text-align: left;
+                    background-color: transparent !important;
+                    margin-left: 4px;
+                    margin-top: 2px;
+                    margin-right: 4px;
+                }
             }
 
             select {
@@ -536,9 +544,11 @@
             }
 
             button {
-                padding: 6px 32px;
+                padding: 6px 40px;
                 font-size: 12px;
                 text-transform: uppercase;
+                display: inline-block !important;
+                margin-left: 5px;
             }
 
             input:focus {
@@ -600,11 +610,6 @@
             }
         }
 
-        // Center text position in time buttons
-        .highcharts-button text {
-            transform: translate(1px, 2px) !important;
-        }
-
         // Fix current price label position
         .highcharts-crosshair-label {
             .highcharts-label-box {
@@ -659,9 +664,9 @@
 // Only for DARK theme <24.02.21>
 //
 .v-theme--dark {
-    --dark-button-color: #292929;
-    --dark-button-color--hover: #393939;
-    --dark-button-color--hover-lighten1: #505050;
+    --dark-button-color: #262626;
+    --dark-button-color--hover: #373838;
+    --dark-button-color--hover-lighten1: #3f4040;
 
     --dark-border-color__popup: #444;
     --dark-border-color__popup--input: #3a3a3a;
@@ -670,7 +675,7 @@
     --dark-button-color__popup--hover: #3a3a3a;
 
     --dark-background-color-lighten1: #333333;
-    --dark-background-color__menu: #212325;
+    --dark-background-color__menu: #1e1e1e;
     --dark-background-color__menu--hover: #363a3e;
 
     --dark-text-and-icons-color: #e5eaed;
@@ -722,8 +727,8 @@
     }
 
     // Change toolbar buttons hover color
-    .highcharts-bindings-wrapper li.highcharts-active > span.highcharts-menu-item-btn,
-    .highcharts-bindings-wrapper li > span.highcharts-menu-item-btn:hover,
+    .highcharts-bindings-wrapper li.highcharts-active > button.highcharts-menu-item-btn,
+    .highcharts-bindings-wrapper li > button.highcharts-menu-item-btn:hover,
     .highcharts-bindings-wrapper .highcharts-arrow-wrapper > div:hover,
     .highcharts-bindings-wrapper li.highcharts-active,
     .highcharts-toggle-toolbar:hover {
@@ -759,10 +764,15 @@
         ul.highcharts-indicator {
             &-list {
                 li {
-                    color: var(--dark-text-and-icons-color) !important;
-
-                    &:hover {
-                        background-color: var(--dark-background-color__menu--hover) !important;
+                    color: transparent !important;
+                    padding: 0;
+                    button {
+                        color: var(--dark-text-and-icons-color) !important;
+                        padding: 2px 4px 2px 4px;
+                        font-size: 10px;
+                        &:hover {
+                            background-color: var(--dark-background-color__menu--hover) !important;
+                        }
                     }
                 }
             }
@@ -916,158 +926,158 @@
     // Left menu
     // From first to last icon
     .highcharts-indicators .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/dark/indicators.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/indicators.svg') !important;
     }
 
     .highcharts-label-annotation .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/dark/label.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/label.svg') !important;
     }
     .highcharts-circle-annotation .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/dark/circle.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/circle.svg') !important;
     }
     .highcharts-rectangle-annotation .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/dark/rectangle.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/rectangle.svg') !important;
     }
 
     .highcharts-segment .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/dark/segment.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/segment.svg') !important;
     }
     .highcharts-arrow-segment .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/dark/arrow-segment.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/arrow-segment.svg') !important;
     }
     .highcharts-ray .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/dark/ray.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/ray.svg') !important;
     }
     .highcharts-arrow-ray .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/dark/arrow-ray.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/arrow-ray.svg') !important;
     }
     .highcharts-infinity-line .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/dark/line.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/line.svg') !important;
     }
     .highcharts-arrow-infinity-line .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/dark/arrow-line.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/arrow-line.svg') !important;
     }
     .highcharts-horizontal-line .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/dark/horizontal-line.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/horizontal-line.svg') !important;
     }
     .highcharts-vertical-line .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/dark/vertical-line.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/vertical-line.svg') !important;
     }
 
     .highcharts-elliott3 .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/dark/elliott-3.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/elliott-3.svg') !important;
     }
     .highcharts-elliott5 .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/dark/elliott-5.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/elliott-5.svg') !important;
     }
     .highcharts-crooked3 .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/dark/crooked-3.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/crooked-3.svg') !important;
     }
     .highcharts-crooked5 .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/dark/crooked-5.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/crooked-5.svg') !important;
     }
 
     .highcharts-measure-xy .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/dark/measure-xy.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/measure-xy.svg') !important;
     }
     .highcharts-measure-x .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/dark/measure-x.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/measure-x.svg') !important;
     }
     .highcharts-measure-y .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/dark/measure-y.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/measure-y.svg') !important;
     }
 
     .highcharts-fibonacci .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/dark/fibonacci.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/fibonacci.svg') !important;
     }
     .highcharts-pitchfork .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/dark/pitchfork.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/pitchfork.svg') !important;
     }
     .highcharts-parallel-channel .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/dark/parallel-channel.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/parallel-channel.svg') !important;
     }
 
     .highcharts-toggle-annotations .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/dark/annotations-visible.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/annotations-visible.svg') !important;
     }
 
     .highcharts-vertical-counter .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/dark/vertical-counter.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/vertical-counter.svg') !important;
     }
     .highcharts-vertical-label .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/dark/vertical-label.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/vertical-label.svg') !important;
     }
     .highcharts-vertical-arrow .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/dark/vertical-arrow.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/vertical-arrow.svg') !important;
     }
 
     .highcharts-flag-circlepin .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/dark/flag-elipse.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/flag-elipse.svg') !important;
     }
     .highcharts-flag-diamondpin .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/dark/flag-diamond.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/flag-diamond.svg') !important;
     }
     .highcharts-flag-squarepin .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/dark/flag-trapeze.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/flag-trapeze.svg') !important;
     }
     .highcharts-flag-simplepin .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/dark/flag-basic.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/flag-basic.svg') !important;
     }
 
     .highcharts-zoom-x .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/dark/zoom-x.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/zoom-x.svg') !important;
     }
     .highcharts-zoom-y .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/dark/zoom-y.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/zoom-y.svg') !important;
     }
     .highcharts-zoom-xy .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/dark/zoom-xy.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/zoom-xy.svg') !important;
     }
 
     .highcharts-full-screen .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/dark/fullscreen.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/fullscreen.svg') !important;
     }
 
     .highcharts-series-type-candlestick .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/dark/series-candlestick.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/series-candlestick.svg') !important;
     }
     .highcharts-series-type-line .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/dark/series-line.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/series-line.svg') !important;
     }
     .highcharts-series-type-ohlc .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/dark/series-ohlc.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/series-ohlc.svg') !important;
     }
 
     .highcharts-current-price-indicator .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/dark/current-price-show.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/current-price-show.svg') !important;
     }
 
     .highcharts-save-chart .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/dark/save-chart.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/save-chart.svg') !important;
     }
 
     .highcharts-separator .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/dark/separator.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/separator.svg') !important;
     }
 
     // Arrows
     .highcharts-toggle-toolbar {
-        background-image: url('@/Assets/images/highcharts/dark/arrow-right.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/arrow-right.svg') !important;
         background-color: var(--dark-background-color) !important;
     }
     .highcharts-arrow-right {
-        background-image: url('@/Assets/images/highcharts/dark/arrow-bottom.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/arrow-bottom.svg') !important;
     }
     .highcharts-arrow-up {
-        background-image: url('@/Assets/images/highcharts/dark/arrow-right.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/arrow-right.svg') !important;
     }
     .highcharts-arrow-down {
-        background-image: url('@/Assets/images/highcharts/dark/arrow-right.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/arrow-right.svg') !important;
     }
 
     // Other Icons
     .highcharts-popup-close {
-        background-image: url('@/Assets/images/highcharts/dark/close.svg') !important;
+        background: url('../js/Assets/images/highcharts/dark/close.svg') no-repeat 50% 50% !important;
         background-color: var(--dark-button-color__popup);
 
         &:hover {
@@ -1075,10 +1085,10 @@
         }
     }
     .highcharts-annotation-remove-button {
-        background-image: url('@/Assets/images/highcharts/dark/destroy.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/destroy.svg') !important;
     }
     .highcharts-annotation-edit-button {
-        background-image: url('@/Assets/images/highcharts/dark/edit.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/dark/edit.svg') !important;
     }
 
     // Fix some strange white bug in corners
@@ -1094,162 +1104,168 @@
 }
 .v-theme--light {
     .highcharts-indicators .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/indicators.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/indicators.svg') !important;
     }
 
     .highcharts-label-annotation .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/label.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/label.svg') !important;
     }
     .highcharts-circle-annotation .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/circle.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/circle.svg') !important;
     }
     .highcharts-rectangle-annotation .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/rectangle.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/rectangle.svg') !important;
     }
 
     .highcharts-segment .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/segment.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/segment.svg') !important;
     }
     .highcharts-arrow-segment .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/arrow-segment.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/arrow-segment.svg') !important;
     }
     .highcharts-ray .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/ray.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/ray.svg') !important;
     }
     .highcharts-arrow-ray .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/arrow-ray.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/arrow-ray.svg') !important;
     }
     .highcharts-infinity-line .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/line.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/line.svg') !important;
     }
     .highcharts-arrow-infinity-line .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/arrow-line.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/arrow-line.svg') !important;
     }
     .highcharts-horizontal-line .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/horizontal-line.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/horizontal-line.svg') !important;
     }
     .highcharts-vertical-line .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/vertical-line.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/vertical-line.svg') !important;
     }
 
     .highcharts-elliott3 .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/elliott-3.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/elliott-3.svg') !important;
     }
     .highcharts-elliott5 .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/elliott-5.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/elliott-5.svg') !important;
     }
     .highcharts-crooked3 .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/crooked-3.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/crooked-3.svg') !important;
     }
     .highcharts-crooked5 .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/crooked-5.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/crooked-5.svg') !important;
     }
 
     .highcharts-measure-xy .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/measure-xy.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/measure-xy.svg') !important;
     }
     .highcharts-measure-x .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/measure-x.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/measure-x.svg') !important;
     }
     .highcharts-measure-y .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/measure-y.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/measure-y.svg') !important;
     }
 
     .highcharts-fibonacci .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/fibonacci.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/fibonacci.svg') !important;
     }
     .highcharts-pitchfork .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/pitchfork.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/pitchfork.svg') !important;
     }
     .highcharts-parallel-channel .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/parallel-channel.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/parallel-channel.svg') !important;
     }
 
     .highcharts-toggle-annotations .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/annotations-visible.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/annotations-visible.svg') !important;
     }
 
     .highcharts-vertical-counter .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/vertical-counter.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/vertical-counter.svg') !important;
     }
     .highcharts-vertical-label .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/vertical-label.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/vertical-label.svg') !important;
     }
     .highcharts-vertical-arrow .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/vertical-arrow.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/vertical-arrow.svg') !important;
     }
 
     .highcharts-flag-circlepin .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/flag-elipse.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/flag-elipse.svg') !important;
     }
     .highcharts-flag-diamondpin .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/flag-diamond.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/flag-diamond.svg') !important;
     }
     .highcharts-flag-squarepin .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/flag-trapeze.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/flag-trapeze.svg') !important;
     }
     .highcharts-flag-simplepin .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/flag-basic.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/flag-basic.svg') !important;
     }
 
     .highcharts-zoom-x .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/zoom-x.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/zoom-x.svg') !important;
     }
     .highcharts-zoom-y .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/zoom-y.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/zoom-y.svg') !important;
     }
     .highcharts-zoom-xy .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/zoom-xy.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/zoom-xy.svg') !important;
     }
 
     .highcharts-full-screen .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/fullscreen.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/fullscreen.svg') !important;
     }
 
     .highcharts-series-type-candlestick .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/series-candlestick.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/series-candlestick.svg') !important;
     }
     .highcharts-series-type-line .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/series-line.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/series-line.svg') !important;
     }
     .highcharts-series-type-ohlc .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/series-ohlc.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/series-ohlc.svg') !important;
     }
 
     .highcharts-current-price-indicator .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/current-price-show.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/current-price-show.svg') !important;
     }
 
     .highcharts-save-chart .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/save-chart.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/save-chart.svg') !important;
     }
 
     .highcharts-separator .highcharts-menu-item-btn {
-        background-image: url('@/Assets/images/highcharts/separator.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/separator.svg') !important;
     }
 
     // Arrows
     .highcharts-toggle-toolbar {
-        background-image: url('@/Assets/images/highcharts/arrow-right.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/arrow-right.svg') !important;
     }
     .highcharts-arrow-right {
-        background-image: url('@/Assets/images/highcharts/arrow-bottom.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/arrow-bottom.svg') !important;
     }
     .highcharts-arrow-up {
-        background-image: url('@/Assets/images/highcharts/arrow-right.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/arrow-right.svg') !important;
     }
     .highcharts-arrow-down {
-        background-image: url('@/Assets/images/highcharts/arrow-right.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/arrow-right.svg') !important;
     }
 
     // Other Icons
     .highcharts-popup-close {
-        background-image: url('@/Assets/images/highcharts/close.svg') !important;
+        background: url('../js/Assets/images/highcharts/close.svg') no-repeat 50% 50% !important;
     }
     .highcharts-annotation-remove-button {
-        background-image: url('@/Assets/images/highcharts/destroy.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/destroy.svg') !important;
     }
     .highcharts-annotation-edit-button {
-        background-image: url('@/Assets/images/highcharts/edit.svg') !important;
+        background-image: url('../js/Assets/images/highcharts/edit.svg') !important;
+    }
+
+    .highcharts-crosshair-label {
+        text {
+            fill: #252525 !important;
+        }
     }
 }
