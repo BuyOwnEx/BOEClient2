@@ -108,8 +108,9 @@ let options = {
                 text: '1m',
                 events: {
                     click: e => {
+                        e.value.preventDefault();
                         candle_period.value = '1m';
-                        return true;
+                        return false;
                     },
                 },
             },
@@ -122,7 +123,7 @@ let options = {
                 events: {
                     click: e => {
                         candle_period.value = '5m';
-                        return true;
+                        return false;
                     },
                 },
             },
@@ -135,7 +136,7 @@ let options = {
                 events: {
                     click: () => {
                         candle_period.value = '15m';
-                        return true;
+                        return false;
                     },
                 },
             },
@@ -148,7 +149,7 @@ let options = {
                 events: {
                     click: () => {
                         candle_period.value = '30m';
-                        return true;
+                        return false;
                     },
                 },
             },
@@ -161,7 +162,7 @@ let options = {
                 events: {
                     click: () => {
                         candle_period.value = '1h';
-                        return true;
+                        return false;
                     },
                 },
             },
@@ -174,7 +175,7 @@ let options = {
                 events: {
                     click: () => {
                         candle_period.value = '4h';
-                        return true;
+                        return false;
                     },
                 },
             },
@@ -187,7 +188,7 @@ let options = {
                 events: {
                     click: () => {
                         candle_period.value = '1d';
-                        return true;
+                        return false;
                     },
                 },
             },
@@ -200,7 +201,7 @@ let options = {
                 events: {
                     click: () => {
                         candle_period.value = '1w';
-                        return true;
+                        return false;
                     },
                 },
             },
