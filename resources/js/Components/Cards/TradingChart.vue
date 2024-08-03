@@ -374,7 +374,7 @@ onMounted(() => {
 </script>
 <template>
     <v-card class="pa-1">
-        <chart :constructor-type="'stockChart'" :options="options" :highcharts="hcInstance" class="trading-chart" />
+        <chart :constructor-type="'stockChart'" :options="options" :highcharts="hcInstance" class="trading-chart" style="height: 100%; width: 100%; position: absolute" />
     </v-card>
 </template>
 

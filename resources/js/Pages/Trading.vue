@@ -222,8 +222,8 @@ $grid-height: calc(100vh - 64px - 40px - 8px); // 64px - header, 40px - footer, 
 			'chat bid forms forms ask history'
 			'activity bid forms forms ask history';
         grid-gap: 4px;
-        grid-template-columns: 325px 1fr 1fr 1fr 1fr 325px;
-        grid-template-rows: 40px 408px 2fr 1fr 195px;
+        grid-template-columns: minmax(325px, 1fr) 1fr 1fr 1fr 1fr minmax(325px, 1fr);
+        grid-template-rows: 40px minmax(408px, 5fr) 2fr 1fr 195px;
 
         &__tickers {
             grid-area: tickers;

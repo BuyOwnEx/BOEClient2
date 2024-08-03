@@ -406,26 +406,36 @@ const getPercentColorClass = (percent) => {
     &__header-item--favorite
         padding: 4px
         width: 26px
+        display: flex
+        flex: 1 1 auto
 
     &__header-item--pair
         text-transform: uppercase
         padding: 4px
         width: 80px
+        display: flex
+        flex: 1 1 auto
 
     &__header-item--rate
         text-transform: uppercase
         padding: 4px
         width: 80px
+        display: flex
+        flex: 1 1 auto
 
     &__header-item--volume
         text-transform: uppercase
         padding: 4px
         width: 100px
+        display: flex
+        flex: 1 1 auto
 
     &__header-item--change
         text-transform: uppercase
         padding: 4px
         width: 50px
+        display: flex
+        flex: 1 1 auto
 
     &__table-body
         display: flex
