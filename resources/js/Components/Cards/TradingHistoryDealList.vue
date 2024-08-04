@@ -39,17 +39,17 @@ const historyData = computed(() => {
             {{ $t('trading.headers.history_deal_list') }}
         </v-card-title>
         <v-card-text class="trading-history-deal-list__content pa-0">
-            <div class="trading-history-deal-list__table-header pb-1 mb-1 pt-2">
+            <div class="trading-history-deal-list__table-header pb-1 mb-1 pt-1">
 
-                <div class="trading-history-deal-list-table-header__item--rate">
+                <div class="trading-history-deal-list__header-item--rate">
                     {{ $t('table_header.rate') }} ({{ market }})
                 </div>
 
-                <div class="trading-history-deal-list-table-header__item--amount">
+                <div class="trading-history-deal-list__header-item--amount">
                     {{ $t('table_header.amount') }} ({{ currency }})
                 </div>
 
-                <div class="trading-history-deal-list-table-header__item--date text-end">
+                <div class="trading-history-deal-list__header-item--date">
                     {{ $t('table_header.date') }}
                 </div>
             </div>
@@ -73,7 +73,69 @@ const historyData = computed(() => {
 </template>
 <style scoped lang="sass">
 .trading-history-deal-list
+    display: flex
+    flex-flow: column
+    flex-grow: 1
     &__header
-        margin-left: 4px
         font-size: 17px !important
+        display: flex
+        justify-content: space-between
+        align-items: center
+
+    &__table-header
+        font-size: 0.7rem !important
+        font-weight: bold
+        display: grid
+        grid-template-areas: 'price size date'
+        grid-template-columns: minmax(90px, 1fr) minmax(80px, 1fr) minmax(100px, 2fr)
+        border-bottom: 1px solid gray
+
+    &__header-item--rate
+        padding: 4px
+        grid-area: price
+        text-transform: uppercase
+        white-space: nowrap
+
+    &__header-item--amount
+        padding: 4px
+        grid-area: size
+        text-transform: uppercase
+        white-space: nowrap
+
+    &__header-item--date
+        font-size: 0.8rem
+        padding: 4px
+        grid-area: date
+        text-align: end
+        text-transform: uppercase
+        white-space: nowrap
+
+    &__table-body
+        display: flex
+        flex-flow: column
+        overflow-y: auto
+
+    &__table-body-item
+        font-size: 0.7rem !important
+        display: grid
+        grid-template-areas: 'price size date'
+        grid-template-columns: minmax(90px, 1fr) minmax(80px, 1fr) minmax(100px, 2fr)
+
+    &__body-item--price
+        padding: 4px
+        grid-area: price
+        white-space: nowrap
+
+    &__body-item--size
+        padding: 4px
+        grid-area: size
+        white-space: nowrap
+
+    &__body-item--date
+        font-weight: normal
+        font-size: 0.65rem !important
+        color: rgb(var(--v-theme-secondary)) !important
+        padding: 4px
+        grid-area: date
+        white-space: nowrap
 </style>

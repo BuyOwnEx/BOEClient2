@@ -327,15 +327,15 @@ $grid-height: calc(100vh - 64px - 40px - 8px); // 64px - header, 40px - footer, 
 @media screen and (min-width: 1382px) and (max-width: 1768px) {
     .trading {
         &__desktop {
-            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr minmax(300px, 1fr) minmax(300px, 1fr);
             grid-template-areas:
-                'info info info info info info info info info history history history tickers tickers tickers'
-				'chart chart chart chart chart chart chart chart chart history history history tickers tickers tickers'
-				'forms forms forms forms forms forms bid bid bid ask ask ask chat chat chat'
-				'forms forms forms forms forms forms bid bid bid ask ask ask chat chat chat'
-				'forms forms forms forms forms forms bid bid bid ask ask ask chat chat chat'
-				'forms forms forms forms forms forms bid bid bid ask ask ask chat chat chat'
-                'forms forms forms forms forms forms bid bid bid ask ask ask chat chat chat';
+                'info info info history tickers'
+				'chart chart chart history tickers'
+				'forms forms bid ask chat'
+				'forms forms bid ask chat'
+				'forms forms bid ask chat'
+				'forms forms bid ask chat'
+                'forms forms bid ask chat';
             grid-template-rows: 40px 30fr 6fr 6fr 6fr 6fr 6fr;
 
             &__tickers {
@@ -349,16 +349,16 @@ $grid-height: calc(100vh - 64px - 40px - 8px); // 64px - header, 40px - footer, 
             }
         }
         &__desktop.logged {
-            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
             grid-template-areas:
-				'info info info info info info info info info history history history tickers tickers tickers'
-				'chart chart chart chart chart chart chart chart chart history history history tickers tickers tickers'
-				'forms forms forms forms forms forms bid bid bid ask ask ask chat chat chat'
-				'forms forms forms forms forms forms bid bid bid ask ask ask chat chat chat'
-				'forms forms forms forms forms forms bid bid bid ask ask ask chat chat chat'
-				'forms forms forms forms forms forms bid bid bid ask ask ask chat chat chat'
-                'forms forms forms forms forms forms bid bid bid ask ask ask chat chat chat'
-                'own own own own own own own own own own own own own own own';
+				'info info info history tickers'
+				'chart chart chart history tickers'
+				'forms forms bid ask chat'
+				'forms forms bid ask chat'
+				'forms forms bid ask chat'
+				'forms forms bid ask chat'
+                'forms forms bid ask chat'
+                'own own own own own';
             grid-template-rows: 40px 30fr 6fr 6fr 6fr 6fr 6fr 6fr;
 
             &__tickers {
@@ -376,14 +376,14 @@ $grid-height: calc(100vh - 64px - 40px - 8px); // 64px - header, 40px - footer, 
 @media screen and (max-width: 1382px) {
     .trading {
         &__desktop {
-            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
             grid-template-areas:
-				'info info info info info info info info info info info info tickers tickers tickers tickers'
-                'chart chart chart chart chart chart chart chart chart chart chart chart tickers tickers tickers tickers'
-				'forms forms forms forms forms forms forms forms bid bid bid bid ask ask ask ask'
-				'forms forms forms forms forms forms forms forms bid bid bid bid ask ask ask ask'
-				'forms forms forms forms forms forms forms forms bid bid bid bid ask ask ask ask'
-				'forms forms forms forms forms forms forms forms bid bid bid bid ask ask ask ask';
+				'info info info tickers'
+                'chart chart chart tickers'
+				'forms forms bid ask'
+				'forms forms bid ask'
+				'forms forms bid ask'
+				'forms forms bid ask';
             grid-template-rows: 40px 4fr 2fr 2fr;
 
             &__tickers {
@@ -397,15 +397,15 @@ $grid-height: calc(100vh - 64px - 40px - 8px); // 64px - header, 40px - footer, 
             }
         }
         &__desktop.logged {
-            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
             grid-template-areas:
-				'info info info info info info info info info info info info tickers tickers tickers tickers'
-                'chart chart chart chart chart chart chart chart chart chart chart chart tickers tickers tickers tickers'
-				'forms forms forms forms forms forms forms forms bid bid bid bid ask ask ask ask'
-				'forms forms forms forms forms forms forms forms bid bid bid bid ask ask ask ask'
-				'forms forms forms forms forms forms forms forms bid bid bid bid ask ask ask ask'
-				'forms forms forms forms forms forms forms forms bid bid bid bid ask ask ask ask'
-                'own own own own own own own own own own own own own own own own';
+				'info info info tickers'
+                'chart chart chart tickers'
+				'forms forms bid ask'
+				'forms forms bid ask'
+				'forms forms bid ask'
+				'forms forms bid ask'
+                'own own own own';
             grid-template-rows: 40px 4fr 2fr 2fr 1fr;
 
             &__tickers {
