@@ -32,7 +32,15 @@ const props = defineProps({
         type: Array,
         required: true,
     },
+    pair: {
+        type: Object,
+        required: true,
+    },
     graph: {
+        type: Array,
+        required: true,
+    },
+    history_deals: {
         type: Array,
         required: true,
     },
@@ -82,6 +90,7 @@ volumes = volumes.sort((a, b) => {
 store.commit('tickers/setTickersList', props.tickers);
 store.commit('trading/setAllCurrenciesList', props.all_currencies);
 store.commit('trading/setGraphData', {candlesData: ohlc, volumeData: volumes});
+store.commit('trading/setHistoryDealList', props.history_deals);
 
 </script>
 
@@ -96,7 +105,7 @@ store.commit('trading/setGraphData', {candlesData: ohlc, volumeData: volumes});
 
             <TradingChart class="trading__desktop__chart" :currency="currency" :market="market" />
 
-            <TradingHistoryDealList v-if="showHistory" class="trading__desktop__history" :market="market" :currency="currency" />
+            <TradingHistoryDealList v-if="showHistory" class="trading__desktop__history" :market="market" :currency="currency" :pair="pair" />
 
             <TradingChat v-if="showChat" class="trading__desktop__chat" />
 
@@ -165,6 +174,7 @@ store.commit('trading/setGraphData', {candlesData: ohlc, volumeData: volumes});
                 class="trading__mobile__history"
                 :market="market"
                 :currency="currency"
+                :pair="pair"
             />
 
             <TradingChat
