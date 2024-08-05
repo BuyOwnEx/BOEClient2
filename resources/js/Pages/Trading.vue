@@ -40,6 +40,10 @@ const props = defineProps({
         type: Array,
         required: true,
     },
+    depth: {
+        type: Object,
+        required: true,
+    },
     history_deals: {
         type: Array,
         required: true,
@@ -91,6 +95,18 @@ store.commit('tickers/setTickersList', props.tickers);
 store.commit('trading/setAllCurrenciesList', props.all_currencies);
 store.commit('trading/setGraphData', {candlesData: ohlc, volumeData: volumes});
 store.commit('trading/setHistoryDealList', props.history_deals);
+store.commit('trading/setAskList', props.depth.asks_list);
+store.commit('trading/setBidList', props.depth.bids_list);
+store.commit('trading/setAskAmountDepth', props.depth.asks_amount);
+store.commit('trading/setBidAmountDepth', props.depth.bids_amount);
+store.commit('trading/setAskVolumeDepth', props.depth.asks_vol);
+store.commit('trading/setBidVolumeDepth', props.depth.bids_vol);
+if (props.depth.asks_list.length !== 0) {
+    store.commit('trading/setBestAsk', props.depth.asks_list[0].price);
+}
+if (props.depth.bids_list.length !== 0) {
+    store.commit('trading/setBestBid', props.depth.bids_list[0].price);
+}
 
 </script>
 
@@ -113,7 +129,7 @@ store.commit('trading/setHistoryDealList', props.history_deals);
 
             <TradingForms class="trading__desktop__forms" :currency="currency" :market="market" />
 
-            <TradingBidList class="trading__desktop__bid-list" :currency="currency" :market="market" />
+            <TradingBidList class="trading__desktop__bid-list" :currency="currency" :market="market" :pair="pair" />
 
             <TradingMarketActivity v-if="showActivity" class="trading__desktop__market-activity" />
 
@@ -327,7 +343,7 @@ $grid-height: calc(100vh - 64px - 40px - 8px); // 64px - header, 40px - footer, 
 @media screen and (min-width: 1382px) and (max-width: 1768px) {
     .trading {
         &__desktop {
-            grid-template-columns: 1fr 1fr 1fr minmax(300px, 1fr) minmax(300px, 1fr);
+            grid-template-columns: 1fr 1fr 1fr minmax(325px, 1fr) minmax(325px, 1fr);
             grid-template-areas:
                 'info info info history tickers'
 				'chart chart chart history tickers'

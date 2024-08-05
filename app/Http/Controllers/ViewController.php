@@ -54,6 +54,8 @@ class ViewController extends Controller
             $tickers = $api->tickers();
             $graph = $api->candlesticks($currency, $market);
             $history_deals = $api->history_deals($currency, $market);
+            $depth = $api->depth($currency, $market);
+            Log::info($depth);
             return Inertia::render('Trading', [
                 'currency'=>$currency,
                 'market'=>$market,
@@ -61,6 +63,7 @@ class ViewController extends Controller
                 'tickers'=>$tickers->getData()->data,
                 'history_deals'=>$history_deals->getData()->data,
                 'graph'=>$graph->getData()->data,
+                'depth'=>$depth->getData(),
                 'all_currencies'=>app('all-currencies')['data']
             ]);
         } catch (\Exception $e) {

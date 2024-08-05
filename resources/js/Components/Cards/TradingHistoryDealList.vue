@@ -87,7 +87,7 @@ const historyData = computed(() => {
         font-weight: bold
         display: grid
         grid-template-areas: 'price size date'
-        grid-template-columns: minmax(90px, 1fr) minmax(80px, 1fr) minmax(100px, 2fr)
+        grid-template-columns: minmax(90px, 1fr) minmax(80px, 1fr) minmax(100px, 1fr)
         border-bottom: 1px solid gray
 
     &__header-item--rate
@@ -119,7 +119,7 @@ const historyData = computed(() => {
         font-size: 0.7rem !important
         display: grid
         grid-template-areas: 'price size date'
-        grid-template-columns: minmax(90px, 1fr) minmax(80px, 1fr) minmax(100px, 2fr)
+        grid-template-columns: minmax(90px, 1fr) minmax(80px, 1fr) minmax(100px, 1fr)
 
     &__body-item--price
         padding: 4px
