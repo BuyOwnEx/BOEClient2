@@ -1,3 +1,4 @@
+import _ from "lodash";
 import BigNumber from 'bignumber.js';
 BigNumber.config({ EXPONENTIAL_AT: [-15, 20] });
 const intervals = [
@@ -231,9 +232,9 @@ const actions = {
         return new Promise((resolve, reject) => {
             let queryParams = {
                 params: {
-                    currency: state.trading.selectedCurrency,
-                    market: state.trading.selectedMarket,
-                    range: state.trading.selectedPeriod,
+                    currency: state.selectedCurrency,
+                    market: state.selectedMarket,
+                    range: state.selectedPeriod,
                 },
             };
             axios
@@ -267,11 +268,11 @@ const actions = {
                     });
                     console.log(
                         'Graph data for ' +
-                        this.state.trading.selectedCurrency +
+                        state.selectedCurrency +
                         '_' +
-                        this.state.trading.selectedMarket +
+                        state.selectedMarket +
                         ' for period ' +
-                        this.state.trading.selectedPeriod +
+                        state.selectedPeriod +
                         ' was getting from API',
                     );
                     resolve({ candlesData: ohlc, volumeData: volumes });

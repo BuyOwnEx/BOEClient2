@@ -40,6 +40,18 @@ const props = defineProps({
         required: true,
     }
 });
+
+const intervals = [
+    { room: 1, range: '1m' },
+    { room: 5, range: '5m' },
+    { room: 15, range: '15m' },
+    { room: 30, range: '30m' },
+    { room: 60, range: '1h' },
+    { room: 240, range: '4h' },
+    { room: 1440, range: '1d' },
+    { room: 10080, range: '1w' },
+];
+
 const store = useStore();
 
 const hcInstance = ref(Highcharts);
@@ -47,7 +59,29 @@ let chartInFullscreen = ref(false);
 let candle_period = ref('1m');
 const valuesToDisplay = ref(97);
 const maxCandles = ref(501);
-let options = {
+const xData = computed(() => {
+    return store.state.trading.candlesData;
+});
+const yData = computed(() => {
+    return store.state.trading.volumeData;
+});
+
+const selectedPeriodObject = computed(() => {
+    const period = candle_period.value;
+    return _.find(intervals, item => {
+        return item.range === period.toLowerCase();
+    });
+})
+
+const candle_room = computed(() => {
+    return selectedPeriodObject.value.room;
+})
+
+const candlePeriodIndex = computed(() => {
+    return selectedPeriodObject.value.index;
+})
+
+let options = ref({
     time: {
         timezoneOffset: new Date().getTimezoneOffset()
     },
@@ -63,6 +97,7 @@ let options = {
         spacing: [10, 10, 10, 10],
         events: {
             load() {
+                console.log('Chart was loaded!');
                 this.redraw();
             },
         },
@@ -108,8 +143,25 @@ let options = {
                 text: '1m',
                 events: {
                     click: e => {
-                        e.value.preventDefault();
                         candle_period.value = '1m';
+                        store.commit('trading/setGraphPeriod', candle_period.value);
+                        store.dispatch('trading/getGraphFromServer').then(resp => {
+                            hcInstance.value.charts[0].series.forEach((item, i) => {
+                                const id = _.get(item, 'options.id', undefined);
+                                if (['main','highcharts-navigator-series'].indexOf(id) !== -1) {
+                                    hcInstance.value.charts[0].series[i].setData(xData.value, false, false, false);
+                                }
+                            });
+                            hcInstance.value.charts[0].series[1].setData(yData.value, false);
+                            if (xData.value.length > valuesToDisplay.value)
+                            {
+                                hcInstance.value.charts[0].xAxis[0].setExtremes(xData.value[xData.value.length - valuesToDisplay.value - 1].x, xData.value[xData.value.length - 1].x);
+                            }
+                            else
+                            {
+                                hcInstance.value.charts[0].xAxis[0].setExtremes(xData.value[0].x, xData.value[xData.value.length - 1].x);
+                            }
+                        });
                         return false;
                     },
                 },
@@ -123,6 +175,27 @@ let options = {
                 events: {
                     click: e => {
                         candle_period.value = '5m';
+                        store.commit('trading/setGraphPeriod', candle_period.value);
+                        store.dispatch('trading/getGraphFromServer').then(resp => {
+                            hcInstance.value.charts[0].series.forEach((item, i) => {
+                                const id = _.get(item, 'options.id', undefined);
+                                if (['main','highcharts-navigator-series'].indexOf(id) !== -1) {
+                                    hcInstance.value.charts[0].series[i].setData(xData.value, false, false, false);
+                                }
+                            });
+                            if (xData.value.length > valuesToDisplay.value)
+                            {
+                                hcInstance.value.charts[0].xAxis[0].setExtremes(xData.value[xData.value.length - valuesToDisplay.value - 1].x, xData.value[xData.value.length - 1].x);
+                            }
+                            else
+                            {
+                                hcInstance.value.charts[0].xAxis[0].setExtremes(xData.value[0].x, xData.value[xData.value.length - 1].x);
+                            }
+                            setTimeout(() => {
+                                hcInstance.value.charts[0].redraw();
+                                hcInstance.value.charts[0].reflow();
+                            }, 200);
+                        });
                         return false;
                     },
                 },
@@ -210,15 +283,20 @@ let options = {
         inputEnabled: false,
     },
     xAxis: {
-        overscroll: 1 * 60 * 1000, // одна минута
-            resize: {
+        overscroll: candle_room.value * 60 * 1000, // изначально одна минута
+        resize: {
             enabled: false,
         },
-        range: 97 * 60 * 1000, // изначально данные показываем за 97 минут
+        range: valuesToDisplay.value * candle_room.value * 60 * 1000, // изначально данные показываем за 97 минут
             events: {
-            setExtremes: _.debounce(e => {
-            }, 100),
-        },
+                setExtremes: _.debounce(e => {
+                    console.log(e.min);
+                    console.log(e.max);
+                    console.log(e.trigger);
+                    hcInstance.value.charts[0].redraw();
+                    hcInstance.value.charts[0].reflow();
+                }, 100),
+            },
     },
     yAxis: [
         {
@@ -265,7 +343,7 @@ let options = {
             type: 'candlestick',
             id: 'main',
             name: i18n.global.t('table_header.rate') + ', ' + props.market,
-            data: [],
+            data: xData.value,
             yAxis: 0,
             xAxis: 0,
             color: '#ef476f',
@@ -297,7 +375,7 @@ let options = {
             id: 'volume',
             linkedTo: 'main',
             name: i18n.global.t('table_header.volume') + ', ' + props.currency,
-            data: [],
+            data: yData.value,
             yAxis: 1,
             xAxis: 0,
         },
@@ -330,24 +408,11 @@ let options = {
             iconsURL: '/resources/js/assets/images/highcharts/',
         },
     },
-};
+});
 
-const selectedPeriodObject = computed(() => {
-    const period = candle_period.value;
-    return _.find(options.rangeSelector.buttons, item => {
-        return item.text === period.toLowerCase();
-    });
-})
 
-const candle_room = computed(() => {
-    return selectedPeriodObject.value.room;
-})
 
-const candlePeriodIndex = computed(() => {
-    return selectedPeriodObject.value.index;
-})
-
-const initGraphDataHandler = () => {
+/*const initGraphDataHandler = () => {
     const data = {
         xData: store.state.trading.candlesData,
         yData: store.state.trading.volumeData,
@@ -374,10 +439,10 @@ const initGraphDataHandler = () => {
         hcInstance.value.charts[0].redraw();
         hcInstance.value.charts[0].reflow();
     }, 200);
-};
+};*/
 
 onMounted(() => {
-    initGraphDataHandler();
+    //initGraphDataHandler();
 });
 
 </script>

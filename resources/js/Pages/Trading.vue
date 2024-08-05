@@ -91,6 +91,7 @@ volumes = volumes.sort((a, b) => {
     return a.x - b.x;
 });
 
+store.commit('trading/setPair', {currency: props.currency, market: props.market});
 store.commit('tickers/setTickersList', props.tickers);
 store.commit('trading/setAllCurrenciesList', props.all_currencies);
 store.commit('trading/setGraphData', {candlesData: ohlc, volumeData: volumes});
@@ -125,7 +126,7 @@ if (props.depth.bids_list.length !== 0) {
 
             <TradingChat v-if="showChat" class="trading__desktop__chat" />
 
-            <TradingAskList class="trading__desktop__ask-list" :currency="currency" :market="market" />
+            <TradingAskList class="trading__desktop__ask-list" :currency="currency" :market="market" :pair="pair" />
 
             <TradingForms class="trading__desktop__forms" :currency="currency" :market="market" />
 
@@ -206,6 +207,7 @@ if (props.depth.bids_list.length !== 0) {
                     class="trading__mobile__orders__bid flex-grow-1"
                     :currency="currency"
                     :market="market"
+                    :pair="pair"
                 />
                 <TradingAskBidLastPrice
                     class="trading__mobile__orders__last-price"
@@ -215,6 +217,7 @@ if (props.depth.bids_list.length !== 0) {
                     class="trading__mobile__orders__ask flex-grow-1"
                     :currency="currency"
                     :market="market"
+                    :pair="pair"
                 />
             </div>
 

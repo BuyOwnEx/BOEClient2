@@ -40,58 +40,38 @@ Route::get('captcha', 'TraderController@getCaptchaConfig');
 Route::post('set_locale', 'TraderController@setLocale')->name('set_locale');
 Route::post('2fa_validate', ['middleware' => 'throttle:5', 'uses' => 'TraderController@postValidateToken']);
 
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
-    /*Route::get('/', function () {
-        return to_route('trading/{market}/{currency}',['market' => config('app.default-market'), 'currency' => config('app.default-currency')]);
-    })->name('trading');*/
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
-    Route::get('balance', 'ViewController@getBalanceView')->name('balance');
-    Route::get('transactions', 'ViewController@getTransactionsView')->name('transactions');
-    Route::get('fiat_transactions', 'ViewController@getFiatTransactionsView')->name('fiat_transactions');
-    Route::get('transfers', 'ViewController@getTransfersView')->name('transfers');
-    Route::get('orders', 'ViewController@getOrdersView')->name('orders');
-    Route::get('deals', 'ViewController@getDealsView')->name('deals');
-    Route::get('ref_payments', 'ViewController@getRefPaymentsView')->name('referrals');
-    Route::get('support', 'ViewController@getSupportView')->name('support');
-    Route::get('profile', 'ViewController@getProfileView')->name('profile');
-    Route::get('notifications', 'ViewController@getNotificationsView')->name('notifications');
 
-    Route::group(['prefix' => 'trader'], function () {
-        Route::get('2fa_generate', 'TraderController@generateTwoFactor');
+Route::group(['prefix' => 'trader'], function () {
+    Route::get('2fa_generate', 'TraderController@generateTwoFactor');
 
-        Route::get('tickets', 'TicketController@getAllTickets');
-        Route::get('ticket/comments', 'TicketController@getAllTicketComments');
-        Route::get('ticket/priorities', 'TicketController@getPriorities');
-        Route::get('ticket/statuses', 'TicketController@getStatuses');
-        Route::get('ticket/tags', 'TicketController@getTags');
-        Route::post('ticket/create', 'TicketController@createTicket')->middleware('check_block_status');
-        Route::post('ticket/comment/add', 'TicketController@addComment')->middleware('check_block_status');
-        Route::post('ticket/close', 'TicketController@closeTicket')->middleware('check_block_status');
+    Route::get('tickets', 'TicketController@getAllTickets');
+    Route::get('ticket/comments', 'TicketController@getAllTicketComments');
+    Route::get('ticket/priorities', 'TicketController@getPriorities');
+    Route::get('ticket/statuses', 'TicketController@getStatuses');
+    Route::get('ticket/tags', 'TicketController@getTags');
+    Route::post('ticket/create', 'TicketController@createTicket')->middleware('check_block_status');
+    Route::post('ticket/comment/add', 'TicketController@addComment')->middleware('check_block_status');
+    Route::post('ticket/close', 'TicketController@closeTicket')->middleware('check_block_status');
 
-        Route::post('2fa_enable', ['middleware' => ['throttle:5','check_block_status'], 'uses' => 'TraderController@enableTwoFactorReady']);
-        Route::post('2fa_disable', ['middleware' => ['throttle:5','check_block_status'], 'uses' => 'TraderController@disableTwoFactorReady']);
+    Route::post('2fa_enable', ['middleware' => ['throttle:5','check_block_status'], 'uses' => 'TraderController@enableTwoFactorReady']);
+    Route::post('2fa_disable', ['middleware' => ['throttle:5','check_block_status'], 'uses' => 'TraderController@disableTwoFactorReady']);
 
-        Route::group(['prefix' => 'ext'], function () {
-            Route::get('tickers', 'TraderController@getTickers')->name('tickers');
-            Route::get('market_data', 'TraderController@getMarketData')->name('market_data');
-            Route::get('depth', 'TraderController@getDepth')->name('depth');
-            Route::get('history/deals', 'TraderController@HistoryDealList')->name('history_deal_list');
-            Route::get('graph', 'TraderController@getChart')->name('chart');
-            Route::get('crypto_currencies', 'TraderController@getCryptoCurrencies')->name('crypto_currencies');
-            Route::get('fiat_currencies', 'TraderController@getFiatCurrencies')->name('fiat_currencies');
-            Route::get('all_currencies', 'TraderController@getAllCurrencies')->name('all_currencies');
-            Route::get('all_fiat_platforms', 'TraderController@getAllFiatPlatforms')->name('all_fiat_platforms');
-            Route::get('all_fiat_fees', 'TraderController@getAllFiatFees')->name('all_fiat_fees');
-            Route::get('all_banks', 'TraderController@getAllBanks')->name('all_banks');
-            Route::get('health', 'TraderController@getHealth')->name('health');
-            Route::get('get_offer_list', 'TraderController@getOfferList')->name('offer_list');
+    Route::group(['prefix' => 'ext'], function () {
+        Route::get('tickers', 'TraderController@getTickers')->name('tickers');
+        Route::get('market_data', 'TraderController@getMarketData')->name('market_data');
+        Route::get('depth', 'TraderController@getDepth')->name('depth');
+        Route::get('history/deals', 'TraderController@HistoryDealList')->name('history_deal_list');
+        Route::get('graph', 'TraderController@getChart')->name('chart');
+        Route::get('crypto_currencies', 'TraderController@getCryptoCurrencies')->name('crypto_currencies');
+        Route::get('fiat_currencies', 'TraderController@getFiatCurrencies')->name('fiat_currencies');
+        Route::get('all_currencies', 'TraderController@getAllCurrencies')->name('all_currencies');
+        Route::get('all_fiat_platforms', 'TraderController@getAllFiatPlatforms')->name('all_fiat_platforms');
+        Route::get('all_fiat_fees', 'TraderController@getAllFiatFees')->name('all_fiat_fees');
+        Route::get('all_banks', 'TraderController@getAllBanks')->name('all_banks');
+        Route::get('health', 'TraderController@getHealth')->name('health');
+        Route::get('get_offer_list', 'TraderController@getOfferList')->name('offer_list');
 
+        Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
             Route::get('token', 'JWTController@getOwnToken')->name('token');
             Route::post('private', 'JWTController@getPrivateToken')->name('private');
             Route::post('refresh', 'JWTController@refreshOwnToken')->name('refresh');
@@ -183,7 +163,22 @@ Route::middleware([
                 Route::post('notify_fiat_qr_replenish', 'TraderController@NotifyFiatQRReplenish')->name('notify_fiat_qr_replenish');
                 Route::post('notify_fiat_invoice_replenish', 'TraderController@NotifyFiatInvoiceReplenish')->name('notify_fiat_invoice_replenish');
             });
-
         });
     });
+});
+
+Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
+    Route::get('/dashboard', function () {
+        return Inertia::render('Dashboard');
+    })->name('dashboard');
+    Route::get('balance', 'ViewController@getBalanceView')->name('balance');
+    Route::get('transactions', 'ViewController@getTransactionsView')->name('transactions');
+    Route::get('fiat_transactions', 'ViewController@getFiatTransactionsView')->name('fiat_transactions');
+    Route::get('transfers', 'ViewController@getTransfersView')->name('transfers');
+    Route::get('orders', 'ViewController@getOrdersView')->name('orders');
+    Route::get('deals', 'ViewController@getDealsView')->name('deals');
+    Route::get('ref_payments', 'ViewController@getRefPaymentsView')->name('referrals');
+    Route::get('support', 'ViewController@getSupportView')->name('support');
+    Route::get('profile', 'ViewController@getProfileView')->name('profile');
+    Route::get('notifications', 'ViewController@getNotificationsView')->name('notifications');
 });

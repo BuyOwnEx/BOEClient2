@@ -19,9 +19,6 @@ const props = defineProps({
 });
 const store = useStore();
 
-const calculateMargin = computed(() => {
-    return `translateY(${props.itemIndex * 25 + 'px' })`;
-});
 const bidVolumeDepth = computed(() => {
     return store.state.trading.bid_volume_depth;
 });
@@ -33,32 +30,39 @@ const calculateLength = computed(() => {
     let volumeDepth = 0;
     if (props.type === 'bid') volumeDepth = bidVolumeDepth.value;
     else if (props.type === 'ask') volumeDepth = askVolumeDepth.value;
+    let percent = '0%';
+    let padding = 0;
+    if(props.type === 'bid')
+    {
+        percent = (props.volume / volumeDepth) * 100 + '%';
+        padding = '4px';
+        return `translateX(calc(100% - ${percent} - ${padding}))`;
+    }
+    else {
+        percent = -(100 - (props.volume / volumeDepth) * 100) + '%';
+        padding = '4px';
+        return `translateX(calc(${percent} + ${padding}))`;
+    }
 
-    const percent = (props.volume / volumeDepth) * 100 + '%';
-    const tablePadding = '4px';
-    return `calc(100% - ${percent} - ${tablePadding})`;
 });
 
 </script>
 <template>
-    <span>
-        <span
-            v-if="type === 'bid'"
-            class="orders-wall--bid"
-            :style="{ transform: calculateMargin, left: calculateLength }"
-        />
-    </span>
+    <div
+        :class="`orders-wall--` + type"
+        :style="{ transform: calculateLength }"
+    />
 </template>
 <style scoped lang="sass">
 .orders-wall-main
     position: absolute
-    top: var(--bid-ask-header-height)
     bottom: 0
-    height: var(--table-row-height)
+    height: 100%
+    width: 100%
 
 .orders-wall--bid
     @extend .orders-wall-main
-    background: rgba(146, 245, 150, 0.2)
+    background: rgba(146, 245, 150, 0.1)
     right: 0
     left: 0
 

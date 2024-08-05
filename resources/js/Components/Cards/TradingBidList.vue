@@ -58,18 +58,20 @@ const bidList = computed(() => {
                     </div>
                     <div class="trading-bid-list__table-body mt-1">
                         <div class="trading-bid-list__table-body-item" v-if="bidList.length > 0" v-for="(item, itemIndex) in bidList" :key="item.id">
-                            <div class="trading-bid-list__body-item--price text-start">
-                                <strong class="text-success">
-                                    {{ item.price }}
-                                </strong>
+                            <div class="trading-bid-list__body-item--row">
+                                <div class="trading-bid-list__body-item--price text-start">
+                                    <strong class="text-success">
+                                        {{ item.price }}
+                                    </strong>
+                                </div>
+                                <div class="trading-bid-list__body-item--size text-start">
+                                    {{ item.size }}
+                                </div>
+                                <div class="trading-bid-list__body-item--volume text-end">
+                                    {{ item.volume }}
+                                </div>
                             </div>
-                            <div class="trading-bid-list__body-item--size text-start">
-                                {{ item.size }}
-                            </div>
-                            <div class="trading-bid-list__body-item--volume text-end">
-                                <TradingOrderFill :item-index="itemIndex" :volume="item.volume" type="bid" />
-                                {{ item.volume }}
-                            </div>
+                            <TradingOrderFill :item-index="itemIndex" :volume="item.volume" type="bid" />
                         </div>
                     </div>
                 </div>
@@ -124,9 +126,17 @@ const bidList = computed(() => {
 
     &__table-body-item
         font-size: 0.7rem !important
+        display: flex
+        position: relative
+
+    &__body-item--row
         display: grid
         grid-template-areas: 'price size volume'
         grid-template-columns: minmax(90px, 1fr) minmax(80px, 1fr) minmax(100px, 1fr)
+        height: 100%
+        width: 100%
+        z-index: 2
+        line-height: 20px
 
     &__body-item--price
         padding: 4px
