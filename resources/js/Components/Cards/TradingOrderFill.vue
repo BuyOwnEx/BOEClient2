@@ -62,9 +62,12 @@ const calculateLength = computed(() => {
 
 .orders-wall--bid
     @extend .orders-wall-main
-    background: rgba(146, 245, 150, 0.1)
+    background: rgba(70, 200, 76, 0.32)
     right: 0
     left: 0
+
+.v-theme--dark .orders-wall--bid
+    background: rgba(75, 191, 80, 0.24)
 
 .orders-wall--ask
     @extend .orders-wall-main
