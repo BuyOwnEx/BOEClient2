@@ -123,6 +123,7 @@ const bidList = computed(() => {
         display: flex
         flex-flow: column
         overflow-y: auto
+        overflow-x: hidden
 
     &__table-body-item
         font-size: 0.7rem !important

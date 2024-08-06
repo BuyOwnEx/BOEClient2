@@ -191,10 +191,6 @@ let options = ref({
                             {
                                 hcInstance.value.charts[0].xAxis[0].setExtremes(xData.value[0].x, xData.value[xData.value.length - 1].x);
                             }
-                            setTimeout(() => {
-                                hcInstance.value.charts[0].redraw();
-                                hcInstance.value.charts[0].reflow();
-                            }, 200);
                         });
                         return false;
                     },
