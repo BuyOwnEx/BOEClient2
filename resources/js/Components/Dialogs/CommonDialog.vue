@@ -1,0 +1,114 @@
+<script setup>
+import {computed, ref} from "vue";
+
+const props = defineProps({
+    confirmText: {
+        type: String,
+        required: false,
+    },
+    confirmColor: {
+        type: String,
+        required: false,
+        default: 'primary',
+    },
+    headerColor: {
+        type: String,
+        required: false,
+        default: '',
+    },
+});
+const dialog = ref(false);
+
+const getBackgroundClassColor = computed(() => {
+    if (props.headerColor === 'success')
+        return 'common-dialog__title--success';
+    else if (props.headerColor === 'error')
+        return 'common-dialog__title--error';
+});
+const emit = defineEmits(['confirm']);
+
+const confirm = () => {
+    emit('confirm');
+    close();
+};
+
+const close = () => {
+    dialog.value = false;
+};
+
+</script>
+<template>
+    <v-dialog v-model="dialog" width="500">
+        <template #activator="{ on, attrs }">
+			<span v-bind="attrs" v-on="on">
+				<slot></slot>
+			</span>
+        </template>
+
+        <v-card class="common-dialog">
+            <slot name="card">
+                <v-card-title class="common-dialog__title" :class="getBackgroundClassColor">
+                    <slot name="title">
+                        {{ $t('common.confirmation') }}
+                    </slot>
+                </v-card-title>
+
+                <v-card-text class="common-dialog__content">
+                    <slot name="content"></slot>
+                </v-card-text>
+
+                <v-divider />
+
+                <v-card-actions class="common-dialog__actions">
+                    <slot name="actions">
+                        <v-spacer />
+
+                        <slot name="close">
+                            <v-btn size="small" variant="text" tile plain @click="close">
+                                {{ $t('common.cancel') }}
+                            </v-btn>
+                        </slot>
+
+                        <v-spacer />
+
+                        <slot name="confirm">
+                            <v-btn :color="confirmColor" size="small" tile variant="text" plain @click="confirm">
+                                {{ confirmText || $t('common.confirm') }}
+                            </v-btn>
+                        </slot>
+
+                        <v-spacer />
+                    </slot>
+                </v-card-actions>
+            </slot>
+        </v-card>
+    </v-dialog>
+</template>
+
+<style scoped lang="sass">
+.common-dialog
+    &__title
+        font-weight: 600 !important
+        padding: 8px 24px 8px !important
+
+        &--success
+            background-color: var(--v-success-base)
+        &--error
+            background-color: var(--v-error-base)
+
+    &__content
+        padding-top: 8px !important
+
+    &__actions
+        .v-btn
+            text-transform: uppercase !important
+            letter-spacing: 1px !important
+
+.theme--dark
+    .common-dialog
+        &__title
+            &--success
+                background-color: var(--v-success-darken1)
+            &--error
+                background-color: var(--v-error-darken1)
+</style>
