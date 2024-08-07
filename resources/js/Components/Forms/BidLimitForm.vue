@@ -404,8 +404,9 @@ const formatWithScaleInAllCurrencies = (value, currency) => {
                         :label="$t('trading.order.use_additional_params')"
                         hide-details
                         left
+                        flat
+                        :ripple="false"
                         density="compact"
-                        inset
                     />
                 </div>
             </div>
@@ -450,7 +451,7 @@ const formatWithScaleInAllCurrencies = (value, currency) => {
     justify-content: space-between;
 
     &__volume {
-        height: 60px;
+
         margin: 6px 0;
     }
 
@@ -458,14 +459,14 @@ const formatWithScaleInAllCurrencies = (value, currency) => {
         display: grid;
         grid-gap: 2px;
         grid-template-columns: repeat(4, 1fr);
-        margin: -6px 0 16px;
+        margin-top: 4px;
+        margin-bottom: 4px;
     }
 
     &__text-field-hint {
         line-height: 1;
         font-size: 0.75rem;
         padding: 0 12px;
-        margin-top: -6px;
         opacity: 0.6;
     }
 

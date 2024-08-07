@@ -127,7 +127,7 @@ const selectedTab = ref(0);
 
 @media screen and (min-width: 960px)
     .trading-forms
-        min-height: 528px
+        font-weight: normal
 
 @media screen and (max-width: 959px)
     .trading-forms
