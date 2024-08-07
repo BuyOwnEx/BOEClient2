@@ -128,7 +128,7 @@ if (props.depth.bids_list.length !== 0) {
 
             <TradingAskList class="trading__desktop__ask-list" :currency="currency" :market="market" :pair="pair" />
 
-            <TradingForms class="trading__desktop__forms" :currency="currency" :market="market" />
+            <TradingForms class="trading__desktop__forms" :currency="currency" :market="market" :pair="pair" />
 
             <TradingBidList class="trading__desktop__bid-list" :currency="currency" :market="market" :pair="pair" />
 
@@ -226,6 +226,7 @@ if (props.depth.bids_list.length !== 0) {
                 class="trading__mobile__forms"
                 :currency="currency"
                 :market="market"
+                :pair="pair"
             />
 
             <TradingOwnLists

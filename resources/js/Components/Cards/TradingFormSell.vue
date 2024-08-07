@@ -14,7 +14,11 @@ const props = defineProps({
     market: {
         type: String,
         required: true,
-    }
+    },
+    pair: {
+        type: Object,
+        required: true,
+    },
 });
 
 const store = useStore();
@@ -51,11 +55,11 @@ const type = ref('limit');
 
         <div class="trading-form-sell__content">
             <keep-alive v-if="type === 'limit'">
-                <AskLimitForm :currency="currency" :market="market"/>
+                <AskLimitForm :currency="currency" :market="market" :pair="pair" />
             </keep-alive>
 
             <keep-alive v-if="type === 'market'">
-                <AskMarketForm :currency="currency" :market="market"/>
+                <AskMarketForm :currency="currency" :market="market" :pair="pair" />
             </keep-alive>
         </div>
     </div>

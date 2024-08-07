@@ -41,9 +41,9 @@ class ViewController extends Controller
         if ($validator->fails()) {
             return Inertia::render('404');
         }
-        $find_pair = Arr::where(app('all-pairs'), function ($value) use ($currency, $market){
-            return $value['currency'] === mb_strtoupper($currency) && $value['market'] === mb_strtoupper($market);
-        });
+
+        $find_pair = collect(app('all-pairs')['data'])->where('currency',mb_strtoupper($currency))->where('market',mb_strtoupper($market))->first();
+        Log::info(print_r($find_pair, true));
         if(!$find_pair)
         {
             return Inertia::render('404');

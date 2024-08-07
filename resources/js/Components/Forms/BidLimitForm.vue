@@ -2,11 +2,13 @@
 import { useStore } from 'vuex';
 import { computed, ref } from "vue";
 import _ from "lodash";
-import i18n from '@/Translations/i18n.js'
-import BigNumber from 'bignumber.js';
-import TradingFormsConfirmDialog from "@/Components/Dialogs/TradingFormsConfirmDialog.vue";
 import {usePage} from "@inertiajs/vue3";
+import { vMaska } from "maska/vue";
+import BigNumber from 'bignumber.js';
 BigNumber.config({ EXPONENTIAL_AT: [-15, 20] });
+import i18n from '@/Translations/i18n.js'
+import TradingFormsConfirmDialog from "@/Components/Dialogs/TradingFormsConfirmDialog.vue";
+
 const store = useStore();
 const page = usePage();
 const props = defineProps({
@@ -17,7 +19,11 @@ const props = defineProps({
     market: {
         type: String,
         required: true,
-    }
+    },
+    pair: {
+        type: Object,
+        required: true,
+    },
 });
 
 const additionalParamsEnabled = ref(false);
@@ -203,6 +209,7 @@ const setAmount = (percents = 100) => {
 };
 
 const sendBidLimit = () => {
+    console.log(form.value);
     if (!form.value.amount) {
         //this.pushErrorNotification(_, 'incorrect');
         return;
@@ -236,6 +243,19 @@ const formatWithScaleInAllCurrencies = (value, currency) => {
     }
 };
 
+const amount_options = {
+    mask: '9.'+"#".repeat(props.pair.amountScale),
+    tokens: {
+        9: { pattern: /[0-9]/, multiple: true }
+    }
+};
+const rate_options = {
+    mask: '9.'+"#".repeat(props.pair.rateScale),
+    tokens: {
+        9: { pattern: /[0-9]/, multiple: true }
+    }
+};
+
 </script>
 <template>
     <form class="blf" @submit.prevent="sendBidLimit">
@@ -254,7 +274,7 @@ const formatWithScaleInAllCurrencies = (value, currency) => {
                 density="compact"
                 hide-details
                 rounded="0"
-                @keydown="validateNumber($event)"
+                v-maska:form.amount.masked=amount_options
             >
                 <template #append-inner>
                     <span class="button-currency-text">{{ currency.toUpperCase() }}</span>
@@ -285,7 +305,7 @@ const formatWithScaleInAllCurrencies = (value, currency) => {
                 density="compact"
                 rounded="0"
                 hide-details
-                @keydown="validateNumber($event)"
+                v-maska:form.rate.masked=rate_options
             >
                 <template #append-inner>
                     <span class="button-currency-text">{{ market.toUpperCase() }}</span>
@@ -427,7 +447,7 @@ const formatWithScaleInAllCurrencies = (value, currency) => {
                     :leverage-level="leverageLevel"
                     @confirm="sendBidLimit"
                 >
-                    <v-btn color="success" height="24" block>
+                    <v-btn color="success" height="24" block @click="sendBidLimit">
                         {{ $t('trading.order.direction.buy') }}
                     </v-btn>
                 </TradingFormsConfirmDialog>

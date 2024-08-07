@@ -15,7 +15,11 @@ const props = defineProps({
     market: {
         type: String,
         required: true,
-    }
+    },
+    pair: {
+        type: Object,
+        required: true,
+    },
 });
 
 const best_ask = computed(() => {
@@ -43,7 +47,7 @@ const selectedTab = ref(0);
                     </div>
                 </v-card-title>
                 <v-card-text class="trading-forms__content pa-0">
-                    <TradingFormBuy :currency="currency" :market="market" />
+                    <TradingFormBuy :currency="currency" :market="market" :pair="pair" />
                 </v-card-text>
             </v-col>
 
@@ -58,7 +62,7 @@ const selectedTab = ref(0);
                     </div>
                 </v-card-title>
                 <v-card-text class="trading-forms__content pa-0">
-                    <TradingFormSell :currency="currency" :market="market" />
+                    <TradingFormSell :currency="currency" :market="market" :pair="pair" />
                 </v-card-text>
             </v-col>
         </v-row>
@@ -76,10 +80,10 @@ const selectedTab = ref(0);
 
             <v-tabs-window v-model="selectedTab" class="py-1 px-1" touchless>
                 <v-tabs-window-item value="1">
-                    <TradingFormBuy :currency="currency" :market="market" />
+                    <TradingFormBuy :currency="currency" :market="market" :pair="pair" />
                 </v-tabs-window-item>
                 <v-tabs-window-item value="2">
-                    <TradingFormSell :currency="currency" :market="market" />
+                    <TradingFormSell :currency="currency" :market="market" :pair="pair" />
                 </v-tabs-window-item>
             </v-tabs-window>
         </div>

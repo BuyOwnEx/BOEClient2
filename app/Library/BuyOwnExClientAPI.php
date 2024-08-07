@@ -101,6 +101,12 @@ class BuyOwnExClientAPI
         return response()->json($response->json(),$response->status());
     }
 
+    public function all_pairs()
+    {
+        $response = Http::withToken($this->api_key)->get($this->base.'v1/all_pairs');
+        return response()->json($response->json(),$response->status());
+    }
+
     public function market_data()
     {
         $response = Http::withToken($this->api_key)->get($this->base.'v1/market_data');

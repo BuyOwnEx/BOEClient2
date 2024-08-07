@@ -62,6 +62,7 @@ Route::group(['prefix' => 'trader'], function () {
         Route::get('depth', 'TraderController@getDepth')->name('depth');
         Route::get('history/deals', 'TraderController@HistoryDealList')->name('history_deal_list');
         Route::get('graph', 'TraderController@getChart')->name('chart');
+        Route::get('pairs', 'TraderController@getPairs')->name('pairs');
         Route::get('crypto_currencies', 'TraderController@getCryptoCurrencies')->name('crypto_currencies');
         Route::get('fiat_currencies', 'TraderController@getFiatCurrencies')->name('fiat_currencies');
         Route::get('all_currencies', 'TraderController@getAllCurrencies')->name('all_currencies');

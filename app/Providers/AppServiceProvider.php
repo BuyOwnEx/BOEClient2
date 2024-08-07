@@ -50,8 +50,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton('all-pairs', function () {
             return Cache::remember('all_pairs', 60, function () {
                 $api = new BuyOwnExClientAPI(config('app.api-public-key'), config('app.api-secret-key'));
-                $data = $api->market_data()->getOriginalContent();
-                return data_get($data, 'data.*.*');
+                return $api->all_pairs()->getOriginalContent();
             });
         });
     }
