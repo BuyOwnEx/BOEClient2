@@ -114,6 +114,8 @@ const selectedTab = ref(0);
         font-size: 12px
         text-transform: none
         opacity: 0.6
+        align-content: center
+
     &__content
         display: flex
         flex-flow: column

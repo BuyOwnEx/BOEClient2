@@ -78,14 +78,25 @@ const isBuy = computed(() => {
 const isSell = computed(() => {
     return props.actionType === 'sell';
 });
+
+const isSetSL = computed(() => {
+    return props.stopLoss !== '0' && props.stopLoss !== '';
+});
+const isSetTP = computed(() => {
+    return props.takeProfit !== '0' && props.takeProfit !== '';
+});
+const isSetTS = computed(() => {
+    return props.trailingStop !== '0' && props.trailingStop !== '';
+});
+
 const isAnyAdditionalParamExist = computed(() => {
-    return props.stopLoss || props.takeProfit || props.trailingStop;
+    return isSetSL.value || isSetTP.value || isSetTS.value;
 });
 const isMultiplyAdditionalParams = computed(() => {
-    const isFirstAndSecond = props.stopLoss && props.takeProfit;
-    const isFirstAndThird = props.stopLoss && props.trailingStop;
-    const isSecondAndThird = props.takeProfit && props.trailingStop;
-    const isAll = props.stopLoss && props.takeProfit && props.trailingStop;
+    const isFirstAndSecond = isSetSL.value && isSetTP.value;
+    const isFirstAndThird = isSetSL.value && isSetTS.value;
+    const isSecondAndThird = isSetTP.value && isSetTS.value;
+    const isAll = isSetSL.value && isSetTP.value && isSetTS.value;
     return isFirstAndSecond || isFirstAndThird || isSecondAndThird || isAll;
 });
 const getTypeColor = computed(() => {

@@ -27,23 +27,10 @@ const props = defineProps({
 });
 
 const additionalParamsEnabled = ref(false);
-const volume = ref(0);
+const volume = ref('0');
 const useMargin = ref(false);
-const offers = ref([]);
+const offers = ref([{id:1, percent: 1.5, days: 15, amount: 100000}]);
 const leverageLevel = ref(5);
-
-const form = ref({
-    type: 'LIMIT',
-    currency: props.currency.toUpperCase(),
-    market: props.market.toUpperCase(),
-    side: 0,
-    amount: '0',
-    rate: '0',
-    sl_rate: null,
-    tp_rate: null,
-    ts_offset: null,
-    offer: null,
-})
 
 const best_ask = computed(() => {
     return store.state.trading.best_ask;
@@ -52,6 +39,21 @@ const best_ask = computed(() => {
 const best_bid = computed(() => {
     return store.state.trading.best_bid;
 });
+
+const form = ref({
+    type: 'LIMIT',
+    currency: props.currency.toUpperCase(),
+    market: props.market.toUpperCase(),
+    side: 0,
+    amount: '0',
+    rate: BigNumber(best_ask.value).toString(),
+    sl_rate: '0',
+    tp_rate: '0',
+    ts_offset: '0',
+    offer: null,
+})
+
+
 
 const isAuth = computed(() => {
     return page.props.auth.user && page.props.auth.user.email_verified_at
@@ -88,62 +90,53 @@ const activeTicker = computed(() => {
     return store.getters['trading/activeTicker'];
 });
 
-const markets = computed(() => {
-    return _.get(store.state.tickers.markets, props.market.toUpperCase(), null);
-});
-
-const selectedMarket = computed(() => {
-    if (markets.value === null) {
-        return null;
-    }
-    let market = _.find(markets.value, item => item.currency.toUpperCase() === this.currency.toUpperCase());
-    return market === undefined ? null : market;
-});
-
 const amountScale = computed(() => {
-    return selectedMarket.value === null ? 2 : parseInt(selectedMarket.value.amountScale);
+    return parseInt(props.pair.amountScale);
 });
 
 const rateScale = computed(() => {
-    return selectedMarket.value === null ? 2 : parseInt(selectedMarket.value.rateScale);
+    return parseInt(props.pair.rateScale);
 });
 
 const minAmount = computed(() => {
-    return selectedMarket.value === null ? 0 : parseInt(selectedMarket.value.minAmount);
+    return BigNumber(props.pair.minAmount).toString();
 });
 
 const marginTradingAvailable = computed(() => {
-    return selectedMarket.value === null ? false : selectedMarket.value.margin;
+    return props.pair.margin;
 });
 
 const fee_currency = computed(() => {
-    if(selectedMarket.value !== null)
+    if (isAuth.value)
     {
-        if (isAuth.value) {
-            if(form.value.rate < best_ask.value) {
-                if(own_fees.value !== null && own_fees.value !== undefined)
-                {
-                    return BigNumber(own_fees.value.maker_fee).div(100);
-                }
-                else return BigNumber(selectedMarket.value.makerFee).div(100);
+        if(BigNumber(form.value.rate).lt(BigNumber(best_ask.value)))
+        {
+            if(own_fees.value !== null && own_fees.value !== undefined)
+            {
+                return BigNumber(own_fees.value.maker_fee).div(100);
             }
-            else {
-                if(own_fees.value !== null && own_fees.value !== undefined)
-                {
-                    return BigNumber(own_fees.value.taker_fee).div(100);
-                }
-                else return BigNumber(selectedMarket.value.takerFee).div(100);
-            }
+            else return BigNumber(props.pair.makerFee).div(100);
         }
         else
         {
-            if(form.value.rate < best_ask.value) {
-                return BigNumber(selectedMarket.value.makerFee).div(100);
+            if(own_fees.value !== null && own_fees.value !== undefined)
+            {
+                return BigNumber(own_fees.value.taker_fee).div(100);
             }
-            else return BigNumber(selectedMarket.value.takerFee).div(100);
+            else return BigNumber(props.pair.takerFee).div(100);
         }
     }
-    else return BigNumber(0);
+    else
+    {
+        if(BigNumber(form.value.rate).lt(BigNumber(best_ask.value)))
+        {
+            return BigNumber(props.pair.makerFee).div(100);
+        }
+        else
+        {
+            return BigNumber(props.pair.takerFee).div(100);
+        }
+    }
 });
 
 const fee_visible = computed(() => {
@@ -157,7 +150,7 @@ const balance = computed(() => {
         if (amount.available !== undefined) {
             return BigNumber(amount.available).dp(scale, 1);
         }
-        return BigNumber(0).dp(scale, 1);
+        return BigNumber(110).dp(scale, 1);
     } else return BigNumber(0);
 });
 
@@ -166,7 +159,11 @@ const isAdditionalParams = computed(() => {
 });
 
 const useMarginEnabled = computed(() => {
-    return Number(form.value.amount);
+    return Number(form.value.amount) && Number(form.value.rate);
+});
+
+const useCondOrdersEnabled = computed(() => {
+    return Number(form.value.amount) && Number(form.value.rate);
 });
 
 const selectedOffer = computed(() => {
@@ -195,16 +192,27 @@ const validateNumber = (evt) => {
     }
 };
 
-const setAmount = (percents = 100) => {
+const setAmount = () => {
     if (form.value.rate !== '' && form.value.rate !== '0') {
         form.value.amount = balance.value
             .div(BigNumber(form.value.rate))
             .div(100)
-            .times(percents)
+            .times(percent.value)
             .decimalPlaces(amountScale.value, 1)
             .toString();
+        volume.value = BigNumber(form.value.rate)
+            .times(form.value.amount)
+            .decimalPlaces(amountScale.value + rateScale.value, 1)
+            .toString();
+        fee_amount.value = BigNumber(form.value.amount)
+            .times(fee_currency.value)
+            .decimalPlaces(props.pair.amountScale, 1)
+            .toString();
+
     } else {
         form.value.amount = '0';
+        volume.value = '0';
+        fee_amount.value = '0';
     }
 };
 
@@ -242,6 +250,8 @@ const formatWithScaleInAllCurrencies = (value, currency) => {
         return BigNumber(value).toFixed(2, 1);
     }
 };
+const percent = ref(0);
+const fee_amount = ref('0');
 
 const amount_options = {
     mask: '9.'+"#".repeat(props.pair.amountScale),
@@ -255,21 +265,96 @@ const rate_options = {
         9: { pattern: /[0-9]/, multiple: true }
     }
 };
-const unmaskedValue = ref('0')
-defineExpose({ unmaskedValue });
+const volume_options = {
+    mask: '9.'+"#".repeat(props.pair.rateScale+props.pair.amountScale),
+    tokens: {
+        9: { pattern: /[0-9]/, multiple: true }
+    }
+};
+const unmaskedAmount = ref('0')
+const unmaskedRate = ref('0')
+const unmaskedVolume = ref('0')
+const unmaskedSL = ref('0')
+const unmaskedTP = ref('0')
+const unmaskedTS = ref('0')
 
-const updateVolume = (event) => {
-    console.log(event.detail.masked);
+defineExpose({ unmaskedAmount, unmaskedRate, unmaskedVolume, unmaskedSL, unmaskedTP, unmaskedTS });
+
+const updateVolumeAmountChanged = (event) => {
     if (!useMarginEnabled.value) useMargin.value = false;
     if(event.detail.masked !== '')
     {
         volume.value = BigNumber(event.detail.masked)
             .times(BigNumber(form.value.rate))
+            .decimalPlaces(props.pair.amountScale+props.pair.rateScale, 1)
+            .toString();
+        percent.value = BigNumber(event.detail.masked)
+            .times(100)
+            .times(BigNumber(form.value.rate))
+            .div(balance.value)
+            .decimalPlaces(0, 1)
+            .toNumber();
+        fee_amount.value = BigNumber(event.detail.masked)
+            .times(fee_currency.value)
+            .decimalPlaces(props.pair.amountScale, 1)
             .toString();
     }
-    else volume.value = 0;
+    else {
+        volume.value = '0';
+        percent.value = 0;
+        fee_amount.value = '0';
+    }
+}
+const updateVolumeRateChanged = (event) => {
+    if (!useMarginEnabled.value) useMargin.value = false;
+    if(event.detail.masked !== '')
+    {
+        volume.value = BigNumber(event.detail.masked)
+            .times(BigNumber(form.value.amount))
+            .decimalPlaces(props.pair.amountScale+props.pair.rateScale, 1)
+            .toString();
+        percent.value = BigNumber(event.detail.masked)
+            .times(100)
+            .times(BigNumber(form.value.amount))
+            .div(balance.value)
+            .decimalPlaces(0, 1)
+            .toNumber();
+    }
+    else {
+        volume.value = '0';
+        percent.value = 0;
+    }
+}
+const updateAmountVolumeChanged = (event) => {
+    if (!useMarginEnabled.value) useMargin.value = false;
+    if(event.detail.masked !== '')
+    {
+        form.value.amount = BigNumber(event.detail.masked)
+            .div(form.value.rate)
+            .decimalPlaces(props.pair.amountScale, 1)
+            .toString();
+        percent.value =
+            BigNumber(form.value.rate)
+                .times(100)
+                .times(BigNumber(form.value.amount))
+                .div(balance.value)
+                .decimalPlaces(0, 1)
+                .toNumber();
+        fee_amount.value = BigNumber(form.value.amount)
+            .times(fee_currency.value)
+            .decimalPlaces(props.pair.amountScale, 1)
+            .toString();
+    }
+    else {
+        form.value.amount = '0';
+        percent.value = 0;
+        fee_amount.value = '0';
+    }
 }
 
+const resetOffer = () => {
+    if(!useMargin.value) form.value.offer = null
+};
 </script>
 <template>
     <form class="blf" @submit.prevent="sendBidLimit">
@@ -278,173 +363,195 @@ const updateVolume = (event) => {
         <input name="market" type="hidden" :value="market" />
         <input name="side" type="hidden" value="0" />
 
-        <div>
-            <v-text-field
-                v-model="form.amount"
-                ref="bid_limit_amount"
-                :label="$t('trading.order.direction.buy')"
-                type="text"
-                variant="outlined"
-                density="compact"
-                hide-details
-                rounded="0"
-                v-maska:unmaskedValue.masked=amount_options
-                @maska="updateVolume"
-            >
-                <template #append-inner>
-                    <span class="button-currency-text">{{ currency.toUpperCase() }}</span>
-                </template>
-            </v-text-field>
+        <div class="d-flex flex-grow-0 flex-column">
+            <div style="display: inline-block; position: relative; height: 100%">
+                <Transition mode="out-in" name="slide-left" style="position: relative; height: 100%; width: 100%">
+                    <div style="position: absolute; height: 100%; width: 100%" v-if="!additionalParamsEnabled && !useMargin">
+                        <v-text-field
+                            v-model="form.rate"
+                            ref="bid_limit_rate"
+                            :label="$t('table_header.rate_per') + ' ' + currency.toUpperCase()"
+                            type="text"
+                            variant="outlined"
+                            density="compact"
+                            rounded="0"
+                            hide-details
+                            v-maska:unmaskedRate.masked=rate_options
+                            @maska="updateVolumeRateChanged"
+                        >
+                            <template #append-inner>
+                                <span class="button-currency-text">{{ market.toUpperCase() }}</span>
+                            </template>
+                        </v-text-field>
 
-            <div class="blf__percents">
-                <v-btn :input-value="form.amount === '25'" variant="text" size="small" outlined tile @click="setAmount(25)">
-                    <span>25 %</span>
-                </v-btn>
-                <v-btn :input-value="form.amount === '50'" variant="text" size="small" outlined tile @click="setAmount(50)">
-                    <span>50 %</span>
-                </v-btn>
-                <v-btn :input-value="form.amount === '75'" variant="text" size="small" outlined tile @click="setAmount(75)">
-                    <span>75 %</span>
-                </v-btn>
-                <v-btn :input-value="form.amount === '100'" variant="text" size="small" outlined tile @click="setAmount(100)">
-                    <span>100 %</span>
-                </v-btn>
-            </div>
+                        <v-text-field
+                            v-model="form.amount"
+                            ref="bid_limit_amount"
+                            :label="$t('table_header.amount')"
+                            type="text"
+                            variant="outlined"
+                            density="compact"
+                            hide-details
+                            rounded="0"
+                            class="mt-2"
+                            v-maska:unmaskedAmount.masked=amount_options
+                            @maska="updateVolumeAmountChanged"
+                        >
+                            <template #append-inner>
+                                <span class="button-currency-text">{{ currency.toUpperCase() }}</span>
+                            </template>
+                        </v-text-field>
 
-            <v-text-field
-                v-model="form.rate"
-                ref="bid_limit_rate"
-                :label="$t('table_header.rate_per') + ' ' + currency.toUpperCase()"
-                type="text"
-                variant="outlined"
-                density="compact"
-                rounded="0"
-                hide-details
-                v-maska:form.rate.masked=rate_options
-            >
-                <template #append-inner>
-                    <span class="button-currency-text">{{ market.toUpperCase() }}</span>
-                </template>
-            </v-text-field>
+                        <v-slider
+                            v-model="percent"
+                            min="0"
+                            max="100"
+                            step="1"
+                            :ticks="[0,25,50,75,100]"
+                            show-ticks="always"
+                            tile
+                            track-size="2"
+                            color="primary"
+                            thumb-color="primary"
+                            thumb-size="10"
+                            thumb-label
+                            :ripple="false"
+                            hide-details
+                            @update:modelValue="setAmount"
+                        ></v-slider>
 
-            <div class="blf__volume">
-                <v-text-field
-                    v-model="volume"
-                    ref="bid_limit_volume"
-                    :label="$t('table_header.volume')"
-                    type="text"
-                    variant="outlined"
-                    density="compact"
-                    hide-details
-                    rounded="0"
-                    @keydown="validateNumber($event)"
-                >
-                    <template #append-inner>
-                        <span class="button-currency-text">{{ market.toUpperCase() }}</span>
-                    </template>
-                </v-text-field>
-                <div class="blf__text-field-hint">
-                    {{ $t('trading.order.pay_limit_buy', [fee_visible]) + ' ' + currency.toUpperCase() }}
-                </div>
-            </div>
-
-            <div class="blf__margin" v-if="useMargin && marginAvailable">
-                <v-select
-                    v-model="form.offer"
-                    :items="offers_select"
-                    :label="$t('trading.order.offer')"
-                    item-text="name"
-                    item-value="id"
-                    density="compact"
-                    hide-details
-                />
-            </div>
-
-            <div v-if="!useMargin && conditionalOrdersAvailable" class="blf__params">
-                <v-text-field
-                    v-model="form.sl_rate"
-                    ref="bid_limit_sl_rate"
-                    :label="$t('trading.order.sl_rate')"
-                    :disabled="!additionalParamsEnabled"
-                    type="text"
-                    variant="outlined"
-                    density="compact"
-                    hide-details
-                    rounded="0"
-                    @keydown="validateNumber($event)"
-                >
-                    <template #append-inner>
+                        <div class="blf__volume">
+                            <v-text-field
+                                v-model="volume"
+                                ref="bid_limit_volume"
+                                :label="$t('table_header.volume')"
+                                type="text"
+                                variant="outlined"
+                                density="compact"
+                                hide-details
+                                rounded="0"
+                                v-maska:unmaskedVolume.masked=volume_options
+                                @maska="updateAmountVolumeChanged"
+                            >
+                                <template #append-inner>
+                                    <span class="button-currency-text">{{ market.toUpperCase() }}</span>
+                                </template>
+                            </v-text-field>
+                            <div class="blf__text-field-hint">
+                                {{ $t('table_header.fee') }}: {{ fee_visible }}% ~ {{ fee_amount }} {{ currency.toUpperCase() }}
+                            </div>
+                        </div>
+                    </div>
+                    <div style="position: absolute; height: 100%; width: 100%" v-else-if="additionalParamsEnabled && !useMargin">
+                        <div v-if="!useMargin && conditionalOrdersAvailable && additionalParamsEnabled" class="blf__params">
+                            <v-text-field
+                                v-model="form.sl_rate"
+                                ref="bid_limit_sl_rate"
+                                :label="$t('trading.order.sl_rate')"
+                                :disabled="!additionalParamsEnabled"
+                                type="text"
+                                variant="outlined"
+                                density="compact"
+                                hide-details
+                                rounded="0"
+                                v-maska:unmaskedSL.masked=rate_options
+                            >
+                                <template #append-inner>
 							<span class="button-currency-text">
 								{{ market.toUpperCase() }}
 							</span>
-                    </template>
-                </v-text-field>
+                                </template>
+                            </v-text-field>
 
-                <v-text-field
-                    v-model="form.tp_rate"
-                    style="margin-top: 6px"
-                    ref="bid_limit_tp_rate"
-                    :label="$t('trading.order.tp_rate')"
-                    :disabled="!additionalParamsEnabled"
-                    type="text"
-                    variant="outlined"
-                    density="compact"
-                    hide-details
-                    rounded="0"
-                    @keydown="validateNumber($event)"
-                >
-                    <template #append-inner>
+                            <v-text-field
+                                v-model="form.tp_rate"
+                                ref="bid_limit_tp_rate"
+                                :label="$t('trading.order.tp_rate')"
+                                :disabled="!additionalParamsEnabled"
+                                type="text"
+                                variant="outlined"
+                                density="compact"
+                                hide-details
+                                rounded="0"
+                                class="mt-3"
+                                v-maska:unmaskedTP.masked=rate_options
+                            >
+                                <template #append-inner>
 							<span class="button-currency-text">
 								{{ market.toUpperCase() }}
 							</span>
-                    </template>
-                </v-text-field>
+                                </template>
+                            </v-text-field>
 
-                <v-text-field
-                    v-model="form.ts_offset"
-                    style="margin-top: 6px"
-                    ref="bid_limit_ts_offset"
-                    :label="$t('trading.order.ts_offset')"
-                    :disabled="!additionalParamsEnabled"
-                    type="text"
-                    variant="outlined"
-                    density="compact"
-                    hide-details
-                    rounded="0"
-                    @keydown="validateNumber($event)"
-                >
-                    <template #append-inner>
-                        <span class="button-currency-text">{{ market.toUpperCase() }}</span>
-                    </template>
-                </v-text-field>
+                            <v-text-field
+                                v-model="form.ts_offset"
+                                ref="bid_limit_ts_offset"
+                                :label="$t('trading.order.ts_offset')"
+                                :disabled="!additionalParamsEnabled"
+                                type="text"
+                                variant="outlined"
+                                density="compact"
+                                hide-details
+                                rounded="0"
+                                class="mt-3"
+                                v-maska:unmaskedTS.masked=rate_options
+                            >
+                                <template #append-inner>
+                                    <span class="button-currency-text">{{ market.toUpperCase() }}</span>
+                                </template>
+                            </v-text-field>
+                        </div>
+                    </div>
+                    <div style="position: absolute; height: 100%; width: 100%" v-else-if="!additionalParamsEnabled && useMargin">
+                        <div class="blf__margin" v-if="useMargin && marginAvailable">
+                            <v-select
+                                v-model="form.offer"
+                                :items="offers_select"
+                                :label="$t('trading.order.offer')"
+                                item-title="name"
+                                item-value="id"
+                                variant="underlined"
+                                density="compact"
+                                color="primary"
+                                hide-details
+                                :list-props="{ density: 'compact'}"
+                            />
+                        </div>
+                    </div>
+                </Transition>
             </div>
-        </div>
-
-        <div>
             <div class="blf__switch">
-                <div v-if="marginTradingAvailable && marginAvailable" class="d-flex justify-start">
+                <div v-if="!useMargin && conditionalOrdersAvailable " class="d-flex justify-start">
+                    <v-switch
+                        v-model="additionalParamsEnabled"
+                        :label="$t('trading.order.use_additional_params')"
+                        :disabled="!useCondOrdersEnabled"
+                        hide-details
+                        left
+                        flat
+                        :ripple="false"
+                        density="compact"
+                        color="primary"
+                    />
+                </div>
+                <div v-if="marginTradingAvailable && marginAvailable && !additionalParamsEnabled" class="d-flex justify-start">
                     <v-switch
                         v-model="useMargin"
                         :label="$t('trading.order.use_margin')"
                         :disabled="!useMarginEnabled"
                         hide-details
                         left
-                        density="compact"
-                        inset
-                    />
-                </div>
-                <div v-if="!useMargin && conditionalOrdersAvailable" class="d-flex justify-start">
-                    <v-switch
-                        v-model="additionalParamsEnabled"
-                        :label="$t('trading.order.use_additional_params')"
-                        hide-details
-                        left
                         flat
                         :ripple="false"
                         density="compact"
+                        color="primary"
+                        @update:modelValue="resetOffer"
                     />
                 </div>
             </div>
+        </div>
+
+        <div>
             <div class="blf__footer mt-2">
                 <TradingFormsConfirmDialog
                     order-type="limit"
@@ -467,9 +574,9 @@ const updateVolume = (event) => {
                     </v-btn>
                 </TradingFormsConfirmDialog>
 
-                <div class="blf__footer__available text-center">
+                <div class="blf__footer__available text-center mt-1">
                     {{ $t('trading.order.available') }}
-                    <span class="blf__footer__balance" @click="setAmount(100)">
+                    <span class="blf__footer__balance">
 						{{ formatWithScaleInAllCurrencies(balance, market) }}
 					</span>
                     {{ market.toUpperCase() }}
@@ -479,6 +586,21 @@ const updateVolume = (event) => {
     </form>
 </template>
 <style scoped lang="scss">
+.slide-left-enter-active,
+.slide-left-leave-active {
+    transition: all 0.25s ease-out;
+}
+.slide-left-enter-from {
+    opacity: 0;
+    transform: translateX(30px);
+}
+.slide-left-leave-to {
+    opacity: 0;
+    transform: translateX(-30px);
+}
+.v-slider {
+    font-size: 10px;
+}
 .blf {
     display: flex;
     flex-flow: column;
@@ -486,23 +608,27 @@ const updateVolume = (event) => {
     justify-content: space-between;
 
     &__volume {
+        margin: 8px 0 0;
+    }
 
-        margin: 6px 0;
+    &__switch {
+        margin-top: 4px;
     }
 
     &__percents {
         display: grid;
         grid-gap: 2px;
         grid-template-columns: repeat(4, 1fr);
-        margin-top: 4px;
-        margin-bottom: 4px;
+        margin-top: 6px;
+        margin-bottom: 8px;
     }
 
     &__text-field-hint {
         line-height: 1;
         font-size: 0.75rem;
-        padding: 0 12px;
+        padding: 0 6px;
         opacity: 0.6;
+        margin-top: 4px;
     }
 
     &__margin {
@@ -513,16 +639,20 @@ const updateVolume = (event) => {
         &__available {
             font-size: 11px;
         }
-        &__balance {
-            cursor: pointer;
-        }
     }
 }
-.v-field {
-    ::v-deep &__input {
-        min-height: 32px !important;
-        padding-top: 4px;
-        padding-bottom: 4px;
+::v-deep(.v-field__input) {
+    min-height: 32px !important;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+.v-switch {
+    ::v-deep(.v-selection-control) {
+        min-height: 28px !important;
+    }
+    ::v-deep(.v-label) {
+        font-size: 11px;
     }
 }
+
 </style>

@@ -38,9 +38,9 @@ const type = ref('limit');
 <template>
     <div class="trading-form-buy">
         <div class="trading-form-buy__actions align-start">
-            <v-radio-group v-model="type" inline hide-details mandatory density="compact" row>
-                <v-radio class="mr-2" color="primary" label="Limit" value="limit" :ripple="false" />
-                <v-radio class="mr-2" color="primary" label="Market" value="market" :ripple="false" />
+            <v-radio-group v-model="type" inline hide-details mandatory density="compact" row class="pt-0 pb-2">
+                <v-radio class="mr-2" density="compact" color="primary" label="LIMIT" value="limit" :ripple="false" />
+                <v-radio class="mr-2" density="compact" color="primary" label="MARKET" value="market" :ripple="false" />
             </v-radio-group>
 
             <div v-if="mobile" class="trading-forms__best-wrapper">
@@ -91,11 +91,15 @@ const type = ref('limit');
 .trading-form-buy .v-radio-group
     margin: 0
     padding-top: 4px
-    padding-bottom: 16px
-    font-size: 14px
+    padding-bottom: 4px
+    font-size: 10px
     letter-spacing: normal
     max-width: 100%
     text-align: left
+
+.v-radio-group
+    :deep(.v-label)
+        font-size: 12px
 
 .v-application--is-rtl
     .trading-form-buy
