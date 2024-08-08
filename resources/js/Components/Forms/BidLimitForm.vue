@@ -255,6 +255,20 @@ const rate_options = {
         9: { pattern: /[0-9]/, multiple: true }
     }
 };
+const unmaskedValue = ref('0')
+defineExpose({ unmaskedValue });
+
+const updateVolume = (event) => {
+    console.log(event.detail.masked);
+    if (!useMarginEnabled.value) useMargin.value = false;
+    if(event.detail.masked !== '')
+    {
+        volume.value = BigNumber(event.detail.masked)
+            .times(BigNumber(form.value.rate))
+            .toString();
+    }
+    else volume.value = 0;
+}
 
 </script>
 <template>
@@ -274,7 +288,8 @@ const rate_options = {
                 density="compact"
                 hide-details
                 rounded="0"
-                v-maska:form.amount.masked=amount_options
+                v-maska:unmaskedValue.masked=amount_options
+                @maska="updateVolume"
             >
                 <template #append-inner>
                     <span class="button-currency-text">{{ currency.toUpperCase() }}</span>
@@ -325,7 +340,7 @@ const rate_options = {
                     @keydown="validateNumber($event)"
                 >
                     <template #append-inner>
-                        <span class="button-currency-text">{{ currency.toUpperCase() }}</span>
+                        <span class="button-currency-text">{{ market.toUpperCase() }}</span>
                     </template>
                 </v-text-field>
                 <div class="blf__text-field-hint">
