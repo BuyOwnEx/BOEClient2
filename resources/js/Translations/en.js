@@ -1,5 +1,7 @@
 export default {
     common: {
+        buy: 'Buy',
+        sell: 'Sell',
         add: 'Add',
         create: 'Create',
         save: 'Save',
@@ -270,9 +272,10 @@ export default {
         headers: {
             history_deal_list: 'Deals history',
             market_activity: 'Market activity',
+            make_order: 'Place order',
             own_active_order_list: 'Active orders',
-            own_active_position_list: 'Your opened positions',
-            own_history_deal_list: 'Yours deals',
+            own_active_position_list: 'Opened positions',
+            own_history_deal_list: 'Deals',
             ask: 'Ask',
             bid: 'Bid',
             ask_bid: 'Ask and Bid',
@@ -392,6 +395,9 @@ export default {
         },
 
         forms: {
+            main_buy_order: 'Main buy order of',
+            main_sell_order: 'Main sell order of',
+            for_price: 'at a price of',
             best_bid: 'Best Bid',
             best_ask: 'Best Ask',
             stop_loss_info: 'Stop Loss Info',

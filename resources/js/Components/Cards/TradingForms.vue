@@ -79,26 +79,24 @@ const selectedFormTab = ref(0);
             </v-col>
         </v-row>
 
-        <v-card class="own-lists-tabs-wrapper" v-if="!mobile && isAuth">
-            <v-tabs v-model="selectedFormTab" class='small-tabs' color="primary" density="compact">
-                <v-tab :key="1">
-                    {{ $t('trading.headers.forms') }}
+        <div class="own-lists-tabs-wrapper fill-height" v-else-if="!mobile && isAuth">
+            <v-tabs v-model="selectedFormTab" color="primary" density="compact" :hide-slider="true">
+                <v-tab value="1" size="small" :hide-slider="true">
+                    {{ $t('trading.headers.make_order') }}
                 </v-tab>
-                <v-tab :key="2">
+                <v-tab value="2" size="small" :hide-slider="true">
                     {{ $t('trading.headers.own_active_order_list') }}
                 </v-tab>
-
-                <v-tab :key="3">
+                <v-tab value="3" size="small" :hide-slider="true">
                     {{ $t('trading.headers.own_history_deal_list') }}
                 </v-tab>
-
-                <v-tab v-if="marginAvailable && marginTradingAvailable" :key="4">
+                <v-tab v-if="marginAvailable && marginTradingAvailable" value="4" size="small" :hide-slider="true">
                     {{ $t('trading.headers.own_active_position_list') }}
                 </v-tab>
             </v-tabs>
-            <v-tabs-window v-model="selectedFormTab" class="profile-page__tabs-items">
-                <v-tabs-window-item value="1">
-                    <v-row class="pa-1" no-gutters>
+            <v-tabs-window v-model="selectedFormTab">
+                <v-tabs-window-item value="1" class="fill-height">
+                    <v-row class="pa-1 fill-height" no-gutters>
                         <v-col class="trading-forms__form trading-forms__form--buy" cols="12" md="6">
                             <v-card-title class="trading-forms__header component-title pa-0">
                                 <span>
@@ -131,24 +129,28 @@ const selectedFormTab = ref(0);
                     </v-row>
                 </v-tabs-window-item>
                 <!--                        <OwnActiveOrderList :currency="currency" :market="market" />-->
-                <v-tabs-window-item value="2">
 
+                <v-tabs-window-item value="2" class="fill-height">
+                    {{ $t('text-1.1')}}
                 </v-tabs-window-item>
                 <!--                        <OwnHistoryDealList :currency="currency" :market="market" />-->
-                <v-tabs-window-item value="3">
 
+                <v-tabs-window-item value="3" class="fill-height">
+                    {{ $t('text-1.2')}}
                 </v-tabs-window-item >
-                <v-tabs-window-item v-if="marginAvailable && marginTradingAvailable" value="4">
+
+                <v-tabs-window-item v-if="marginAvailable && marginTradingAvailable" value="4" class="fill-height">
                     <!--                        <OwnActivePositionList :currency="currency" :market="market" />-->
+                    {{ $t('text-1.3')}}
                 </v-tabs-window-item>
 
             </v-tabs-window>
-        </v-card>
+        </div>
 
 
         <!--	mobile version	-->
         <div v-else>
-            <v-tabs v-model="selectedTab" class="small-tabs" grow>
+            <v-tabs v-model="selectedTab" grow>
                 <v-tab :key="1">
                     {{ $t('trading.order.direction.buy') }}
                 </v-tab>
@@ -169,6 +171,10 @@ const selectedFormTab = ref(0);
     </v-card>
 </template>
 <style scoped lang="sass">
+.v-window
+    height: calc(100% - 36px)
+    :deep(.v-window__container)
+        height: 100%
 .trading-forms
     display: flex
     flex-grow: 1

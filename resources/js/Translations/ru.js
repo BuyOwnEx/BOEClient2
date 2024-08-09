@@ -1,5 +1,7 @@
 export default {
     common: {
+        buy: 'Купить',
+        sell: 'Продать',
         add: 'Добавить',
         create: 'Создать',
         save: 'Сохранить',
@@ -269,9 +271,10 @@ export default {
         headers: {
             history_deal_list: 'История торгов',
             market_activity: 'Активность на рынке',
+            make_order: 'Выставить ордер',
             own_active_order_list: 'Активные ордера',
-            own_active_position_list: 'Ваши открытые позиции',
-            own_history_deal_list: 'Ваши сделки',
+            own_active_position_list: 'Открытые позиции',
+            own_history_deal_list: 'Сделки',
             ask: 'Продажа',
             bid: 'Покупка',
             ask_bid: 'Продажа и покупка',
@@ -389,6 +392,9 @@ export default {
         },
 
         forms: {
+            main_buy_order: 'Основной ордер на покупку',
+            main_sell_order: 'Основной ордер на продажу',
+            for_price: 'по цене',
             best_bid: 'Best Bid',
             best_ask: 'Best Ask',
             stop_loss_info: 'Информация Stop Loss',

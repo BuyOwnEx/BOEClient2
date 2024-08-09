@@ -145,6 +145,7 @@ const sendMessage = () => {
     &__text {
         font-size: 0.7rem;
         word-break: break-word;
+        padding-right: 20px;
     }
 }
 .v-application--is-rtl .trading-chat-message {

@@ -53,8 +53,6 @@ const form = ref({
     offer: null,
 })
 
-
-
 const isAuth = computed(() => {
     return page.props.auth.user && page.props.auth.user.email_verified_at
 });
@@ -167,30 +165,9 @@ const useCondOrdersEnabled = computed(() => {
 });
 
 const selectedOffer = computed(() => {
-    const selectedOfferID = form.value.offer;
-    return offers.value?.find(item => item.id === selectedOfferID)
+    if(form.value.offer !== null) return offers.value !== null ? _.find(offers.value, item => item.id === form.value.offer) : null
+    else return {}
 });
-
-const validateNumber = (evt) => {
-    let charCode = evt.which ? evt.which : evt.keyCode;
-    if (
-        charCode > 31 &&
-        (charCode < 48 || charCode > 57) &&
-        (charCode < 96 || charCode > 105) &&
-        charCode !== 46 &&
-        charCode !== 35 &&
-        charCode !== 36 &&
-        charCode !== 37 &&
-        charCode !== 39 &&
-        evt.key !== '.'
-    )
-    {
-        evt.preventDefault();
-    }
-    else {
-        return true;
-    }
-};
 
 const setAmount = () => {
     if (form.value.rate !== '' && form.value.rate !== '0') {
@@ -241,7 +218,6 @@ const findCurrencyScale = (currency) => {
     });
     if (index > -1) return currencies.data[index].scale;
 };
-
 const formatWithScaleInAllCurrencies = (value, currency) => {
     const scale = findCurrencyScale(currency.toUpperCase());
     if (scale) {
@@ -355,6 +331,29 @@ const updateAmountVolumeChanged = (event) => {
 const resetOffer = () => {
     if(!useMargin.value) form.value.offer = null
 };
+
+const isSetSL = computed(() => {
+    return form.value.sl_rate !== '0' && form.value.sl_rate !== '';
+});
+const isSetTP = computed(() => {
+    return form.value.tp_rate !== '0' && form.value.tp_rate !== '';
+});
+const isSetTS = computed(() => {
+    return form.value.ts_offset !== '0' && form.value.ts_offset !== '';
+});
+
+const showCondParams = ref(false);
+
+const setCondParams = () => {
+    additionalParamsEnabled.value = false;
+    showCondParams.value = !!(isSetSL.value || isSetTP.value || isSetTS.value);
+};
+const resetCondParams = () => {
+    form.value.sl_rate = '0';
+    form.value.tp_rate = '0';
+    form.value.ts_offset = '0';
+    additionalParamsEnabled.value = false;
+};
 </script>
 <template>
     <form class="blf" @submit.prevent="sendBidLimit">
@@ -364,12 +363,11 @@ const resetOffer = () => {
         <input name="side" type="hidden" value="0" />
 
         <div class="d-flex flex-grow-0 flex-column">
-            <div style="display: inline-block; position: relative; height: 100%">
-                <Transition mode="out-in" name="slide-left" style="position: relative; height: 100%; width: 100%">
-                    <div style="position: absolute; height: 100%; width: 100%" v-if="!additionalParamsEnabled && !useMargin">
+            <div class="d-inline-block position-relative fill-height">
+                <Transition mode="out-in" name="slide-left" class="position-relative fill-height" style="width: 100%">
+                    <div class="fill-height" style="position: absolute; width: 100%" v-if="!additionalParamsEnabled && !useMargin">
                         <v-text-field
                             v-model="form.rate"
-                            ref="bid_limit_rate"
                             :label="$t('table_header.rate_per') + ' ' + currency.toUpperCase()"
                             type="text"
                             variant="outlined"
@@ -386,7 +384,6 @@ const resetOffer = () => {
 
                         <v-text-field
                             v-model="form.amount"
-                            ref="bid_limit_amount"
                             :label="$t('table_header.amount')"
                             type="text"
                             variant="outlined"
@@ -423,7 +420,6 @@ const resetOffer = () => {
                         <div class="blf__volume">
                             <v-text-field
                                 v-model="volume"
-                                ref="bid_limit_volume"
                                 :label="$t('table_header.volume')"
                                 type="text"
                                 variant="outlined"
@@ -440,13 +436,32 @@ const resetOffer = () => {
                             <div class="blf__text-field-hint">
                                 {{ $t('table_header.fee') }}: {{ fee_visible }}% ~ {{ fee_amount }} {{ currency.toUpperCase() }}
                             </div>
+                            <div class="mt-2">
+                                <div class="blf__text-field-hint" v-if="showCondParams && isSetSL">
+                                    + SL-MARKET: <span class="text-success text-uppercase text-[14px]">{{ form.sl_rate }} {{ market.toUpperCase() }}</span>
+                                </div>
+                                <div class="blf__text-field-hint" v-if="showCondParams && isSetTP">
+                                    + TP-MARKET: <span class="text-success text-uppercase text-[14px]">{{ form.tp_rate }} {{ market.toUpperCase() }}</span>
+                                </div>
+                                <div class="blf__text-field-hint" v-if="showCondParams && isSetTS">
+                                    + TS-MARKET: <span class="text-success text-uppercase text-[14px]">{{ form.ts_offset }} {{ market.toUpperCase() }}</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div style="position: absolute; height: 100%; width: 100%" v-else-if="additionalParamsEnabled && !useMargin">
+                    <div class="fill-height" style="position: absolute; width: 100%" v-else-if="additionalParamsEnabled && !useMargin">
                         <div v-if="!useMargin && conditionalOrdersAvailable && additionalParamsEnabled" class="blf__params">
+                            <div class="mb-4 text-start pl-1">
+                                <span class="text-[10px] text-disabled" style="font-size: 10px;">
+                                    {{ $t('trading.forms.main_buy_order') }}
+                                    <span class="text-success text-uppercase text-[14px]">{{form.amount}} {{ currency.toUpperCase() }}</span>
+                                    {{ $t('trading.forms.for_price') }}
+                                    <span class="text-success text-uppercase text-[14px]">{{form.rate}} {{ market.toUpperCase() }}</span>
+                                </span>
+                            </div>
+
                             <v-text-field
                                 v-model="form.sl_rate"
-                                ref="bid_limit_sl_rate"
                                 :label="$t('trading.order.sl_rate')"
                                 :disabled="!additionalParamsEnabled"
                                 type="text"
@@ -465,7 +480,6 @@ const resetOffer = () => {
 
                             <v-text-field
                                 v-model="form.tp_rate"
-                                ref="bid_limit_tp_rate"
                                 :label="$t('trading.order.tp_rate')"
                                 :disabled="!additionalParamsEnabled"
                                 type="text"
@@ -485,7 +499,6 @@ const resetOffer = () => {
 
                             <v-text-field
                                 v-model="form.ts_offset"
-                                ref="bid_limit_ts_offset"
                                 :label="$t('trading.order.ts_offset')"
                                 :disabled="!additionalParamsEnabled"
                                 type="text"
@@ -500,6 +513,28 @@ const resetOffer = () => {
                                     <span class="button-currency-text">{{ market.toUpperCase() }}</span>
                                 </template>
                             </v-text-field>
+                            <div class="d-flex justify-space-around">
+                                <v-btn
+                                    variant="text"
+                                    size="x-small"
+                                    color="primary"
+                                    class="mt-2 align-center"
+                                    tile
+                                    @click="setCondParams"
+                                >
+                                    {{ $t('common.apply') }}
+                                </v-btn>
+                                <v-btn
+                                    variant="text"
+                                    size="x-small"
+                                    color="secondary"
+                                    class="mt-2 align-center"
+                                    tile
+                                    @click="resetCondParams"
+                                >
+                                    {{ $t('common.reset') }}
+                                </v-btn>
+                            </div>
                         </div>
                     </div>
                     <div style="position: absolute; height: 100%; width: 100%" v-else-if="!additionalParamsEnabled && useMargin">
@@ -551,36 +586,34 @@ const resetOffer = () => {
             </div>
         </div>
 
-        <div>
-            <div class="blf__footer mt-2">
-                <TradingFormsConfirmDialog
-                    order-type="limit"
-                    action-type="buy"
-                    :amount="form.amount"
-                    :price="form.rate"
-                    :currency="currency"
-                    :market="market"
-                    :is-additional-params="additionalParamsEnabled"
-                    :stop-loss="form.sl_rate"
-                    :take-profit="form.tp_rate"
-                    :trailing-stop="form.ts_offset"
-                    :is-leverage="useMargin"
-                    :leverage-offer="selectedOffer"
-                    :leverage-level="leverageLevel"
-                    @confirm="sendBidLimit"
-                >
-                    <v-btn color="success" height="24" block @click="sendBidLimit">
-                        {{ $t('trading.order.direction.buy') }}
-                    </v-btn>
-                </TradingFormsConfirmDialog>
+        <div class="blf__footer mt-2">
+            <TradingFormsConfirmDialog
+                order-type="limit"
+                action-type="buy"
+                :amount="form.amount"
+                :price="form.rate"
+                :currency="currency"
+                :market="market"
+                :is-additional-params="additionalParamsEnabled.value"
+                :stop-loss="form.sl_rate"
+                :take-profit="form.tp_rate"
+                :trailing-stop="form.ts_offset"
+                :is-leverage="useMargin.value"
+                :leverage-offer="selectedOffer.value"
+                :leverage-level="leverageLevel"
+                @confirm="sendBidLimit"
+            >
+                <v-btn color="success" height="24" block>
+                    {{ $t('common.buy') }}
+                </v-btn>
+            </TradingFormsConfirmDialog>
 
-                <div class="blf__footer__available text-center mt-1">
-                    {{ $t('trading.order.available') }}
-                    <span class="blf__footer__balance">
+            <div class="blf__footer__available text-center mt-1">
+                {{ $t('trading.order.available') }}
+                <span class="blf__footer__balance">
 						{{ formatWithScaleInAllCurrencies(balance, market) }}
 					</span>
-                    {{ market.toUpperCase() }}
-                </div>
+                {{ market.toUpperCase() }}
             </div>
         </div>
     </form>

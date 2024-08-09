@@ -244,7 +244,7 @@ $grid-height: calc(100vh - 64px - 40px - 8px); // 64px - header, 40px - footer, 
     &__desktop {
         width: 100%;
         height: $grid-height;
-        min-height: 850px;
+        min-height: 900px;
         display: grid;
         grid-template-areas:
             'tickers info info info info history'
@@ -377,9 +377,8 @@ $grid-height: calc(100vh - 64px - 40px - 8px); // 64px - header, 40px - footer, 
 				'forms forms bid ask chat'
 				'forms forms bid ask chat'
 				'forms forms bid ask chat'
-                'forms forms bid ask chat'
-                'own own own own own';
-            grid-template-rows: 40px 30fr 6fr 6fr 6fr 6fr 6fr 6fr;
+                'forms forms bid ask chat';
+            grid-template-rows: 40px 30fr 6fr 6fr 6fr 6fr 6fr;
 
             &__tickers {
                 min-width: unset;
@@ -424,9 +423,8 @@ $grid-height: calc(100vh - 64px - 40px - 8px); // 64px - header, 40px - footer, 
 				'forms forms bid ask'
 				'forms forms bid ask'
 				'forms forms bid ask'
-				'forms forms bid ask'
-                'own own own own';
-            grid-template-rows: 40px 4fr 2fr 2fr 1fr;
+				'forms forms bid ask';
+            grid-template-rows: 40px 4fr 2fr 2fr;
 
             &__tickers {
                 min-width: unset;

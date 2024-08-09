@@ -66,6 +66,10 @@ const props = defineProps({
 
 const emit = defineEmits(['confirm']);
 
+const isMarginOrder = computed(() => {
+    return props.isLeverage;
+});
+
 const isLimit = computed(() => {
     return props.orderType === 'limit';
 });
@@ -259,19 +263,19 @@ const confirm = () => {
 
         <template #content>
             <div>
-                <div v-if="!isLeverage">
-                    <div v-if="isBuy && isLimit" v-html="buyLimitText" />
-                    <div v-else-if="isBuy && isMarket" v-html="buyMarketText" />
+                <div v-if="!isMarginOrder">
+                    <div v-if="isBuy && isLimit && !isAnyAdditionalParamExist" v-html="buyLimitText" />
+                    <div v-else-if="isBuy && isMarket && !isAnyAdditionalParamExist" v-html="buyMarketText" />
                     <div v-else-if="isBuy && isLimit && isAnyAdditionalParamExist" v-html="buyLimitParamsText" />
-                    <div v-else-if="isBuy && isLimit && isAnyAdditionalParamExist" v-html="buyMarketParamsText" />
+                    <div v-else-if="isBuy && isMarket && isAnyAdditionalParamExist" v-html="buyMarketParamsText" />
 
-                    <div v-if="isSell && isLimit" v-html="sellLimitText" />
-                    <div v-else-if="isSell && isMarket" v-html="sellMarketText" />
+                    <div v-if="isSell && isLimit && !isAnyAdditionalParamExist" v-html="sellLimitText" />
+                    <div v-else-if="isSell && isMarket && !isAnyAdditionalParamExist" v-html="sellMarketText" />
                     <div v-else-if="isSell && isLimit && isAnyAdditionalParamExist" v-html="sellLimitParamsText" />
                     <div v-else-if="isSell && isMarket && isAnyAdditionalParamExist" v-html="sellMarketParamsText" />
                 </div>
 
-                <div v-else-if="isLeverage">
+                <div v-else>
                     <div v-if="isBuy && isLimit" v-html="buyLimitLeverageText" />
                     <div v-if="isBuy && isMarket" v-html="buyMarketLeverageText" />
 
@@ -279,20 +283,17 @@ const confirm = () => {
                     <div v-if="isSell && isMarket" v-html="sellMarketLeverageText" />
                 </div>
 
-                <ul
-                    v-if="isAnyAdditionalParamExist && isAdditionalParams"
-                    class="trading-forms-confirm-dialog__add-params-list"
-                >
-                    <li v-if="isBuy && stopLoss" v-html="buyStopLossText" />
-                    <li v-if="isBuy && takeProfit" v-html="buyTakeProfitText" />
-                    <li v-if="isBuy && trailingStop" v-html="buyTrailingStopText" />
+                <ul v-if="isAnyAdditionalParamExist" class="trading-forms-confirm-dialog__add-params-list">
+                    <li v-if="isBuy && isSetSL" v-html="buyStopLossText" />
+                    <li v-if="isBuy && isSetTP" v-html="buyTakeProfitText" />
+                    <li v-if="isBuy && isSetTS" v-html="buyTrailingStopText" />
 
-                    <li v-if="isSell && stopLoss" v-html="sellStopLossText" />
-                    <li v-if="isSell && takeProfit" v-html="sellTakeProfitText" />
-                    <li v-if="isSell && trailingStop" v-html="sellTrailingStopText" />
+                    <li v-if="isSell && isSetSL" v-html="sellStopLossText" />
+                    <li v-if="isSell && isSetTP" v-html="sellTakeProfitText" />
+                    <li v-if="isSell && isSetTS" v-html="sellTrailingStopText" />
                 </ul>
 
-                <small v-if="isMultiplyAdditionalParams && isAdditionalParams" class="text--secondary pt-1">
+                <small v-if="isMultiplyAdditionalParams" class="text-secondary pt-1">
                     * {{ $t('trading.forms.dialog.only_one_conditional_orders_trigger') }}
                 </small>
             </div>

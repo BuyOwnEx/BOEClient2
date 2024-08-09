@@ -14,17 +14,11 @@ const props = defineProps({
     headerColor: {
         type: String,
         required: false,
-        default: '',
+        default: 'primary',
     },
 });
 const dialog = ref(false);
 
-const getBackgroundClassColor = computed(() => {
-    if (props.headerColor === 'success')
-        return 'common-dialog__title--success';
-    else if (props.headerColor === 'error')
-        return 'common-dialog__title--error';
-});
 const emit = defineEmits(['confirm']);
 
 const confirm = () => {
@@ -39,15 +33,15 @@ const close = () => {
 </script>
 <template>
     <v-dialog v-model="dialog" width="500">
-        <template #activator="{ on, attrs }">
-			<span v-bind="attrs" v-on="on">
+        <template #activator="{ props: activatorProps }">
+			<span v-bind="activatorProps">
 				<slot></slot>
 			</span>
         </template>
 
         <v-card class="common-dialog">
             <slot name="card">
-                <v-card-title class="common-dialog__title" :class="getBackgroundClassColor">
+                <v-card-title class="common-dialog__title" :class="'bg-'+props.headerColor">
                     <slot name="title">
                         {{ $t('common.confirmation') }}
                     </slot>
@@ -64,7 +58,7 @@ const close = () => {
                         <v-spacer />
 
                         <slot name="close">
-                            <v-btn size="small" variant="text" tile plain @click="close">
+                            <v-btn color="secondary" tile variant="text" @click="close">
                                 {{ $t('common.cancel') }}
                             </v-btn>
                         </slot>
@@ -72,7 +66,7 @@ const close = () => {
                         <v-spacer />
 
                         <slot name="confirm">
-                            <v-btn :color="confirmColor" size="small" tile variant="text" plain @click="confirm">
+                            <v-btn :color="confirmColor" tile variant="text" @click="confirm">
                                 {{ confirmText || $t('common.confirm') }}
                             </v-btn>
                         </slot>
@@ -91,24 +85,12 @@ const close = () => {
         font-weight: 600 !important
         padding: 8px 24px 8px !important
 
-        &--success
-            background-color: var(--v-success-base)
-        &--error
-            background-color: var(--v-error-base)
-
     &__content
         padding-top: 8px !important
+        padding-bottom: 8px !important
 
     &__actions
         .v-btn
             text-transform: uppercase !important
             letter-spacing: 1px !important
-
-.theme--dark
-    .common-dialog
-        &__title
-            &--success
-                background-color: var(--v-success-darken1)
-            &--error
-                background-color: var(--v-error-darken1)
 </style>
