@@ -134,12 +134,12 @@ if (props.depth.bids_list.length !== 0) {
 
             <TradingMarketActivity v-if="showActivity" class="trading__desktop__market-activity" />
 
-            <TradingOwnLists
+<!--            <TradingOwnLists
                 v-if="$page.props.auth.user && $page.props.auth.user.email_verified_at"
                 class="trading__desktop__own-lists-tabs-wrapper"
                 :currency="currency"
                 :market="market"
-            />
+            />-->
         </div>
         <div v-else class="trading__mobile">
             <v-bottom-navigation class="mt-1" style="position: relative" v-model="selectedTab" mode="shift" grow color="primary" base-color="on-surface">
@@ -244,16 +244,17 @@ $grid-height: calc(100vh - 64px - 40px - 8px); // 64px - header, 40px - footer, 
     &__desktop {
         width: 100%;
         height: $grid-height;
+        min-height: 850px;
         display: grid;
         grid-template-areas:
             'tickers info info info info history'
 			'tickers chart chart chart chart history'
-			'chat bid forms forms ask history'
-			'chat bid forms forms ask history'
-			'activity bid forms forms ask history';
+			'tickers bid forms forms ask history'
+			'tickers bid forms forms ask chat'
+			'activity bid forms forms ask chat';
         grid-gap: 4px;
         grid-template-columns: minmax(325px, 1fr) 1fr 1fr 1fr 1fr minmax(325px, 1fr);
-        grid-template-rows: 40px minmax(408px, 5fr) 2fr 1fr 195px;
+        grid-template-rows: 40px minmax(408px, 5fr) minmax(150px, 2fr) 1fr 200px;
 
         &__tickers {
             grid-area: tickers;
@@ -306,11 +307,10 @@ $grid-height: calc(100vh - 64px - 40px - 8px); // 64px - header, 40px - footer, 
         grid-template-areas:
             'tickers info info info info history'
 			'tickers chart chart chart chart history'
-			'chat bid forms forms ask history'
-			'chat bid forms forms ask history'
-			'activity bid forms forms ask history'
-			'own own own own own own';
-        grid-template-rows: 40px 5fr 2fr 1fr 2fr 1fr;
+			'tickers bid forms forms ask history'
+			'tickers bid forms forms ask chat'
+			'activity bid forms forms ask chat';
+        grid-template-rows: 40px minmax(408px, 5fr) minmax(150px, 2fr) 1fr 200px;
     }
 
     &__mobile {

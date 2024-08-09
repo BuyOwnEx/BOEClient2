@@ -4,9 +4,10 @@ import {computed, ref} from "vue";
 import {useStore} from "vuex";
 import TradingFormBuy from "@/Components/Cards/TradingFormBuy.vue";
 import TradingFormSell from "@/Components/Cards/TradingFormSell.vue";
+import {usePage} from "@inertiajs/vue3";
 const { mobile } = useDisplay();
 const store = useStore();
-
+const page = usePage();
 const props = defineProps({
     currency: {
         type: String,
@@ -22,6 +23,10 @@ const props = defineProps({
     },
 });
 
+const isAuth = computed(() => {
+    return page.props.auth.user && page.props.auth.user.email_verified_at
+});
+
 const best_ask = computed(() => {
     return store.state.trading.best_ask;
 });
@@ -30,12 +35,19 @@ const best_bid = computed(() => {
     return store.state.trading.best_bid;
 });
 
+const marginAvailable = import.meta.env.VITE_CONFIG_PRODUCT_TYPE === 'full';
+
+const marginTradingAvailable = computed(() => {
+    return props.pair.margin;
+});
+
 const selectedTab = ref(0);
+const selectedFormTab = ref(0);
 
 </script>
 <template>
     <v-card class="trading-forms">
-        <v-row v-if="!mobile" class="pa-1" no-gutters>
+        <v-row v-if="!mobile && !isAuth" class="pa-1" no-gutters>
             <v-col class="trading-forms__form trading-forms__form--buy" cols="12" md="6">
                 <v-card-title class="trading-forms__header component-title pa-0">
 					<span>
@@ -66,6 +78,73 @@ const selectedTab = ref(0);
                 </v-card-text>
             </v-col>
         </v-row>
+
+        <v-card class="own-lists-tabs-wrapper" v-if="!mobile && isAuth">
+            <v-tabs v-model="selectedFormTab" class='small-tabs' color="primary" density="compact">
+                <v-tab :key="1">
+                    {{ $t('trading.headers.forms') }}
+                </v-tab>
+                <v-tab :key="2">
+                    {{ $t('trading.headers.own_active_order_list') }}
+                </v-tab>
+
+                <v-tab :key="3">
+                    {{ $t('trading.headers.own_history_deal_list') }}
+                </v-tab>
+
+                <v-tab v-if="marginAvailable && marginTradingAvailable" :key="4">
+                    {{ $t('trading.headers.own_active_position_list') }}
+                </v-tab>
+            </v-tabs>
+            <v-tabs-window v-model="selectedFormTab" class="profile-page__tabs-items">
+                <v-tabs-window-item value="1">
+                    <v-row class="pa-1" no-gutters>
+                        <v-col class="trading-forms__form trading-forms__form--buy" cols="12" md="6">
+                            <v-card-title class="trading-forms__header component-title pa-0">
+                                <span>
+                                    {{ $t('trading.order.direction.buy') }}
+                                    {{ currency }}
+                                </span>
+                                <div class="trading-forms__best">
+                                    <span> {{ $t('trading.forms.best_ask') }}: {{ best_ask }} </span>
+                                </div>
+                            </v-card-title>
+                            <v-card-text class="trading-forms__content pa-0">
+                                <TradingFormBuy :currency="currency" :market="market" :pair="pair" />
+                            </v-card-text>
+                        </v-col>
+
+                        <v-col class="trading-forms__form trading-forms__form--sell" cols="12" md="6">
+                            <v-card-title class="trading-forms__header component-title pa-0">
+                                <span>
+                                    {{ $t('trading.order.direction.sell') }}
+                                    {{ currency }}
+                                </span>
+                                <div class="trading-forms__best">
+                                    <span>{{ $t('trading.forms.best_bid') }}: {{ best_bid }}</span>
+                                </div>
+                            </v-card-title>
+                            <v-card-text class="trading-forms__content pa-0">
+                                <TradingFormSell :currency="currency" :market="market" :pair="pair" />
+                            </v-card-text>
+                        </v-col>
+                    </v-row>
+                </v-tabs-window-item>
+                <!--                        <OwnActiveOrderList :currency="currency" :market="market" />-->
+                <v-tabs-window-item value="2">
+
+                </v-tabs-window-item>
+                <!--                        <OwnHistoryDealList :currency="currency" :market="market" />-->
+                <v-tabs-window-item value="3">
+
+                </v-tabs-window-item >
+                <v-tabs-window-item v-if="marginAvailable && marginTradingAvailable" value="4">
+                    <!--                        <OwnActivePositionList :currency="currency" :market="market" />-->
+                </v-tabs-window-item>
+
+            </v-tabs-window>
+        </v-card>
+
 
         <!--	mobile version	-->
         <div v-else>

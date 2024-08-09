@@ -151,7 +151,7 @@ const balance = computed(() => {
             return BigNumber(amount.available).dp(scale, 1);
         }
         return BigNumber(110).dp(scale, 1);
-    } else return BigNumber(0);
+    } else return BigNumber(110);
 });
 
 const isAdditionalParams = computed(() => {
