@@ -408,11 +408,11 @@ export default {
                 buy_market_order: 'Вы собираетесь <b> купить {amount} {currency}</b> по рыночной цене',
                 buy_market_order_with_params:
                     'Вы собираетесь <b> купить {amount} {currency}</b> по рыночной цене со следующими связанными условными ордерами',
-                buy_stop_loss:
+                buy_stop_loss_text:
                     'Продать по рынку в случае, если Best Bid достигнет значения <b>{stopLoss} {market}</b> (SL ордер)',
-                buy_take_profit:
+                buy_take_profit_text:
                     'Продать по рынку в случае, если Best Bid достигнет значения <b>{takeProfit} {market}</b> (TP ордер)',
-                buy_trailing_stop:
+                buy_trailing_stop_text:
                     'Продать по рынку в случае, если цена актива упадёт одномоментно на <b>{trailingStop}</b> пунктов (TS ордер)',
 
                 buy_limit_leverage:

@@ -36,10 +36,6 @@ const best_ask = computed(() => {
     return store.state.trading.best_ask;
 });
 
-const best_bid = computed(() => {
-    return store.state.trading.best_bid;
-});
-
 const form = ref({
     type: 'LIMIT',
     currency: props.currency.toUpperCase(),
@@ -82,10 +78,6 @@ const offers_select = computed(() => {
             ]),
         };
     });
-});
-
-const activeTicker = computed(() => {
-    return store.getters['trading/activeTicker'];
 });
 
 const amountScale = computed(() => {
@@ -152,10 +144,6 @@ const balance = computed(() => {
     } else return BigNumber(110);
 });
 
-const isAdditionalParams = computed(() => {
-    return additionalParamsEnabled.value;
-});
-
 const useMarginEnabled = computed(() => {
     return Number(form.value.amount) && Number(form.value.rate);
 });
@@ -194,7 +182,6 @@ const setAmount = () => {
 };
 
 const sendBidLimit = () => {
-    console.log(form.value);
     if (!form.value.amount) {
         //this.pushErrorNotification(_, 'incorrect');
         return;
@@ -687,5 +674,4 @@ const resetCondParams = () => {
         font-size: 11px;
     }
 }
-
 </style>
