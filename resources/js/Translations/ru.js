@@ -128,6 +128,7 @@ export default {
         fee: 'Комиссия',
         market: 'Рынок',
         amount: 'Кол-во',
+        amount_full: 'Количество',
         rate: 'Цена',
         rate_per: 'Цена за 1',
         filled: 'Завершено %',

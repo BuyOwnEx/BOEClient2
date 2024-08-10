@@ -128,6 +128,7 @@ export default {
         fee: 'Fee',
         market: 'Market',
         amount: 'Amount',
+        amount_full: 'Amount',
         rate: 'Price',
         rate_per: 'Price per 1',
         filled: 'Filled, %',
