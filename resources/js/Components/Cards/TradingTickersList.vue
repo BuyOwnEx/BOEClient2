@@ -67,8 +67,8 @@ const tickersList = computed(() => {
             currency: item.currency,
             margin: item.margin,
             volume: item.volume,
-            latest: item.latest.toFixed(item.scale),
-            change: change.toFixed(item.scale),
+            latest: item.latest.toFixed(item.rate_scale),
+            change: change.toFixed(item.rate_scale),
             changePercent: changePercent.toFixed(2),
         };
     });

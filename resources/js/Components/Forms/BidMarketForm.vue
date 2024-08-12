@@ -169,16 +169,23 @@ const setAmount = () => {
         }
     }
     else {
-        form.value.amount = balance.value
-            .times(percent.value)
-            .div(100)
-            .decimalPlaces(amountScale.value, 1)
-            .toString();
-        fee_amount.value = BigNumber(form.value.amount)
-            .div(BigNumber(best_ask.value))
-            .times(fee_currency.value)
-            .decimalPlaces(feeScale.value, 1)
-            .toString();
+        if(BigNumber(best_ask.value).gt(0))
+        {
+            form.value.amount = balance.value
+                .times(percent.value)
+                .div(100)
+                .decimalPlaces(amountScale.value, 1)
+                .toString();
+            fee_amount.value = BigNumber(form.value.amount)
+                .div(BigNumber(best_ask.value))
+                .times(fee_currency.value)
+                .decimalPlaces(feeScale.value, 1)
+                .toString();
+        }
+        else {
+            form.value.amount = '0';
+            fee_amount.value = '0';
+        }
     }
 };
 

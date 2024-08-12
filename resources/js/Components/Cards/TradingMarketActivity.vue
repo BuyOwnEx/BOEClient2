@@ -27,7 +27,7 @@ const tickersList = computed(() => {
             market: item.market,
             currency: item.currency,
             trend: change > 0 ? 'positive' : change < 0 ? 'negative' : 0,
-            change: change.dp(item.scale).toNumber(),
+            change: change.dp(item.rate_scale).toNumber(),
             changePercent: changePercent,
         };
     });

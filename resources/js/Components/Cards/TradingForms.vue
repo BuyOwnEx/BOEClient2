@@ -5,6 +5,7 @@ import {useStore} from "vuex";
 import TradingFormBuy from "@/Components/Cards/TradingFormBuy.vue";
 import TradingFormSell from "@/Components/Cards/TradingFormSell.vue";
 import {usePage} from "@inertiajs/vue3";
+import TradingOwnActiveOrdersList from "@/Components/Cards/TradingOwnActiveOrdersList.vue";
 const { mobile } = useDisplay();
 const store = useStore();
 const page = usePage();
@@ -131,7 +132,7 @@ const selectedFormTab = ref(0);
                 <!--                        <OwnActiveOrderList :currency="currency" :market="market" />-->
 
                 <v-tabs-window-item value="2" class="fill-height">
-                    {{ $t('text-1.1')}}
+                    <TradingOwnActiveOrdersList :currency="currency" :market="market" :pair="pair"></TradingOwnActiveOrdersList>
                 </v-tabs-window-item>
                 <!--                        <OwnHistoryDealList :currency="currency" :market="market" />-->
 

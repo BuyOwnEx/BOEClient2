@@ -97,7 +97,7 @@ class BuyOwnExClientAPI
 
     public function tickers()
     {
-        $response = Http::withToken($this->api_key)->get($this->base.'v1/tickers');
+        $response = Http::withToken($this->api_key)->get($this->base.'v1/new_tickers');
         return response()->json($response->json(),$response->status());
     }
 

@@ -25,6 +25,9 @@ const vuetify = createVuetify({
             dense: true,
             ripple: false
         },
+        VDialog: {
+            scrollStrategy: 'none'
+        },
         VField: {
             VIcon: {
                 color: '#868a8c',
