@@ -249,9 +249,9 @@ $grid-height: calc(100vh - 64px - 40px - 8px); // 64px - header, 40px - footer, 
         grid-template-areas:
             'tickers info info info info history'
 			'tickers chart chart chart chart history'
-			'tickers bid forms forms ask history'
-			'tickers bid forms forms ask chat'
-			'activity bid forms forms ask chat';
+			'chat bid forms forms ask history'
+			'chat bid forms forms ask history'
+			'chat bid forms forms ask activity';
         grid-gap: 4px;
         grid-template-columns: minmax(325px, 1fr) 1fr 1fr 1fr 1fr minmax(325px, 1fr);
         grid-template-rows: 40px minmax(408px, 5fr) minmax(150px, 2fr) 1fr 200px;

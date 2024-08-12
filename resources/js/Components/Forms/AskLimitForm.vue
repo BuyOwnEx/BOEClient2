@@ -80,14 +80,6 @@ const offers_select = computed(() => {
     });
 });
 
-const amountScale = computed(() => {
-    return parseInt(props.pair.amountScale);
-});
-
-const rateScale = computed(() => {
-    return parseInt(props.pair.rateScale);
-});
-
 const minAmount = computed(() => {
     return BigNumber(props.pair.minAmount).toString();
 });
@@ -127,6 +119,18 @@ const fee_currency = computed(() => {
             return BigNumber(props.pair.takerFee).div(100);
         }
     }
+});
+
+const amountScale = computed(() => {
+    return parseInt(props.pair.amountScale);
+});
+
+const rateScale = computed(() => {
+    return parseInt(props.pair.rateScale);
+});
+
+const feeScale = computed(() => {
+    return rateScale.value + amountScale.value + Math.abs(fee_currency.value.e);
 });
 
 const fee_visible = computed(() => {
@@ -172,7 +176,7 @@ const setAmount = () => {
             .times(form.value.rate)
             .times(fee_currency.value)
             .div(100)
-            .decimalPlaces(props.pair.rateScale, 1)
+            .decimalPlaces(feeScale.value, 1)
             .toString();
     } else {
         form.value.amount = '0';
@@ -260,7 +264,7 @@ const updateVolumeAmountChanged = (event) => {
             .times(form.value.rate)
             .times(fee_currency.value)
             .div(100)
-            .decimalPlaces(props.pair.rateScale, 1)
+            .decimalPlaces(feeScale.value, 1)
             .toString();
     }
     else {
@@ -281,7 +285,7 @@ const updateVolumeRateChanged = (event) => {
             .times(form.value.amount)
             .times(fee_currency.value)
             .div(100)
-            .decimalPlaces(props.pair.rateScale, 1)
+            .decimalPlaces(feeScale.value, 1)
             .toString();
     }
     else {
@@ -306,7 +310,7 @@ const updateAmountVolumeChanged = (event) => {
             .times(form.value.amount)
             .times(fee_currency.value)
             .div(100)
-            .decimalPlaces(props.pair.rateScale, 1)
+            .decimalPlaces(feeScale.value, 1)
             .toString();
     }
     else {

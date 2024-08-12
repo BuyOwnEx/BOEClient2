@@ -399,6 +399,8 @@ export default {
             main_buy_order: 'Main buy order of',
             main_sell_order: 'Main sell order of',
             for_price: 'at a price of',
+            for_market_price: 'at a market price',
+            for_volume: 'in the amount of',
             best_bid: 'Best Bid',
             best_ask: 'Best Ask',
             stop_loss_info: 'Stop Loss Info',

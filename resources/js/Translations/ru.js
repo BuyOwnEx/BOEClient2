@@ -396,6 +396,8 @@ export default {
             main_buy_order: 'Основной ордер на покупку',
             main_sell_order: 'Основной ордер на продажу',
             for_price: 'по цене',
+            for_market_price: 'по рыночной цене',
+            for_volume: 'на сумму',
             best_bid: 'Best Bid',
             best_ask: 'Best Ask',
             stop_loss_info: 'Информация Stop Loss',

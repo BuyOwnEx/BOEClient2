@@ -80,14 +80,6 @@ const offers_select = computed(() => {
     });
 });
 
-const amountScale = computed(() => {
-    return parseInt(props.pair.amountScale);
-});
-
-const rateScale = computed(() => {
-    return parseInt(props.pair.rateScale);
-});
-
 const minAmount = computed(() => {
     return BigNumber(props.pair.minAmount).toString();
 });
@@ -127,6 +119,18 @@ const fee_currency = computed(() => {
             return BigNumber(props.pair.takerFee).div(100);
         }
     }
+});
+
+const amountScale = computed(() => {
+    return parseInt(props.pair.amountScale);
+});
+
+const rateScale = computed(() => {
+    return parseInt(props.pair.rateScale);
+});
+
+const feeScale = computed(() => {
+    return amountScale.value + Math.abs(fee_currency.value.e);
 });
 
 const fee_visible = computed(() => {
@@ -171,7 +175,7 @@ const setAmount = () => {
             .toString();
         fee_amount.value = BigNumber(form.value.amount)
             .times(fee_currency.value)
-            .decimalPlaces(props.pair.amountScale, 1)
+            .decimalPlaces(feeScale.value, 1)
             .toString();
 
     } else {
@@ -259,7 +263,7 @@ const updateVolumeAmountChanged = (event) => {
             .toNumber();
         fee_amount.value = BigNumber(event.detail.masked)
             .times(fee_currency.value)
-            .decimalPlaces(props.pair.amountScale, 1)
+            .decimalPlaces(feeScale.value, 1)
             .toString();
     }
     else {
@@ -305,7 +309,7 @@ const updateAmountVolumeChanged = (event) => {
                 .toNumber();
         fee_amount.value = BigNumber(form.value.amount)
             .times(fee_currency.value)
-            .decimalPlaces(props.pair.amountScale, 1)
+            .decimalPlaces(feeScale.value, 1)
             .toString();
     }
     else {

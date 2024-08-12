@@ -138,6 +138,7 @@ const sendMessage = () => {
         overflow: hidden;
         text-overflow: ellipsis;
         text-transform: lowercase;
+        margin-right: 4px;
     }
     &__date {
         font-size: 0.65rem;
@@ -145,7 +146,7 @@ const sendMessage = () => {
     &__text {
         font-size: 0.7rem;
         word-break: break-word;
-        padding-right: 20px;
+        padding-right: 45px;
     }
 }
 .v-application--is-rtl .trading-chat-message {

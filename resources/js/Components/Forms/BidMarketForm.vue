@@ -27,7 +27,6 @@ const props = defineProps({
 });
 
 const additionalParamsEnabled = ref(false);
-const volume = ref('0');
 const useMargin = ref(false);
 const offers = ref([{id:1, percent: 1.5, days: 15, amount: 100000}]);
 const leverageLevel = ref(5);
@@ -85,14 +84,6 @@ const offers_select = computed(() => {
     });
 });
 
-const amountScale = computed(() => {
-    return parseInt(props.pair.amountScale);
-});
-
-const rateScale = computed(() => {
-    return parseInt(props.pair.rateScale);
-});
-
 const minAmount = computed(() => {
     return BigNumber(props.pair.minAmount).toString();
 });
@@ -114,6 +105,18 @@ const fee_currency = computed(() => {
     {
         return BigNumber(props.pair.takerFee).div(100);
     }
+});
+
+const amountScale = computed(() => {
+    return parseInt(props.pair.amountScale);
+});
+
+const rateScale = computed(() => {
+    return parseInt(props.pair.rateScale);
+});
+
+const feeScale = computed(() => {
+    return amountScale.value + Math.abs(fee_currency.value.e);
 });
 
 const fee_visible = computed(() => {
@@ -145,26 +148,37 @@ const selectedOffer = computed(() => {
 });
 
 const setAmount = () => {
-    if (form.value.rate !== '' && form.value.rate !== '0') {
+    if(form.value.base === 0)
+    {
+        if(BigNumber(best_ask.value).gt(0))
+        {
+            form.value.amount = balance.value
+                .div(BigNumber(best_ask.value))
+                .div(100)
+                .times(percent.value)
+                .decimalPlaces(amountScale.value, 1)
+                .toString();
+            fee_amount.value = BigNumber(form.value.amount)
+                .times(fee_currency.value)
+                .decimalPlaces(feeScale.value, 1)
+                .toString();
+        }
+        else {
+            form.value.amount = '0';
+            fee_amount.value = '0';
+        }
+    }
+    else {
         form.value.amount = balance.value
-            .div(BigNumber(form.value.rate))
-            .div(100)
             .times(percent.value)
+            .div(100)
             .decimalPlaces(amountScale.value, 1)
             .toString();
-        volume.value = BigNumber(form.value.rate)
-            .times(form.value.amount)
-            .decimalPlaces(amountScale.value + rateScale.value, 1)
-            .toString();
         fee_amount.value = BigNumber(form.value.amount)
+            .div(BigNumber(best_ask.value))
             .times(fee_currency.value)
-            .decimalPlaces(props.pair.amountScale, 1)
+            .decimalPlaces(feeScale.value, 1)
             .toString();
-
-    } else {
-        form.value.amount = '0';
-        volume.value = '0';
-        fee_amount.value = '0';
     }
 };
 
@@ -222,80 +236,50 @@ const volume_options = {
     }
 };
 const unmaskedAmount = ref('0')
-const unmaskedVolume = ref('0')
 const unmaskedSL = ref('0')
 const unmaskedTP = ref('0')
 const unmaskedTS = ref('0')
 
-defineExpose({ unmaskedAmount, unmaskedVolume, unmaskedSL, unmaskedTP, unmaskedTS });
+defineExpose({ unmaskedAmount, unmaskedSL, unmaskedTP, unmaskedTS });
 
-const updateVolumeAmountChanged = (event) => {
+const baseChanged = () => {
+    form.value.amount = '0';
+    percent.value = 0;
+    fee_amount.value = '0';
+};
+
+const updatePercentAmountChanged = (event) => {
     if (!useMarginEnabled.value) useMargin.value = false;
     if(event.detail.masked !== '')
     {
-        volume.value = BigNumber(event.detail.masked)
-            .times(BigNumber(form.value.rate))
-            .decimalPlaces(props.pair.amountScale+props.pair.rateScale, 1)
-            .toString();
-        percent.value = BigNumber(event.detail.masked)
-            .times(100)
-            .times(BigNumber(form.value.rate))
-            .div(balance.value)
-            .decimalPlaces(0, 1)
-            .toNumber();
-        fee_amount.value = BigNumber(event.detail.masked)
-            .times(fee_currency.value)
-            .decimalPlaces(props.pair.amountScale, 1)
-            .toString();
-    }
-    else {
-        volume.value = '0';
-        percent.value = 0;
-        fee_amount.value = '0';
-    }
-}
-const updateVolumeRateChanged = (event) => {
-    if (!useMarginEnabled.value) useMargin.value = false;
-    if(event.detail.masked !== '')
-    {
-        volume.value = BigNumber(event.detail.masked)
-            .times(BigNumber(form.value.amount))
-            .decimalPlaces(props.pair.amountScale+props.pair.rateScale, 1)
-            .toString();
-        percent.value = BigNumber(event.detail.masked)
-            .times(100)
-            .times(BigNumber(form.value.amount))
-            .div(balance.value)
-            .decimalPlaces(0, 1)
-            .toNumber();
-    }
-    else {
-        volume.value = '0';
-        percent.value = 0;
-    }
-}
-const updateAmountVolumeChanged = (event) => {
-    if (!useMarginEnabled.value) useMargin.value = false;
-    if(event.detail.masked !== '')
-    {
-        form.value.amount = BigNumber(event.detail.masked)
-            .div(form.value.rate)
-            .decimalPlaces(props.pair.amountScale, 1)
-            .toString();
-        percent.value =
-            BigNumber(form.value.rate)
+        if(form.value.base === 0)
+        {
+            percent.value = BigNumber(event.detail.masked)
                 .times(100)
-                .times(BigNumber(form.value.amount))
+                .times(BigNumber(best_ask.value))
                 .div(balance.value)
                 .decimalPlaces(0, 1)
                 .toNumber();
-        fee_amount.value = BigNumber(form.value.amount)
-            .times(fee_currency.value)
-            .decimalPlaces(props.pair.amountScale, 1)
-            .toString();
+            fee_amount.value = BigNumber(event.detail.masked)
+                .times(fee_currency.value)
+                .decimalPlaces(feeScale.value, 1)
+                .toString();
+        }
+        else {
+            percent.value =
+                BigNumber(event.detail.masked)
+                    .times(100)
+                    .div(balance.value)
+                    .decimalPlaces(0, 1)
+                    .toNumber();
+            fee_amount.value = BigNumber(event.detail.masked)
+                .div(BigNumber(best_ask.value))
+                .times(fee_currency.value)
+                .decimalPlaces(feeScale.value, 1)
+                .toString();
+        }
     }
     else {
-        form.value.amount = '0';
         percent.value = 0;
         fee_amount.value = '0';
     }
@@ -352,6 +336,7 @@ const resetCondParams = () => {
                                 hide-details
                                 single-line
                                 class="flex-shrink-1 flex-grow-0"
+                                @update:modelValue="baseChanged"
                             >
                                 <template v-slot:selection="{ item, index }">
                                     <span class="text-overline">{{ item.title }}</span>
@@ -373,8 +358,8 @@ const resetCondParams = () => {
                                 hide-details
                                 rounded="0"
                                 class="mt-2 flex-shrink-0 flex-grow-1"
-                                v-maska:unmaskedAmount.masked=amount_options
-                                @maska="updateVolumeAmountChanged"
+                                v-maska:unmaskedAmount.masked="form.base === 0 ? amount_options : volume_options"
+                                @maska="updatePercentAmountChanged"
                             >
                                 <template #append-inner>
                                     <span class="button-currency-text">{{ form.base === 0 ? currency.toUpperCase() : market.toUpperCase() }}</span>
@@ -422,9 +407,10 @@ const resetCondParams = () => {
                             <div class="mb-4 text-start pl-1">
                                 <span class="text-[10px] text-disabled" style="font-size: 10px;">
                                     {{ $t('trading.forms.main_buy_order') }}
-                                    <span class="text-success text-uppercase text-[14px]">{{form.amount}} {{ currency.toUpperCase() }}</span>
-                                    {{ $t('trading.forms.for_price') }}
-                                    <span class="text-success text-uppercase text-[14px]">{{form.rate}} {{ market.toUpperCase() }}</span>
+                                    <span class="text-success text-uppercase text-[14px]" v-if="form.base === 0">{{form.amount}} {{ currency.toUpperCase() }}</span>
+                                    <span class="text-success text-uppercase text-[14px]" v-else>{{ currency.toUpperCase() }}</span>
+                                    {{ $t('trading.forms.for_market_price') }}
+                                    <span v-if="form.base === 1">{{ $t('trading.forms.for_volume') }} <span class="text-success text-uppercase text-[14px]">{{form.amount}} {{ market.toUpperCase() }}</span></span>
                                 </span>
                             </div>
 
