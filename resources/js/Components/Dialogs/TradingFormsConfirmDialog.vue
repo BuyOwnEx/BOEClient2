@@ -294,7 +294,7 @@ const confirm = () => {
                 </ul>
 
                 <small v-if="isMultiplyAdditionalParams" class="text-secondary pt-1">
-                    * {{ $t('trading.forms.dialog.only_one_conditional_orders_trigger') }}
+                    <span class="text-red">*</span> {{ $t('trading.forms.dialog.only_one_conditional_orders_trigger') }}
                 </small>
             </div>
         </template>
@@ -305,5 +305,6 @@ const confirm = () => {
     &__add-params-list
         padding-top: 8px
         padding-left: 16px !important
+        margin-bottom: 8px
 </style>
 

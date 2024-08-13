@@ -84,13 +84,19 @@ const close = () => {
     &__title
         font-weight: 600 !important
         padding: 8px 24px 8px !important
+        font-size: 14px
+        text-transform: uppercase
 
     &__content
         padding-top: 8px !important
         padding-bottom: 8px !important
+        font-size: 12px !important
 
     &__actions
+        padding: 0 0.5rem !important
+        min-height: 42px
         .v-btn
             text-transform: uppercase !important
             letter-spacing: 1px !important
+            font-size: 12px
 </style>

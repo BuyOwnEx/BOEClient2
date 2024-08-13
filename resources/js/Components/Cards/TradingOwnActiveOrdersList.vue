@@ -2,8 +2,8 @@
 import {useStore} from "vuex";
 import {computed, ref} from "vue";
 import _ from "lodash";
-import {useRtl} from "vuetify";
-import { mdiChevronDown } from '@mdi/js';
+import {useRtl, useTheme} from "vuetify";
+import { mdiChevronDown, mdiCancel, mdiInformationOutline } from '@mdi/js';
 import i18n from '@/Translations/i18n.js';
 import CommonDialog from "@/Components/Dialogs/CommonDialog.vue";
 import moment from "moment";
@@ -12,6 +12,7 @@ BigNumber.config({ EXPONENTIAL_AT: [-15, 20] });
 
 const store = useStore();
 const { isRtl } = useRtl()
+const theme = useTheme()
 const props = defineProps({
     currency: {
         type: String,
@@ -28,7 +29,7 @@ const props = defineProps({
 });
 
 const show_all_pairs = ref(false);
-const items_per_page = ref(-1);
+const items_per_page = ref(10);
 
 const all_orders = computed(() => {
     return store.state.user.orders === null ? [{
@@ -48,9 +49,191 @@ const all_orders = computed(() => {
     },{
         "id":282635475,
         "size":1.1234,
-        "actual_size":1.1,
+        "actual_size":0.1,
         "price":3598.94,
         "status":"partiallyFilled",
+        "type":"LIMIT",
+        "side":true,
+        "offset":null,
+        "main_order_id":null,
+        "currency":"ETH",
+        "market":props.market,
+        "created_at":638591066849453700,
+        "updated_at":638591066849453700
+    },{
+        "id":282635476,
+        "size":1.1234,
+        "actual_size":0,
+        "price":3598.94,
+        "status":"filled",
+        "type":"LIMIT",
+        "side":true,
+        "offset":null,
+        "main_order_id":null,
+        "currency":"ETH",
+        "market":props.market,
+        "created_at":638591066849453700,
+        "updated_at":638591066849453700
+    },{
+        "id":282635477,
+        "size":1.1234,
+        "actual_size":0,
+        "price":3598.94,
+        "status":"filled",
+        "type":"LIMIT",
+        "side":true,
+        "offset":null,
+        "main_order_id":null,
+        "currency":"ETH",
+        "market":props.market,
+        "created_at":638591066849453700,
+        "updated_at":638591066849453700
+    },{
+        "id":282635478,
+        "size":1.1234,
+        "actual_size":0,
+        "price":3598.94,
+        "status":"filled",
+        "type":"LIMIT",
+        "side":true,
+        "offset":null,
+        "main_order_id":null,
+        "currency":"ETH",
+        "market":props.market,
+        "created_at":638591066849453700,
+        "updated_at":638591066849453700
+    },{
+        "id":282635479,
+        "size":1.1234,
+        "actual_size":0,
+        "price":3598.94,
+        "status":"filled",
+        "type":"LIMIT",
+        "side":true,
+        "offset":null,
+        "main_order_id":null,
+        "currency":"ETH",
+        "market":props.market,
+        "created_at":638591066849453700,
+        "updated_at":638591066849453700
+    },{
+        "id":282635480,
+        "size":1.1234,
+        "actual_size":0,
+        "price":3598.94,
+        "status":"filled",
+        "type":"LIMIT",
+        "side":true,
+        "offset":null,
+        "main_order_id":null,
+        "currency":"ETH",
+        "market":props.market,
+        "created_at":638591066849453700,
+        "updated_at":638591066849453700
+    },{
+        "id":282635481,
+        "size":1.1234,
+        "actual_size":0,
+        "price":3598.94,
+        "status":"filled",
+        "type":"LIMIT",
+        "side":true,
+        "offset":null,
+        "main_order_id":null,
+        "currency":"ETH",
+        "market":props.market,
+        "created_at":638591066849453700,
+        "updated_at":638591066849453700
+    },{
+        "id":282635482,
+        "size":1.1234,
+        "actual_size":0,
+        "price":3598.94,
+        "status":"filled",
+        "type":"LIMIT",
+        "side":true,
+        "offset":null,
+        "main_order_id":null,
+        "currency":"ETH",
+        "market":props.market,
+        "created_at":638591066849453700,
+        "updated_at":638591066849453700
+    },{
+        "id":282635483,
+        "size":1.1234,
+        "actual_size":0,
+        "price":3598.94,
+        "status":"filled",
+        "type":"LIMIT",
+        "side":true,
+        "offset":null,
+        "main_order_id":null,
+        "currency":"ETH",
+        "market":props.market,
+        "created_at":638591066849453700,
+        "updated_at":638591066849453700
+    },{
+        "id":282635484,
+        "size":1.1234,
+        "actual_size":0,
+        "price":3598.94,
+        "status":"filled",
+        "type":"LIMIT",
+        "side":true,
+        "offset":null,
+        "main_order_id":null,
+        "currency":"ETH",
+        "market":props.market,
+        "created_at":638591066849453700,
+        "updated_at":638591066849453700
+    },{
+        "id":282635485,
+        "size":1.1234,
+        "actual_size":0,
+        "price":3598.94,
+        "status":"filled",
+        "type":"LIMIT",
+        "side":true,
+        "offset":null,
+        "main_order_id":null,
+        "currency":"ETH",
+        "market":props.market,
+        "created_at":638591066849453700,
+        "updated_at":638591066849453700
+    },{
+        "id":282635486,
+        "size":1.1234,
+        "actual_size":0,
+        "price":3598.94,
+        "status":"filled",
+        "type":"LIMIT",
+        "side":true,
+        "offset":null,
+        "main_order_id":null,
+        "currency":"ETH",
+        "market":props.market,
+        "created_at":638591066849453700,
+        "updated_at":638591066849453700
+    },{
+        "id":282635487,
+        "size":1.1234,
+        "actual_size":0,
+        "price":3598.94,
+        "status":"filled",
+        "type":"LIMIT",
+        "side":true,
+        "offset":null,
+        "main_order_id":null,
+        "currency":"ETH",
+        "market":props.market,
+        "created_at":638591066849453700,
+        "updated_at":638591066849453700
+    },{
+        "id":282635488,
+        "size":1.1234,
+        "actual_size":0,
+        "price":3598.94,
+        "status":"filled",
         "type":"LIMIT",
         "side":true,
         "offset":null,
@@ -69,6 +252,10 @@ const orders = computed(() => {
             currency: props.currency.toUpperCase(),
             market: props.market.toUpperCase(),
         });
+});
+
+const isDark = computed(() => {
+   return theme.global.current.value.dark
 });
 
 const close_payload = computed(() => {
@@ -139,16 +326,31 @@ const get_volume = (size, price) => {
 const percent = (item) => {
     if (item.status === 'filled')
     {
-        return BigNumber(100).toFixed(2).toString() + ' %';
+        return 100;
     }
     else if (item.status === 'partiallyFilled')
     {
-        return BigNumber(100).minus(BigNumber(item.actual_size).times(100).div(item.size)).toFixed(2).toString() + ' %';
+        return BigNumber(BigNumber(100).minus(BigNumber(item.actual_size).times(100).div(item.size)).toFixed(2,1)).toNumber();
     }
     else if (item.status === 'accepted') {
-        return BigNumber(0).toFixed(2).toString() + ' %';
+        return 0;
     }
-    else return '-';
+    else return 0;
+};
+
+const get_percent_color = (item) => {
+    if (item.status === 'filled')
+    {
+        return 'success';
+    }
+    else if (item.status === 'partiallyFilled')
+    {
+        return 'warning';
+    }
+    else if (item.status === 'accepted') {
+        return 0;
+    }
+    else return 'error';
 };
 
 const cancel_options = computed(() => {
@@ -186,35 +388,37 @@ const cancel_options = computed(() => {
 
 const headers = computed(() => {
     return [
-        { title: i18n.global.t('table_header.date'), align: 'start', sortable: true, key: 'date' },
-        { title: i18n.global.t('table_header.market'), key: 'pair', sortable: false },
+        { title: '', key: 'action', align: 'start', sortable: false, maxWidth: '40px' },
+        { title: i18n.global.t('table_header.market'), key: 'pair', sortable: false, nowrap: true },
         { title: i18n.global.t('table_header.type'), key: 'side' },
-        { title: i18n.global.t('table_header.amount'), key: 'size', sortable: false },
-        { title: i18n.global.t('table_header.rate'), key: 'price', sortable: false },
-        { title: i18n.global.t('table_header.volume'), key: 'volume', sortable: false },
-        { title: i18n.global.t('table_header.filled'), key: 'percent' },
-        { title: i18n.global.t('table_header.status'), key: 'status', sortable: false },
-        { title: i18n.global.t('table_header.actions'), key: 'action', align: 'center', sortable: false },
+        { title: i18n.global.t('table_header.params'), align: 'start', key: 'params', sortable: false },
+        { title: i18n.global.t('table_header.status'), align: 'center', key: 'percent' },
+        { title: i18n.global.t('table_header.date'), align: 'end', sortable: true, key: 'created_at' },
     ];
 });
+
+const sort_by = ref([{ key: 'created_at', order: 'desc' }])
 
 </script>
 <template>
     <v-data-table
+        v-model:sort-by="sort_by"
         :headers="headers"
         :items="orders"
         :items-per-page="items_per_page"
         :items-per-page-options="[]"
         density="compact"
-        :header-props="{height: '30px', style: 'font-size: 0.625rem'}"
+        :header-props="{height: '30px', style: 'font-size: 0.625rem; padding: 0 8px'}"
+        :row-props="{style: 'font-size: 0.625rem'}"
+        :cell-props="{style: 'padding: 0 8px'}"
         height="100%"
         style="height: 100%"
     >
         <template v-slot:top>
-            <div class="d-flex justify-space-between">
+            <div class="d-flex justify-space-between align-center">
                 <v-switch
                     v-model="show_all_pairs"
-                    :class="[isRtl.value ? 'mr-4' : 'ml-4']"
+                    :class="[isRtl.value ? 'mr-2' : 'ml-2']"
                     :label="$t('trading.show_other_pairs')"
                     hide-details
                     left
@@ -227,11 +431,12 @@ const headers = computed(() => {
                     <template #activator="{ props }">
                         <v-btn
                             v-bind="props"
-                            :class="[isRtl.value ? 'mr-auto' : 'ml-auto']"
+                            :class="[isRtl.value ? 'ml-2' : 'mr-2']"
                             color="primary"
                             variant="text"
                             tile
                             size="small"
+                            style="font-size: 11px"
                         >
                             {{ $t('common.cancel') }}
                             <v-icon end color="primary" size="small">{{ mdiChevronDown }}</v-icon>
@@ -239,10 +444,10 @@ const headers = computed(() => {
                     </template>
 
                     <v-list density="compact">
-                        <CommonDialog v-for="item in cancel_options" :key="item.id" @confirm="item.click()">
+                        <CommonDialog v-for="item in cancel_options" :header-color="'error'" :confirm-color="'error'" :key="item.id" @confirm="item.click()">
                             <template #default>
                                 <v-list-item link>
-                                    <v-list-item-title>{{ item.text }}</v-list-item-title>
+                                    <v-list-item-title style="font-size: 11px;">{{ item.text }}</v-list-item-title>
                                 </v-list-item>
                             </template>
                             <template #title>
@@ -256,10 +461,11 @@ const headers = computed(() => {
                 </v-menu>
             </div>
         </template>
-        <template #item.date="{ item }">
-					<span class="table-date">
-						{{ format_date(item.created_at) }}
-					</span>
+
+        <template #item.created_at="{ item }">
+            <span class="table-date">
+                {{ format_date(item.created_at) }}
+            </span>
         </template>
 
         <template #item.pair="{ item }">
@@ -267,68 +473,110 @@ const headers = computed(() => {
         </template>
 
         <template #item.side="{ item }">
-					<span v-if="item.side === false">
-						<strong class="text-success">
-							{{ $t('trading.order.direction.buy') }}
-						</strong>
-					</span>
+            <span v-if="item.side === false">
+                <strong class="text-success">
+                    {{ $t('trading.order.direction.buy') }}
+                </strong>
+            </span>
             <span v-else>
-						<strong class="text-error">
-							{{ $t('trading.order.direction.sell') }}
-						</strong>
-					</span>
-
-            <span v-if="item.type === 'STOPLOSS'" class="own-active-order-list__type own-active-order-list__type--sl">
-						SL
-					</span>
-
-            <span v-if="item.type === 'TAKEPROFIT'" class="own-active-order-list own-active-order-list__type--tp">
-						TP
-					</span>
-
-            <span v-if="item.type === 'TRAILINGSTOP'" class="own-active-order-list own-active-order-list__type--ts">
-						TS
-					</span>
+                <strong class="text-error">
+                    {{ $t('trading.order.direction.sell') }}
+                </strong>
+            </span>
+            <span v-if="item.type === 'STOPLOSS'" class="own-active-order-list__type own-active-order-list__type--sl">SL</span>
+            <span v-if="item.type === 'TAKEPROFIT'" class="own-active-order-list own-active-order-list__type--tp">TP</span>
+            <span v-if="item.type === 'TRAILINGSTOP'" class="own-active-order-list own-active-order-list__type--ts">TS</span>
         </template>
 
-        <template #item.size="{ item }">
-            {{ format_with_scale(item.size, findAmountScale(currency, market)) }}
-            {{ item.currency.toUpperCase() }}
+        <template #item.params="{ item }">
+            <div class="d-flex align-center">
+                <v-tooltip location="top">
+                    <template v-slot:activator="{ props }">
+                        <v-icon v-bind="props" color="primary" size="small">{{mdiInformationOutline}}</v-icon>
+                    </template>
+                    <template v-slot:default>
+                        <div class="d-flex flex-column" style="font-size: 0.645rem">
+                            <span class="d-flex justify-space-between text-no-wrap">
+                                <span class="mr-2">{{ $t('table_header.date') }}:</span>
+                                <span>{{ format_date(item.created_at) }}</span>
+                            </span>
+                            <span class="d-flex justify-space-between text-no-wrap">
+                                <span class="mr-2">{{ $t('table_header.status') }}:</span>
+                                <span :class="isDark ? 'text-green-darken-4' : 'text-green-lighten-1'" v-if="item.status === 'accepted'"> {{ $t('trading.order.status.accepted') }}</span>
+                                <span class="text-warning" v-else>{{ $t('trading.order.status.partiallyFilled') }}</span>
+                            </span>
+                            <span class="d-flex justify-space-between text-no-wrap">
+                                <span class="mr-2">{{ $t('table_header.amount') }}:</span>
+                                <span><b>{{ format_with_scale(item.size, findAmountScale(currency, market)) }}</b> {{ item.currency.toUpperCase() }}</span>
+                            </span>
+                            <span class="d-flex justify-space-between text-no-wrap">
+                                <span class="mr-2">{{ $t('table_header.rate') }}:</span>
+                                <span><b>{{ format_with_scale(item.price, findRateScale(currency, market)) }}</b> {{ item.market.toUpperCase() }}</span>
+                            </span>
+                            <span class="d-flex justify-space-between text-no-wrap">
+                                <span class="mr-2">{{ $t('table_header.volume') }}:</span>
+                                <span><b>{{ get_volume(item.size, item.price) }}</b> {{ item.market.toUpperCase() }}</span>
+                            </span>
+                        </div>
+                    </template>
+                </v-tooltip>
+                <div class="d-flex flex-column ml-2">
+                    <span class="text-no-wrap"><span>{{ $t('table_header.amount') }}: </span>{{ format_with_scale(item.size, findAmountScale(currency, market)) }} {{ item.currency.toUpperCase() }}</span>
+                    <span class="text-no-wrap"><span>{{ $t('table_header.rate') }}: </span>{{ format_with_scale(item.price, findRateScale(currency, market)) }} {{ item.market.toUpperCase() }}</span>
+                </div>
+            </div>
         </template>
 
-        <template #item.price="{ item }">
-            {{ format_with_scale(item.price, findRateScale(currency, market)) }}
-            {{ item.market.toUpperCase() }}
-        </template>
+        <template #item.percent="{ item }">
+            <v-tooltip location="top">
+                <template v-slot:activator="{ props }">
+                    <v-progress-linear
+                        v-bind="props"
+                        :buffer-value="percent(item)"
+                        :buffer-color="get_percent_color(item)"
+                        :buffer-opacity="isDark ? 0.5 : 0.9"
+                        bg-color="grey"
+                        height="10"
+                    >
+                        <template v-slot:default>
+                            <strong class="pt-1 pb-1">{{ percent(item) }} %</strong>
+                        </template>
+                    </v-progress-linear>
+                </template>
+                <template v-slot:default>
+                    <div class="d-flex flex-column" style="font-size: 0.645rem">
+                        <span class="d-flex justify-space-between text-no-wrap">
+                            <span class="mr-2">{{ $t('table_header.status') }}:</span>
+                            <span :class="isDark ? 'text-green-darken-4' : 'text-green-lighten-1'" v-if="item.status === 'accepted'"> {{ $t('trading.order.status.accepted') }}</span>
+                            <span :class="isDark ? 'text-green-darken-4' : 'text-green-lighten-1'" v-else-if="item.status === 'filled'"> {{ $t('trading.order.status.filled') }}</span>
+                            <span class="text-warning" v-else>{{ $t('trading.order.status.partiallyFilled') }}</span>
+                        </span>
+                        <span class="d-flex justify-space-between text-no-wrap">
+                            <span class="mr-2">{{ $t('table_header.actual_size') }}:</span>
+                            <span><b>{{ format_with_scale(item.actual_size, findAmountScale(currency, market)) }}</b> {{ item.currency.toUpperCase() }}</span>
+                        </span>
+                        <span class="d-flex justify-space-between text-no-wrap">
+                            <span class="mr-2">{{ $t('table_header.actual_volume') }}:</span>
+                            <span><b>{{ get_volume(item.actual_size, item.price) }}</b> {{ item.market.toUpperCase() }}</span>
+                        </span>
+                    </div>
 
-        <template #item.volume="{ item }">
-            {{ get_volume(item.size, item.price) }}
-            {{ item.market.toUpperCase() }}
-        </template>
-
-        <template #item.percent="{ item }"> {{ percent(item) }} </template>
-
-        <template #item.status="{ item }">
-					<span class="text-success" v-if="item.status === 'accepted'">
-						{{ $t('trading.order.status.accepted') }}
-					</span>
-            <span class="text-warning" v-else>
-						{{ $t('trading.order.status.partiallyFilled') }}
-					</span>
+                </template>
+            </v-tooltip>
         </template>
 
         <template #item.action="{ item }">
-            <CommonDialog @confirm="orderCancel(item)">
+            <CommonDialog @confirm="orderCancel(item)" :header-color="'error'" :confirm-color="'error'">
                 <template #default>
-                    <v-btn color="primary" variant="outlined" tile size="x-small">
-                        {{ $t('common.cancel') }}
-                    </v-btn>
+                    <v-tooltip :text="$t('common.cancel')" location="top">
+                        <template v-slot:activator="{ props }">
+                            <v-icon v-bind="props" color="error" size="small" style="cursor: pointer">{{ mdiCancel }}</v-icon>
+                        </template>
+                    </v-tooltip>
                 </template>
-
                 <template #title>
                     {{ $t('trading.order.cancel_title') }}
                 </template>
-
                 <template #content>
                     {{ $t('trading.order.cancel_one') }}
                 </template>
@@ -337,6 +585,25 @@ const headers = computed(() => {
     </v-data-table>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+.v-switch {
+    ::v-deep(.v-label) {
+        font-size: 0.6875rem;
+    }
+}
+::v-deep(.v-data-table-footer) {
+    padding: 2px;
+    line-height: 15px;
+    font-size: 11px;
+}
+::v-deep(.v-data-table-footer__items-per-page) {
+    display: none;
+}
 
+::v-deep(.v-pagination) {
+    .v-btn {
+        height: 24px;
+        width: 24px;
+    }
+}
 </style>

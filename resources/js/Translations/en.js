@@ -96,6 +96,7 @@ export default {
         maintenance: 'In Maintenance',
     },
     table_header: {
+        params: 'Params',
         base_currency: 'Base currency',
         currency: 'Currency',
         currencies: 'Currencies',
@@ -322,7 +323,7 @@ export default {
             cancel_all: 'Cancel all orders',
             cancel_by_type: 'Cancel all {type} orders',
 
-            cancel_title: 'Cancellation confirmation',
+            cancel_title: 'Confirmation',
             cancel_one: 'Are you sure you want to cancel the order?',
             cancel_many: 'Are you sure you want to cancel all {type} orders?',
         },

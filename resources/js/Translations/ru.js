@@ -96,6 +96,7 @@ export default {
         maintenance: 'В обслуживании',
     },
     table_header: {
+        params: 'Параметры',
         base_currency: 'Базовая валюта',
         currency: 'Валюта',
         currencies: 'Валюты',
@@ -321,7 +322,7 @@ export default {
             cancel_all: 'Отменить все ордера',
             cancel_by_type: 'Отменить все {type} ордера',
 
-            cancel_title: 'Подтверждение отмены',
+            cancel_title: 'Подтверждение',
             cancel_one: 'Вы действительно хотите отменить ордер?',
             cancel_many: 'Вы уверены, что хотите отменить все {type} ордера?',
         },

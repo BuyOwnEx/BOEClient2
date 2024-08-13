@@ -6,6 +6,7 @@ import TradingFormBuy from "@/Components/Cards/TradingFormBuy.vue";
 import TradingFormSell from "@/Components/Cards/TradingFormSell.vue";
 import {usePage} from "@inertiajs/vue3";
 import TradingOwnActiveOrdersList from "@/Components/Cards/TradingOwnActiveOrdersList.vue";
+import TradingOwnHistoryDealsList from "@/Components/Cards/TradingOwnHistoryDealsList.vue";
 const { mobile } = useDisplay();
 const store = useStore();
 const page = usePage();
@@ -129,15 +130,13 @@ const selectedFormTab = ref(0);
                         </v-col>
                     </v-row>
                 </v-tabs-window-item>
-                <!--                        <OwnActiveOrderList :currency="currency" :market="market" />-->
 
                 <v-tabs-window-item value="2" class="fill-height">
                     <TradingOwnActiveOrdersList :currency="currency" :market="market" :pair="pair"></TradingOwnActiveOrdersList>
                 </v-tabs-window-item>
-                <!--                        <OwnHistoryDealList :currency="currency" :market="market" />-->
 
                 <v-tabs-window-item value="3" class="fill-height">
-                    {{ $t('text-1.2')}}
+                    <TradingOwnHistoryDealsList :currency="currency" :market="market" :pair="pair"></TradingOwnHistoryDealsList>
                 </v-tabs-window-item >
 
                 <v-tabs-window-item v-if="marginAvailable && marginTradingAvailable" value="4" class="fill-height">
