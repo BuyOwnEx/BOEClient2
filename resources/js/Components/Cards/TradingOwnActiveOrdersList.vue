@@ -31,7 +31,35 @@ const show_all_pairs = ref(false);
 const items_per_page = ref(-1);
 
 const all_orders = computed(() => {
-    return store.state.user.orders === null ? [] : store.state.user.orders;
+    return store.state.user.orders === null ? [{
+        "id":282635474,
+        "size":1.003457,
+        "actual_size":1.003457,
+        "price":49598.94,
+        "status":"accepted",
+        "type":"LIMIT",
+        "side":false,
+        "offset":null,
+        "main_order_id":null,
+        "currency":props.currency,
+        "market":props.market,
+        "created_at":638591066849453700,
+        "updated_at":638591066849453700
+    },{
+        "id":282635475,
+        "size":1.1234,
+        "actual_size":1.1,
+        "price":3598.94,
+        "status":"partiallyFilled",
+        "type":"LIMIT",
+        "side":true,
+        "offset":null,
+        "main_order_id":null,
+        "currency":"ETH",
+        "market":props.market,
+        "created_at":638591066849453700,
+        "updated_at":638591066849453700
+    }] : store.state.user.orders;
 });
 
 const orders = computed(() => {

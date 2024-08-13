@@ -23,7 +23,7 @@ const ticker = computed(() => {
 });
 
 const lastPrice = computed(() => {
-    return ticker.value ? BigNumber(ticker.value.latest).dp(ticker.value.scale).toString() : 0.0;
+    return ticker.value ? BigNumber(ticker.value.latest).dp(ticker.value.rate_scale).toString() : 0.0;
 });
 
 const dailyChange = computed(() => {
@@ -46,11 +46,11 @@ const dailyChangePercent = computed(() => {
 });
 
 const dailyHigh = computed(() => {
-    return ticker.value ? BigNumber(ticker.value.max).dp(ticker.value.scale).toString() : 0;
+    return ticker.value ? BigNumber(ticker.value.max).dp(ticker.value.rate_scale).toString() : 0;
 });
 
 const dailyLow = computed(() => {
-    return ticker.value ? BigNumber(ticker.value.min).dp(ticker.value.scale).toString() : 0;
+    return ticker.value ? BigNumber(ticker.value.min).dp(ticker.value.rate_scale).toString() : 0;
 });
 
 const dailyVolume = computed(() => {
