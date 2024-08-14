@@ -77,7 +77,7 @@ const formatWithScaleInAllCurrencies = (value, currency) => {
 
 </script>
 <template>
-    <v-card class="trading-market-info pa-2">
+    <v-card class="trading-market-info pl-2 pr-2">
         <div class="d-flex justify-space-around" style="width: 100%">
             <div class="trading-market-info__last-price trading-market-info__item">
 			<span class="info-value">

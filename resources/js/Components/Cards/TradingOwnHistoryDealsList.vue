@@ -199,7 +199,7 @@ const headers = computed(() => {
         { title: i18n.global.t('table_header.date'), align: 'start', sortable: true, key: 'created_at' },
         { title: i18n.global.t('table_header.market'), align: 'start', key: 'pair', sortable: true, nowrap: true },
         { title: i18n.global.t('table_header.type'), key: 'side' },
-        { title: i18n.global.t('table_header.params'), align: 'center', key: 'params', sortable: false },
+        { title: i18n.global.t('table_header.params'), align: 'start', key: 'params', sortable: false },
         { title: i18n.global.t('table_header.volume'), align: 'end', key: 'volume', sortable: false, nowrap: true },
     ];
 });
@@ -216,7 +216,7 @@ const sort_by = ref([{ key: 'created_at', order: 'desc' }])
         :items-per-page-options="[]"
         density="compact"
         :header-props="{height: '30px', style: 'font-size: 0.625rem; padding: 0 8px'}"
-        :row-props="{style: 'font-size: 0.625rem'}"
+        :row-props="{style: 'font-size: 0.6875rem'}"
         :cell-props="{style: 'padding: 0 8px'}"
         height="100%"
         style="height: 100%"
@@ -275,11 +275,11 @@ const sort_by = ref([{ key: 'created_at', order: 'desc' }])
                             </span>
                             <span class="d-flex justify-space-between text-no-wrap">
                                 <span class="mr-2">{{ $t('table_header.amount') }}:</span>
-                                <span><b>{{ format_with_scale(item.size, findAmountScale(currency, market)) }}</b> {{ item.currency.toUpperCase() }}</span>
+                                <span><b>{{ format_with_scale(item.size, findAmountScale(item.currency, item.market)) }}</b> {{ item.currency.toUpperCase() }}</span>
                             </span>
                             <span class="d-flex justify-space-between text-no-wrap">
                                 <span class="mr-2">{{ $t('table_header.rate') }}:</span>
-                                <span><b>{{ format_with_scale(item.price, findRateScale(currency, market)) }}</b> {{ item.market.toUpperCase() }}</span>
+                                <span><b>{{ format_with_scale(item.price, findRateScale(item.currency, item.market)) }}</b> {{ item.market.toUpperCase() }}</span>
                             </span>
                             <span class="d-flex justify-space-between text-no-wrap">
                                 <span class="mr-2">{{ $t('table_header.volume') }}:</span>
@@ -289,8 +289,14 @@ const sort_by = ref([{ key: 'created_at', order: 'desc' }])
                     </template>
                 </v-tooltip>
                 <div class="d-flex flex-column ml-2">
-                    <span class="text-no-wrap"><span>{{ $t('table_header.amount') }}: </span>{{ format_with_scale(item.size, findAmountScale(currency, market)) }} {{ item.currency.toUpperCase() }}</span>
-                    <span class="text-no-wrap"><span>{{ $t('table_header.rate') }}: </span>{{ format_with_scale(item.price, findRateScale(currency, market)) }} {{ item.market.toUpperCase() }}</span>
+                    <span class="text-no-wrap d-flex justify-space-between">
+                        <span class="mr-2">{{ $t('table_header.amount') }}: </span>
+                        <span>{{ format_with_scale(item.size, findAmountScale(item.currency, item.market)) }} {{ item.currency.toUpperCase() }}</span>
+                    </span>
+                    <span class="text-no-wrap d-flex justify-space-between">
+                        <span class="mr-2">{{ $t('table_header.rate') }}: </span>
+                        <span>{{ format_with_scale(item.price, findRateScale(item.currency, item.market)) }} {{ item.market.toUpperCase() }}</span>
+                    </span>
                 </div>
             </div>
         </template>
