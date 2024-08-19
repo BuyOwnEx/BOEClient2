@@ -120,7 +120,7 @@ if (props.depth.bids_list.length !== 0) {
 
             <TradingMarketInfo class="trading__desktop__info" :currency="currency" :market="market" />
 
-            <TradingChart class="trading__desktop__chart" :currency="currency" :market="market" />
+            <TradingChart class="trading__desktop__chart" :currency="currency" :market="market" :ohlc="ohlc" :volume="volumes" />
 
             <TradingHistoryDealList v-if="showHistory" class="trading__desktop__history" :market="market" :currency="currency" :pair="pair" />
 

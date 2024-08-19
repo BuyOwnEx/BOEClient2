@@ -77,10 +77,10 @@ export default function createWebSocketPlugin (socket) {
         };
         const graphPubHandler = (data) => {
             if (data.data.action === 'addPoint') {
-                //this.$eventHub.$emit('addedPoint', { point: data.data.point });
+                store.commit('trading/addPoint', data.data.point);
             }
             if (data.data.action === 'updatePoint') {
-                //this.$eventHub.$emit('updatedPoint', { point: data.data.point });
+                store.commit('trading/updatePoint', data.data.point);
             }
         };
 
@@ -96,16 +96,18 @@ export default function createWebSocketPlugin (socket) {
                 sub_order_book = socket.subscribe('public:order_book_' + store.state.trading.selectedCurrency.toLowerCase() + '_' + store.state.trading.selectedMarket.toLowerCase());
                 sub_depth = socket.subscribe('public:update_depth_' + store.state.trading.selectedCurrency.toLowerCase() + '_' + store.state.trading.selectedMarket.toLowerCase());
                 sub_history_deals = socket.subscribe('public:history_deals_' + store.state.trading.selectedCurrency.toLowerCase() + '_' + store.state.trading.selectedMarket.toLowerCase());
-                sub_graph = socket.subscribe('public:graph_' + store.state.trading.selectedPeriod + '_' + store.state.trading.selectedCurrency.toLowerCase() + '_' + store.state.trading.selectedMarket.toLowerCase());
+
                 sub_tickers.on('publish', tickersPubHandler);
                 sub_order_book.on('publish', orderBookPubHandler);
                 sub_depth.on('publish', updateDepthPubHandler);
                 sub_history_deals.on('publish', historyDealPubHandler);
-                sub_graph.on('publish', graphPubHandler);
+
                 socket.connect();
             }
-            else if (mutation.type === 'setGraphPeriod')
+            else if (mutation.type === 'trading/setGraphPeriod')
             {
+                sub_graph = socket.subscribe('public:graph_' + store.state.trading.selectedPeriod + '_' + store.state.trading.selectedCurrency.toLowerCase() + '_' + store.state.trading.selectedMarket.toLowerCase());
+                sub_graph.on('publish', graphPubHandler);
                 console.log('setGraphPeriod was called by mutation')
             }
         })

@@ -65,6 +65,16 @@ const getters = {
         });
         return ticker === undefined ? null : ticker;
     },
+    lastPoint: state => {
+        return {
+            x: state.candlesData[state.candlesData.length -1].x,
+            open: state.candlesData[state.candlesData.length -1].open,
+            high: state.candlesData[state.candlesData.length -1].high,
+            low: state.candlesData[state.candlesData.length -1].low,
+            close: state.candlesData[state.candlesData.length -1].close,
+            y: state.volumeData[state.volumeData.length -1].y
+        }
+    }
 };
 
 const mutations = {
@@ -136,6 +146,36 @@ const mutations = {
     setGraphData(state, payload) {
         state.candlesData = payload.candlesData;
         state.volumeData = payload.volumeData;
+    },
+    addPoint(state, payload) {
+        state.candlesData.push({
+            x: parseInt(payload.x),
+            open: BigNumber(payload.open).toNumber(),
+            high: BigNumber(payload.high).toNumber(),
+            low: BigNumber(payload.low).toNumber(),
+            close: BigNumber(payload.close).toNumber(),
+        });
+        state.volumeData.push({
+            x: parseInt(payload.x),
+            y: BigNumber(payload.volume).toNumber()
+        });
+        if(state.candlesData.length > 501)
+        {
+            state.candlesData.shift();
+        }
+        if(state.volumeData.length > 501)
+        {
+            state.volumeData.shift();
+        }
+    },
+    updatePoint(state, payload) {
+        state.candlesData[state.candlesData.length -1].x = parseInt(payload.x);
+        state.candlesData[state.candlesData.length -1].open = BigNumber(payload.open).toNumber();
+        state.candlesData[state.candlesData.length -1].high = BigNumber(payload.high).toNumber();
+        state.candlesData[state.candlesData.length -1].low = BigNumber(payload.low).toNumber();
+        state.candlesData[state.candlesData.length -1].close = BigNumber(payload.close).toNumber();
+        state.volumeData[state.volumeData.length -1].x = parseInt(payload.x);
+        state.volumeData[state.volumeData.length -1].y = BigNumber(payload.volume).toNumber();
     },
     setAllCurrenciesList(state, list) {
         state.all_currencies = list;

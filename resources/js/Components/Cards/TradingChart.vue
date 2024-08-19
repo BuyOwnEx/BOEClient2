@@ -17,7 +17,7 @@ import exportingInit from 'highcharts/modules/exporting';
 import stockTools from 'highcharts/modules/stock-tools';
 
 import highchartsTheme from 'highcharts/themes/grid-light';
-import {computed, onMounted, ref} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import {useStore} from "vuex";
 
 loadStock(Highcharts);
@@ -38,6 +38,14 @@ const props = defineProps({
     market: {
         type: String,
         required: true,
+    },
+    ohlc: {
+        type: Array,
+        required: true
+    },
+    volume: {
+        type: Array,
+        required: true
     }
 });
 
@@ -59,12 +67,9 @@ let chartInFullscreen = ref(false);
 let candle_period = ref('1m');
 const valuesToDisplay = ref(97);
 const maxCandles = ref(501);
-const xData = computed(() => {
-    return store.state.trading.candlesData;
-});
-const yData = computed(() => {
-    return store.state.trading.volumeData;
-});
+
+let xData = props.ohlc;
+let yData = props.volume;
 
 const selectedPeriodObject = computed(() => {
     const period = candle_period.value;
@@ -81,7 +86,62 @@ const candlePeriodIndex = computed(() => {
     return selectedPeriodObject.value.index;
 })
 
-let options = ref({
+const lastPoint = computed(() => {
+    return store.getters['trading/lastPoint'];
+});
+
+watch(
+    () => lastPoint.value,
+    (val,prevVal) => {
+        if (val.x > prevVal.x)
+        {
+            const shift = hcInstance.value.charts[0].series[0].options.data.length >= maxCandles.value;
+            hcInstance.value.charts[0].series[0].addPoint({
+                x: parseInt(val.x),
+                open: val.close,
+                high: val.close,
+                low: val.close,
+                close: val.close,
+            }, false, shift, true);
+            hcInstance.value.charts[0].series[1].addPoint({
+                x: parseInt(val.x),
+                y: 0,
+            }, true, shift, true);
+        }
+        else {
+            const candle = hcInstance.value.charts[0];
+            const candlesData = candle.series[0].options.data;
+            const volumeData = candle.series[1].options.data;
+            candlesData[candlesData.length - 1] = {
+                x: parseInt(val.x),
+                open: BigNumber(val.open).toNumber(),
+                high: BigNumber(val.high).toNumber(),
+                low: BigNumber(val.low).toNumber(),
+                close: BigNumber(val.close).toNumber(),
+            };
+            volumeData[volumeData.length - 1] = {
+                x: parseInt(val.x),
+                y: BigNumber(val.y).toNumber(),
+            };
+            const graphsToProcess = ['main'];
+            candle.series.forEach((item, i) => {
+                const id = _.get(item, 'options.id', undefined);
+                if (['main','highcharts-navigator-series'].indexOf(id) !== -1) {
+                    candle.series[i].setData(candlesData, false, false, false);
+                }
+            });
+            candle.series.forEach((item, i) => {
+                const id = _.get(item, 'options.id', undefined);
+                if (['volume'].indexOf(id) !== -1) {
+                    candle.series[i].setData(volumeData, false, false, false);
+                }
+            });
+            candle.redraw();
+        }
+    }
+)
+
+let options = {
     time: {
         timezoneOffset: new Date().getTimezoneOffset()
     },
@@ -98,7 +158,7 @@ let options = ref({
         events: {
             load() {
                 console.log('Chart was loaded!');
-                this.redraw();
+                //this.redraw();
             },
         },
     },
@@ -284,15 +344,15 @@ let options = ref({
             enabled: false,
         },
         range: valuesToDisplay.value * candle_room.value * 60 * 1000, // изначально данные показываем за 97 минут
-            events: {
-                setExtremes: _.debounce(e => {
-                    console.log(e.min);
-                    console.log(e.max);
-                    console.log(e.trigger);
-                    hcInstance.value.charts[0].redraw();
-                    hcInstance.value.charts[0].reflow();
-                }, 100),
-            },
+        events: {
+            setExtremes: _.debounce(e => {
+                console.log(e.min);
+                console.log(e.max);
+                console.log(e.trigger);
+                hcInstance.value.charts[0].redraw();
+                hcInstance.value.charts[0].reflow();
+            }, 100),
+        },
     },
     yAxis: [
         {
@@ -339,7 +399,7 @@ let options = ref({
             type: 'candlestick',
             id: 'main',
             name: i18n.global.t('table_header.rate') + ', ' + props.market,
-            data: xData.value,
+            data: xData,
             yAxis: 0,
             xAxis: 0,
             color: '#ef476f',
@@ -371,9 +431,8 @@ let options = ref({
             id: 'volume',
             linkedTo: 'main',
             name: i18n.global.t('table_header.volume') + ', ' + props.currency,
-            data: yData.value,
-            yAxis: 1,
-            xAxis: 0,
+            data: yData,
+            yAxis: 1
         },
     ],
     navigation: {
@@ -404,9 +463,7 @@ let options = ref({
             iconsURL: '/resources/js/assets/images/highcharts/',
         },
     },
-});
-
-
+};
 
 /*const initGraphDataHandler = () => {
     const data = {
@@ -438,7 +495,7 @@ let options = ref({
 };*/
 
 onMounted(() => {
-    //initGraphDataHandler();
+    store.commit('trading/setGraphPeriod', candle_period.value);
 });
 
 </script>
