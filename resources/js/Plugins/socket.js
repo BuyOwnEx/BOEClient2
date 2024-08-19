@@ -1,68 +1,113 @@
-import _ from "lodash";
 export default function createWebSocketPlugin (socket) {
     return (store) => {
         let sub_tickers = null;
+        let sub_order_book = null;
+        let sub_depth = null;
+        let sub_history_deals = null;
+        let sub_graph = null;
 
         const tickersPubHandler = (data) => {
-            let ticker = _.find(store.state.tickers.tickersList, item => {
-                return item.market.toLowerCase() === data.data.ticker.market.toLowerCase() && item.currency.toLowerCase() === data.data.ticker.currency.toLowerCase();
-            });
-            if (ticker === undefined) {
-                return;
-            }
-            let copy = ticker;
             switch (data.data.action) {
                 case 'update_ticker':
-                    copy.bid = data.data.ticker.bid_price;
-                    copy.ask = data.data.ticker.ask_price;
-                    store.commit('tickers/updateSingleTicker', copy);
-                    if(ticker.currency.toLowerCase() === this.selectedCurrency.toLowerCase() && ticker.market.toLowerCase() === this.selectedMarket.toLowerCase())
+                    store.commit('tickers/updateAskBid', {
+                        currency: data.data.ticker.currency,
+                        market: data.data.ticker.market,
+                        bid: data.data.ticker.bid_price,
+                        ask: data.data.ticker.ask_price
+                    });
+                    if(data.data.ticker.currency.toLowerCase() === store.state.trading.selectedCurrency.toLowerCase() && data.data.ticker.market.toLowerCase() === store.state.trading.selectedMarket.toLowerCase())
                     {
                         store.commit('trading/setBestAsk', data.data.ticker.ask_price);
                         store.commit('trading/setBestBid', data.data.ticker.bid_price);
                     }
                     break;
                 case 'day_change_ticker':
-                    copy.previous_day = data.data.ticker.price;
-                    store.commit('tickers/updateSingleTicker', copy);
+                    store.commit('tickers/updateDayChange', {
+                        currency: data.data.ticker.currency,
+                        market: data.data.ticker.market,
+                        previous_day: data.data.ticker.price
+                    });
                     break;
                 case 'last_deal_ticker':
-                    copy.latest = data.data.ticker.price;
-                    copy.previous = data.data.ticker.prev_price;
-                    store.commit('tickers/updateSingleTicker', copy);
+                    store.commit('tickers/updateLastDeal', {
+                        currency: data.data.ticker.currency,
+                        market: data.data.ticker.market,
+                        latest: data.data.ticker.price,
+                        previous: data.data.ticker.prev_price
+                    });
                     break;
                 case 'max_day_ticker':
-                    copy.max = data.data.ticker.max;
-                    store.commit('tickers/updateSingleTicker', copy);
+                    store.commit('tickers/updateMax', {
+                        currency: data.data.ticker.currency,
+                        market: data.data.ticker.market,
+                        max: data.data.ticker.max
+                    });
                     break;
                 case 'min_day_ticker':
-                    copy.min = data.data.ticker.min;
-                    store.commit('tickers/updateSingleTicker', copy);
+                    store.commit('tickers/updateMin', {
+                        currency: data.data.ticker.currency,
+                        market: data.data.ticker.market,
+                        min: data.data.ticker.min
+                    });
                     break;
                 case 'day_volume_ticker':
-                    copy.volume = data.data.ticker.volume;
-                    store.commit('tickers/updateSingleTicker', copy);
+                    store.commit('tickers/updateVolume', {
+                        currency: data.data.ticker.currency,
+                        market: data.data.ticker.market,
+                        volume: data.data.ticker.volume
+                    });
                     break;
             }
         };
+        const orderBookPubHandler = (data) => {
+            if (data.data.side) {
+                store.commit('trading/setAskList', data.data.levels);
+            } else {
+                store.commit('trading/setBidList', data.data.levels);
+            }
+        };
+        const updateDepthPubHandler = (data) => {
+            store.commit('trading/setAskAmountDepth', data.data.depth.ask_amount);
+            store.commit('trading/setBidAmountDepth', data.data.depth.bid_amount);
+            store.commit('trading/setAskVolumeDepth', data.data.depth.ask_vol);
+            store.commit('trading/setBidVolumeDepth', data.data.depth.bid_vol);
+        };
+        const historyDealPubHandler = (data) => {
+            store.commit('trading/addDealToHistoryDealList', data.data);
+        };
+        const graphPubHandler = (data) => {
+            if (data.data.action === 'addPoint') {
+                //this.$eventHub.$emit('addedPoint', { point: data.data.point });
+            }
+            if (data.data.action === 'updatePoint') {
+                //this.$eventHub.$emit('updatedPoint', { point: data.data.point });
+            }
+        };
 
-
-        socket.on('data', data => {
+        /*socket.on('data', data => {
             //store.commit('receiveData', data);
             console.log('receiveData', data);
-        })
+        })*/
         store.subscribe(mutation => {
-            if (mutation.type === 'setPair') {
+            if (mutation.type === 'trading/setPair') {
                 //socket.emit('update', mutation.payload)
-                console.log('setPair was called by mutation')
+                console.log('setPair was called by mutation');
+                sub_tickers = socket.subscribe('public:tickers');
+                sub_order_book = socket.subscribe('public:order_book_' + store.state.trading.selectedCurrency.toLowerCase() + '_' + store.state.trading.selectedMarket.toLowerCase());
+                sub_depth = socket.subscribe('public:update_depth_' + store.state.trading.selectedCurrency.toLowerCase() + '_' + store.state.trading.selectedMarket.toLowerCase());
+                sub_history_deals = socket.subscribe('public:history_deals_' + store.state.trading.selectedCurrency.toLowerCase() + '_' + store.state.trading.selectedMarket.toLowerCase());
+                sub_graph = socket.subscribe('public:graph_' + store.state.trading.selectedPeriod + '_' + store.state.trading.selectedCurrency.toLowerCase() + '_' + store.state.trading.selectedMarket.toLowerCase());
+                sub_tickers.on('publish', tickersPubHandler);
+                sub_order_book.on('publish', orderBookPubHandler);
+                sub_depth.on('publish', updateDepthPubHandler);
+                sub_history_deals.on('publish', historyDealPubHandler);
+                sub_graph.on('publish', graphPubHandler);
+                socket.connect();
             }
             else if (mutation.type === 'setGraphPeriod')
             {
                 console.log('setGraphPeriod was called by mutation')
             }
         })
-        sub_tickers = socket.subscribe('public:tickers');
-        sub_tickers.on('publish', tickersPubHandler);
-        socket.connect();
     }
 }

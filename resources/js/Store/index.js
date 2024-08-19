@@ -6,7 +6,7 @@ import user from '@/Store/modules/user';
 import Centrifuge from 'centrifuge';
 import createWebSocketPlugin from "@/Plugins/socket.js";
 
-const debug = true;
+const debug = false;
 
 const socket = new Centrifuge(import.meta.env.VITE_WS_SERVER, {
     debug: true,
