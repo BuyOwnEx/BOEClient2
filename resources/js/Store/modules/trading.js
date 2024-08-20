@@ -36,6 +36,7 @@ const state = () => ({
     valuesToDisplay: 97,
     candlesData: [],
     volumeData: [],
+    last_point: null,
     all_currencies: null
 });
 
@@ -65,7 +66,7 @@ const getters = {
         });
         return ticker === undefined ? null : ticker;
     },
-    lastPoint: state => {
+    /*lastPoint: state => {
         return {
             x: state.candlesData[state.candlesData.length -1].x,
             open: state.candlesData[state.candlesData.length -1].open,
@@ -74,7 +75,7 @@ const getters = {
             close: state.candlesData[state.candlesData.length -1].close,
             y: state.volumeData[state.volumeData.length -1].y
         }
-    }
+    }*/
 };
 
 const mutations = {
@@ -146,6 +147,14 @@ const mutations = {
     setGraphData(state, payload) {
         state.candlesData = payload.candlesData;
         state.volumeData = payload.volumeData;
+        state.last_point = {
+            x: payload.candlesData[payload.candlesData.length -1].x,
+            open: payload.candlesData[payload.candlesData.length -1].open,
+            high: payload.candlesData[payload.candlesData.length -1].high,
+            low: payload.candlesData[payload.candlesData.length -1].low,
+            close: payload.candlesData[payload.candlesData.length -1].close,
+            y: payload.volumeData[payload.volumeData.length -1].y
+        };
     },
     addPoint(state, payload) {
         state.candlesData.push({
@@ -159,6 +168,14 @@ const mutations = {
             x: parseInt(payload.x),
             y: BigNumber(payload.volume).toNumber()
         });
+        state.last_point = {
+            x: parseInt(payload.x),
+            open: BigNumber(payload.open).toNumber(),
+            high: BigNumber(payload.high).toNumber(),
+            low: BigNumber(payload.low).toNumber(),
+            close: BigNumber(payload.close).toNumber(),
+            y: BigNumber(payload.volume).toNumber()
+        };
         if(state.candlesData.length > 501)
         {
             state.candlesData.shift();
@@ -176,6 +193,14 @@ const mutations = {
         state.candlesData[state.candlesData.length -1].close = BigNumber(payload.close).toNumber();
         state.volumeData[state.volumeData.length -1].x = parseInt(payload.x);
         state.volumeData[state.volumeData.length -1].y = BigNumber(payload.volume).toNumber();
+        state.last_point = {
+            x: parseInt(payload.x),
+            open: BigNumber(payload.open).toNumber(),
+            high: BigNumber(payload.high).toNumber(),
+            low: BigNumber(payload.low).toNumber(),
+            close: BigNumber(payload.close).toNumber(),
+            y: BigNumber(payload.volume).toNumber()
+        };
     },
     setAllCurrenciesList(state, list) {
         state.all_currencies = list;

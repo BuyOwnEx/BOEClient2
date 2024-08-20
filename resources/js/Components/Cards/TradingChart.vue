@@ -64,18 +64,17 @@ const store = useStore();
 
 const hcInstance = ref(Highcharts);
 let chartInFullscreen = ref(false);
-let candle_period = ref('1m');
-const valuesToDisplay = ref(97);
-const maxCandles = ref(501);
+let candle_period = '1m';
+const valuesToDisplay = 97;
+const maxCandles = 501;
 const graph_loading = ref(false);
 
 let xData = props.ohlc;
 let yData = props.volume;
 
-const selectedPeriodObject = computed(() => {
-    const period = candle_period.value;
+/*const selectedPeriodObject = computed(() => {
     return _.find(intervals, item => {
-        return item.range === period.toLowerCase();
+        return item.range === candle_period.toLowerCase();
     });
 })
 
@@ -85,20 +84,21 @@ const candle_room = computed(() => {
 
 const candlePeriodIndex = computed(() => {
     return selectedPeriodObject.value.index;
-})
+})*/
 
 const lastPoint = computed(() => {
-    return store.getters['trading/lastPoint'];
+    return store.state.trading.last_point;
+    //return store.getters['trading/lastPoint'];
 });
 
 watch(
     () => lastPoint.value,
     (val,prevVal) => {
-        if(!graph_loading)
+        if(!graph_loading.value && val !== null)
         {
             if (val.x > prevVal.x)
             {
-                const shift = hcInstance.value.charts[0].series[0].options.data.length >= maxCandles.value;
+                const shift = hcInstance.value.charts[0].series[0].options.data.length >= maxCandles;
                 hcInstance.value.charts[0].series[0].addPoint({
                     x: parseInt(val.x),
                     open: val.close,
@@ -112,6 +112,7 @@ watch(
                 }, true, shift, true);
             }
             else {
+                if(val.x === prevVal.x && val.y === prevVal.y && val.close === prevVal.close) console.log('VAL = PREV_VAL');
                 const candle = hcInstance.value.charts[0];
                 const candlesData = candle.series[0].options.data;
                 const volumeData = candle.series[1].options.data;
@@ -208,8 +209,8 @@ let options = {
                 events: {
                     click: e => {
                         graph_loading.value = true;
-                        candle_period.value = '1m';
-                        store.commit('trading/setGraphPeriod', candle_period.value);
+                        candle_period = '1m';
+                        store.commit('trading/setGraphPeriod', candle_period);
                         store.dispatch('trading/getGraphFromServer').then(resp => {
                             xData = resp.candlesData;
                             yData = resp.volumeData;
@@ -220,9 +221,9 @@ let options = {
                                 }
                             });
                             hcInstance.value.charts[0].series[1].setData(yData, false);
-                            if (xData.length > valuesToDisplay.value)
+                            if (xData.length > valuesToDisplay)
                             {
-                                hcInstance.value.charts[0].xAxis[0].setExtremes(xData[xData.length - valuesToDisplay.value - 1].x, xData[xData.length - 1].x);
+                                hcInstance.value.charts[0].xAxis[0].setExtremes(xData[xData.length - valuesToDisplay - 1].x, xData[xData.length - 1].x);
                             }
                             else
                             {
@@ -243,8 +244,8 @@ let options = {
                 events: {
                     click: e => {
                         graph_loading.value = true;
-                        candle_period.value = '5m';
-                        store.commit('trading/setGraphPeriod', candle_period.value);
+                        candle_period = '5m';
+                        store.commit('trading/setGraphPeriod', candle_period);
                         store.dispatch('trading/getGraphFromServer').then(resp => {
                             xData = resp.candlesData;
                             yData = resp.volumeData;
@@ -255,9 +256,9 @@ let options = {
                                 }
                             });
                             hcInstance.value.charts[0].series[1].setData(yData, false);
-                            if (xData.length > valuesToDisplay.value)
+                            if (xData.length > valuesToDisplay)
                             {
-                                hcInstance.value.charts[0].xAxis[0].setExtremes(xData[xData.length - valuesToDisplay.value - 1].x, xData[xData.length - 1].x);
+                                hcInstance.value.charts[0].xAxis[0].setExtremes(xData[xData.length - valuesToDisplay - 1].x, xData[xData.length - 1].x);
                             }
                             else
                             {
@@ -277,7 +278,7 @@ let options = {
                 text: '15m',
                 events: {
                     click: () => {
-                        candle_period.value = '15m';
+                        candle_period = '15m';
                         return false;
                     },
                 },
@@ -290,7 +291,7 @@ let options = {
                 text: '30m',
                 events: {
                     click: () => {
-                        candle_period.value = '30m';
+                        candle_period = '30m';
                         return false;
                     },
                 },
@@ -303,7 +304,7 @@ let options = {
                 text: '1h',
                 events: {
                     click: () => {
-                        candle_period.value = '1h';
+                        candle_period = '1h';
                         return false;
                     },
                 },
@@ -316,7 +317,7 @@ let options = {
                 text: '4h',
                 events: {
                     click: () => {
-                        candle_period.value = '4h';
+                        candle_period = '4h';
                         return false;
                     },
                 },
@@ -329,7 +330,7 @@ let options = {
                 text: '1d',
                 events: {
                     click: () => {
-                        candle_period.value = '1d';
+                        candle_period = '1d';
                         return false;
                     },
                 },
@@ -342,7 +343,7 @@ let options = {
                 text: '1w',
                 events: {
                     click: () => {
-                        candle_period.value = '1w';
+                        candle_period = '1w';
                         return false;
                     },
                 },
@@ -352,11 +353,11 @@ let options = {
         inputEnabled: false,
     },
     xAxis: {
-        overscroll: candle_room.value * 60 * 1000, // изначально одна минута
+        overscroll: 1 * 60 * 1000, // изначально одна минута
         resize: {
             enabled: false,
         },
-        range: valuesToDisplay.value * candle_room.value * 60 * 1000, // изначально данные показываем за 97 минут
+        range: valuesToDisplay * 1 * 60 * 1000, // изначально данные показываем за 97 минут
         events: {
             /*setExtremes: _.debounce(e => {
                 console.log(e.min);
@@ -494,11 +495,11 @@ let options = {
     hcInstance.value.charts[0].series[1].setData(data.yData, false);
     const overscroll = Math.round(candle_room.value) * 60 * 1000;
     hcInstance.value.charts[0].xAxis[0].update({
-        range: valuesToDisplay.value * candle_room.value * 60 * 1000,
+        range: valuesToDisplay * candle_room.value * 60 * 1000,
         overscroll,
     });
-    if (data.xData.length > valuesToDisplay.value)
-        hcInstance.value.charts[0].xAxis[0].setExtremes(data.xData[data.xData.length - valuesToDisplay.value - 1].x, data.xData[data.xData.length - 1].x);
+    if (data.xData.length > valuesToDisplay)
+        hcInstance.value.charts[0].xAxis[0].setExtremes(data.xData[data.xData.length - valuesToDisplay - 1].x, data.xData[data.xData.length - 1].x);
     else
         hcInstance.value.charts[0].xAxis[0].setExtremes(data.xData[0].x, data.xData[data.xData.length - 1].x);
     setTimeout(() => {
@@ -508,7 +509,7 @@ let options = {
 };*/
 
 onMounted(() => {
-    store.commit('trading/setGraphPeriod', candle_period.value);
+    store.commit('trading/setGraphPeriod', candle_period);
 });
 
 </script>
