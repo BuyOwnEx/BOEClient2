@@ -67,6 +67,7 @@ let chartInFullscreen = ref(false);
 let candle_period = ref('1m');
 const valuesToDisplay = ref(97);
 const maxCandles = ref(501);
+const graph_loading = ref(false);
 
 let xData = props.ohlc;
 let yData = props.volume;
@@ -93,50 +94,53 @@ const lastPoint = computed(() => {
 watch(
     () => lastPoint.value,
     (val,prevVal) => {
-        if (val.x > prevVal.x)
+        if(!graph_loading)
         {
-            const shift = hcInstance.value.charts[0].series[0].options.data.length >= maxCandles.value;
-            hcInstance.value.charts[0].series[0].addPoint({
-                x: parseInt(val.x),
-                open: val.close,
-                high: val.close,
-                low: val.close,
-                close: val.close,
-            }, false, shift, true);
-            hcInstance.value.charts[0].series[1].addPoint({
-                x: parseInt(val.x),
-                y: 0,
-            }, true, shift, true);
-        }
-        else {
-            const candle = hcInstance.value.charts[0];
-            const candlesData = candle.series[0].options.data;
-            const volumeData = candle.series[1].options.data;
-            candlesData[candlesData.length - 1] = {
-                x: parseInt(val.x),
-                open: BigNumber(val.open).toNumber(),
-                high: BigNumber(val.high).toNumber(),
-                low: BigNumber(val.low).toNumber(),
-                close: BigNumber(val.close).toNumber(),
-            };
-            volumeData[volumeData.length - 1] = {
-                x: parseInt(val.x),
-                y: BigNumber(val.y).toNumber(),
-            };
-            const graphsToProcess = ['main'];
-            candle.series.forEach((item, i) => {
-                const id = _.get(item, 'options.id', undefined);
-                if (['main','highcharts-navigator-series'].indexOf(id) !== -1) {
-                    candle.series[i].setData(candlesData, false, false, false);
-                }
-            });
-            candle.series.forEach((item, i) => {
-                const id = _.get(item, 'options.id', undefined);
-                if (['volume'].indexOf(id) !== -1) {
-                    candle.series[i].setData(volumeData, false, false, false);
-                }
-            });
-            candle.redraw();
+            if (val.x > prevVal.x)
+            {
+                const shift = hcInstance.value.charts[0].series[0].options.data.length >= maxCandles.value;
+                hcInstance.value.charts[0].series[0].addPoint({
+                    x: parseInt(val.x),
+                    open: val.close,
+                    high: val.close,
+                    low: val.close,
+                    close: val.close,
+                }, false, shift, true);
+                hcInstance.value.charts[0].series[1].addPoint({
+                    x: parseInt(val.x),
+                    y: 0,
+                }, true, shift, true);
+            }
+            else {
+                const candle = hcInstance.value.charts[0];
+                const candlesData = candle.series[0].options.data;
+                const volumeData = candle.series[1].options.data;
+                candlesData[candlesData.length - 1] = {
+                    x: parseInt(val.x),
+                    open: BigNumber(val.open).toNumber(),
+                    high: BigNumber(val.high).toNumber(),
+                    low: BigNumber(val.low).toNumber(),
+                    close: BigNumber(val.close).toNumber(),
+                };
+                volumeData[volumeData.length - 1] = {
+                    x: parseInt(val.x),
+                    y: BigNumber(val.y).toNumber(),
+                };
+                const graphsToProcess = ['main'];
+                candle.series.forEach((item, i) => {
+                    const id = _.get(item, 'options.id', undefined);
+                    if (['main','highcharts-navigator-series'].indexOf(id) !== -1) {
+                        candle.series[i].setData(candlesData, false, false, false);
+                    }
+                });
+                candle.series.forEach((item, i) => {
+                    const id = _.get(item, 'options.id', undefined);
+                    if (['volume'].indexOf(id) !== -1) {
+                        candle.series[i].setData(volumeData, false, false, false);
+                    }
+                });
+                candle.redraw();
+            }
         }
     }
 )
@@ -203,24 +207,28 @@ let options = {
                 text: '1m',
                 events: {
                     click: e => {
+                        graph_loading.value = true;
                         candle_period.value = '1m';
                         store.commit('trading/setGraphPeriod', candle_period.value);
                         store.dispatch('trading/getGraphFromServer').then(resp => {
+                            xData = resp.candlesData;
+                            yData = resp.volumeData;
                             hcInstance.value.charts[0].series.forEach((item, i) => {
                                 const id = _.get(item, 'options.id', undefined);
                                 if (['main','highcharts-navigator-series'].indexOf(id) !== -1) {
-                                    hcInstance.value.charts[0].series[i].setData(xData.value, false, false, false);
+                                    hcInstance.value.charts[0].series[i].setData(xData, false, false, false);
                                 }
                             });
-                            hcInstance.value.charts[0].series[1].setData(yData.value, false);
-                            if (xData.value.length > valuesToDisplay.value)
+                            hcInstance.value.charts[0].series[1].setData(yData, false);
+                            if (xData.length > valuesToDisplay.value)
                             {
-                                hcInstance.value.charts[0].xAxis[0].setExtremes(xData.value[xData.value.length - valuesToDisplay.value - 1].x, xData.value[xData.value.length - 1].x);
+                                hcInstance.value.charts[0].xAxis[0].setExtremes(xData[xData.length - valuesToDisplay.value - 1].x, xData[xData.length - 1].x);
                             }
                             else
                             {
-                                hcInstance.value.charts[0].xAxis[0].setExtremes(xData.value[0].x, xData.value[xData.value.length - 1].x);
+                                hcInstance.value.charts[0].xAxis[0].setExtremes(xData[0].x, xData[xData.length - 1].x);
                             }
+                            graph_loading.value = false;
                         });
                         return false;
                     },
@@ -234,23 +242,28 @@ let options = {
                 text: '5m',
                 events: {
                     click: e => {
+                        graph_loading.value = true;
                         candle_period.value = '5m';
                         store.commit('trading/setGraphPeriod', candle_period.value);
                         store.dispatch('trading/getGraphFromServer').then(resp => {
+                            xData = resp.candlesData;
+                            yData = resp.volumeData;
                             hcInstance.value.charts[0].series.forEach((item, i) => {
                                 const id = _.get(item, 'options.id', undefined);
                                 if (['main','highcharts-navigator-series'].indexOf(id) !== -1) {
-                                    hcInstance.value.charts[0].series[i].setData(xData.value, false, false, false);
+                                    hcInstance.value.charts[0].series[i].setData(xData, false, false, false);
                                 }
                             });
-                            if (xData.value.length > valuesToDisplay.value)
+                            hcInstance.value.charts[0].series[1].setData(yData, false);
+                            if (xData.length > valuesToDisplay.value)
                             {
-                                hcInstance.value.charts[0].xAxis[0].setExtremes(xData.value[xData.value.length - valuesToDisplay.value - 1].x, xData.value[xData.value.length - 1].x);
+                                hcInstance.value.charts[0].xAxis[0].setExtremes(xData[xData.length - valuesToDisplay.value - 1].x, xData[xData.length - 1].x);
                             }
                             else
                             {
-                                hcInstance.value.charts[0].xAxis[0].setExtremes(xData.value[0].x, xData.value[xData.value.length - 1].x);
+                                hcInstance.value.charts[0].xAxis[0].setExtremes(xData[0].x, xData[xData.length - 1].x);
                             }
+                            graph_loading.value = false;
                         });
                         return false;
                     },
@@ -345,13 +358,13 @@ let options = {
         },
         range: valuesToDisplay.value * candle_room.value * 60 * 1000, // изначально данные показываем за 97 минут
         events: {
-            setExtremes: _.debounce(e => {
+            /*setExtremes: _.debounce(e => {
                 console.log(e.min);
                 console.log(e.max);
                 console.log(e.trigger);
                 hcInstance.value.charts[0].redraw();
                 hcInstance.value.charts[0].reflow();
-            }, 100),
+            }, 100),*/
         },
     },
     yAxis: [

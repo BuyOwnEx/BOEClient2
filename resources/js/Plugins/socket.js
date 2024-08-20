@@ -92,6 +92,24 @@ export default function createWebSocketPlugin (socket) {
             if (mutation.type === 'trading/setPair') {
                 //socket.emit('update', mutation.payload)
                 console.log('setPair was called by mutation');
+                if(sub_order_book)
+                {
+                    sub_order_book.unsubscribe();
+                    sub_order_book.removeAllListeners();
+                   store.commit('trading/resetOrderBook');
+                }
+                if(sub_history_deals)
+                {
+                    sub_history_deals.unsubscribe();
+                    sub_history_deals.removeAllListeners();
+                    store.commit('trading/resetHistoryDealList');
+                }
+                if(sub_depth)
+                {
+                    sub_depth.unsubscribe();
+                    sub_depth.removeAllListeners();
+                }
+
                 sub_tickers = socket.subscribe('public:tickers');
                 sub_order_book = socket.subscribe('public:order_book_' + store.state.trading.selectedCurrency.toLowerCase() + '_' + store.state.trading.selectedMarket.toLowerCase());
                 sub_depth = socket.subscribe('public:update_depth_' + store.state.trading.selectedCurrency.toLowerCase() + '_' + store.state.trading.selectedMarket.toLowerCase());
@@ -106,6 +124,11 @@ export default function createWebSocketPlugin (socket) {
             }
             else if (mutation.type === 'trading/setGraphPeriod')
             {
+                if(sub_graph)
+                {
+                    sub_graph.unsubscribe();
+                    sub_graph.removeAllListeners();
+                }
                 sub_graph = socket.subscribe('public:graph_' + store.state.trading.selectedPeriod + '_' + store.state.trading.selectedCurrency.toLowerCase() + '_' + store.state.trading.selectedMarket.toLowerCase());
                 sub_graph.on('publish', graphPubHandler);
                 console.log('setGraphPeriod was called by mutation')
