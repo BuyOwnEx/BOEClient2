@@ -72,7 +72,7 @@ const changePeriodEvent = (period) => {
         xData = resp.candlesData;
         yData = resp.volumeData;
         hcInstance.value.charts[0].series.forEach((item, i) => {
-            const id = _.get(item, 'options.id', undefined);
+            const id = _.get(item, 'options.id');
             if (['main','highcharts-navigator-series'].indexOf(id) !== -1) {
                 hcInstance.value.charts[0].series[i].setData(xData, false, false, false);
             }
@@ -105,6 +105,11 @@ const intervals = [
 watch(
     () => lastPoint.value,
     (val,prevVal) => {
+        console.log('graph_loading', graph_loading.value);
+        console.log('val.x', val.x);
+        console.log('prevVal.x', prevVal.x);
+        console.log('val.y', val.y);
+        console.log('prevVal.y', prevVal.y);
         if(!graph_loading.value && val !== null)
         {
             if (val.x > prevVal.x)
@@ -138,15 +143,14 @@ watch(
                     x: parseInt(val.x),
                     y: BigNumber(val.y).toNumber(),
                 };
-                const graphsToProcess = ['main'];
                 candle.series.forEach((item, i) => {
-                    const id = _.get(item, 'options.id', undefined);
+                    const id = _.get(item, 'options.id');
                     if (['main','highcharts-navigator-series'].indexOf(id) !== -1) {
                         candle.series[i].setData(candlesData, false, false, false);
                     }
                 });
                 candle.series.forEach((item, i) => {
-                    const id = _.get(item, 'options.id', undefined);
+                    const id = _.get(item, 'options.id');
                     if (['volume'].indexOf(id) !== -1) {
                         candle.series[i].setData(volumeData, false, false, false);
                     }
