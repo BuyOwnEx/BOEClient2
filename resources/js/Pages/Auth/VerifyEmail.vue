@@ -42,6 +42,9 @@ const verificationLinkSent = computed(() => props.status === 'verification-link-
             <v-alert v-if="verificationLinkSent" density="compact" variant="tonal" type="info" class="text-center ma-6 mt-2">
                 {{ $t('auth.verify.resend_activation_link_text') }}
             </v-alert>
+            <v-alert v-if="$page.props.errors.message" density="compact" variant="tonal" type="error" class="text-center ma-6 mt-2">
+                {{ $page.props.errors.message }}
+            </v-alert>
             <template #additional_actions>
                 <div class="text-center mt-6">
                     <v-btn @click="logout" color="primary" variant="text" block>

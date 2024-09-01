@@ -55,7 +55,6 @@ class ViewController extends Controller
             $graph = $api->candlesticks($currency, $market);
             $history_deals = $api->history_deals($currency, $market);
             $depth = $api->depth($currency, $market);
-            Log::info($depth);
             return Inertia::render('Trading', [
                 'currency'=>$currency,
                 'market'=>$market,
